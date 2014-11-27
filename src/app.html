@@ -1,24 +1,23 @@
 <div>
-	<div v-if="!auth" id="overview">
+	<div v-if="!authenticated" id="overview">
 		<div class="container">
-
 				<div id="user" class="row">
 					<div class="col-md-5 half-border-right right-border">
-						<div class="slidein" v-component="user-{{view}}" v-transition></div>
+						<div class="slidein" v-component="{{view}}" v-transition></div>
 
 						<hr />
 						<p>
 						<a
 							 v-transition
-							 v-if="view === 'login'"
-							 v-on="click: view = 'register'">
+							 v-if="view === 'user-login'"
+							 v-on="click: view = 'user-lregister'">
 						 Don't have a account? Sign up here!!
 						</a>
-						
+
 						<a
 							 v-transition
-							 v-if="view === 'register'"
-							 v-on="click: view = 'login'">
+							 v-if="view === 'user-register'"
+							 v-on="click: view = 'user-login'">
 						 Already a user? Login instead!
 						</a>
 						<br />
@@ -40,5 +39,8 @@
 					</div>
 				</div>
 		</div>
+	</div>
+
+	<div v-if="auth" v-component="{{view}}">
 	</div>
 </div>
