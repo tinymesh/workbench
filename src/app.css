@@ -1,0 +1,100 @@
+@charset "utf-8";
+
+a { cursor: pointer; }
+
+footer > .container {
+	padding-top: 1em;
+	border-top: 1px solid #eee;
+}
+
+
+
+footer {
+  padding-bottom: 40px;
+  color: #777;
+  text-align: center;
+}
+footer > .container {
+	border-top: 1px solid #e5e5e5;
+	padding-top: 2.5em;
+}
+
+footer .links {
+  padding-left: 0;
+  margin-top: 20px;
+  color: #999;
+}
+footer .links li {
+  display: inline;
+  padding: 0;
+}
+footer .links li:after {
+    content: " —";
+}
+footer .links li:last-child:after {
+    content: "";
+}
+footer .links li:first-child {
+  padding-left: 0;
+}
+footer .links li.active a { font-weight: bold; }
+
+
+.navbar {
+	background: #f7f7f7;
+	height: 66px;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 0px;
+}
+
+	.navbar .navbar-header a { padding-top: 21px; }
+
+	.navbar li a {
+		line-height: 32px;
+	}
+
+	.navbar .main li a {
+		color: #3a3a3a;
+		font-weight: bold;
+	}
+
+	.navbar .main li.active a {
+		color: #52bad5;
+		border-bottom: 3px solid #52bad5;
+	}
+
+.half-border-right { padding-right: 4.16%; }
+.half-border-left { padding-left: 4.16%; }
+.right-border {
+	border-right: 2px solid #337ab7;
+	padding-bottom: 2em;
+	box-shadow: 100px 0px 95px -95px rgba(136,136,136,0.5);
+	background: -moz-radial-gradient(center right, ellipse cover, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center right, 0px, center center, 100%, color-stop(0%,rgba(0,0,0,0.1)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center right, ellipse cover, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center right, ellipse cover, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center right, ellipse cover, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center right, rgba(0,0,0,0.1) 0%,rgba(0,0,0,0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0a337ab7', endColorstr='#004f85bb',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+
+/**
+ * Overview
+ */
+
+#overview #user {
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+
+.slidein {
+	transition: 1s;
+	overflow: hidden;
+	left: 0;
+}
+.slidein.v-enter, .slidein.v-leave {
+	height: 0;
+	width: 0;
+	opacity: 0;
+}

@@ -1,0 +1,64 @@
+<form id="signupform" class="form-horizontal" role="form">
+	<div class="page-header">
+		<h3>Create new user</h3>
+	</div>
+
+	<div style="margin-bottom: 20px" class="input-group"
+		v-class="has-error: email && !emailValid">
+		<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+		<input v-model="email" lazy id="login-username" type="text" class="form-control" name="username" value="" placeholder="Email">                                        
+	</div>
+
+	<div v-class="has-error: !passwordMatch" style="margin-bottom: 20px;">
+		<div class="input-group">
+			<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+			<input
+				v-model="password1"
+				v-on="
+					focus: showPwHelptext = true,
+					blur: showPwHelptext = false
+				"
+				id="login-password"
+				name="password"
+				type="password"
+				class="form-control"
+				placeholder="Password">
+		</div>
+		<div v-if="false !== showPwHelptext && passwordStrength >= 0" class="password-strength strength-{{passwordStrength}}" style="margin-left: 40px;">
+			<span class="bar-1"></span><span class="bar-2"></span><span class="bar-3"></span><span class="bar-4"></span>
+		</div>
+		<div
+				v-if="false !== showPwHelptext && passwordStrength >= 0"
+				class="help-block password-strength-text strength-{{passwordStrength}}"
+				style="margin-bottom: 0px; margin-left: 40px;">
+			<span v-if="passwordStrength === 0">Terrible ...</span>
+			<span v-if="passwordStrength === 1">Very weak</span>
+			<span v-if="passwordStrength === 2">Not great</span>
+			<span v-if="passwordStrength === 3">Good</span>
+			<span v-if="passwordStrength === 4">Perfect!</span>
+		</div>
+	</div>
+
+	<div v-class="has-error: !passwordMatch" style="margin-bottom: 25px">
+		<div class="input-group">
+			<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+			<input v-model="password2"
+				id="login-password"
+				type="password"
+				class="form-control"
+				name="cofirmpassword"
+				placeholder="Confirm Password">
+		</div>
+		<span class="help-block" v-if="!passwordMatch">
+			The passwords entered did not match.
+		</span>
+	</div>
+
+	<div style="margin-top:10px" class="form-group">
+		<div class="col-sm-12 controls">
+			<button class="btn btn-success">
+				Sign up!
+			</button>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,35 @@
+#signupform > .page-header {
+	margin-top: 33px;
+}
+
+.password-strength {
+	line-height: 3px;
+	height: 3px;
+}
+
+.password-strength > span {
+	display: inline-block;
+	height: 3px;
+	width: 24%;
+	margin-right: 2px;
+	background: #ccc;
+}
+.password-strength > span:last-child {
+	margin-right: 0px;
+}
+
+.password-strength.strength-0 > span.bar-1 { background-color: red; }
+.password-strength.strength-1 > span.bar-1 { background-color: orange; }
+.password-strength.strength-2 > span.bar-1,
+.password-strength.strength-2 > span.bar-2 { background-color: orange; }
+.password-strength.strength-3 > span.bar-1,
+.password-strength.strength-3 > span.bar-2,
+.password-strength.strength-3 > span.bar-3 { background-color: green; }
+.password-strength.strength-4 > span { background-color: green; }
+
+.password-strength-text { text-align: right; padding-top: 0.5em; font-size: 0.9em;}
+.password-strength-text.strength-0 { color: red; }
+.password-strength-text.strength-1 { color: orange; }
+.password-strength-text.strength-2 { color: orange; }
+.password-strength-text.strength-3,
+.password-strength-text.strength-4 { color: green; }

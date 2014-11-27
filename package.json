@@ -1,0 +1,28 @@
+{
+	"name": "workbench",
+	"description": "Tiny Mesh Cloud Workbench",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/tinymesh/workbench"
+	},
+	"version": "0.0.0",
+	"scripts": {
+		"dev": "watchify -e src/app.js -t partialify -o build/build.js"
+	},
+	"main": "src/app.js",
+	"dependencies": {
+		"cloud-client": "git://github.com/lafka/tinymesh-cloud-client",
+		"director": "^1.2.3",
+		"vue": "git://github.com/yyx990803/vue#next",
+		"bootstrap": "*",
+		"store": "*",
+		"zxcvbn": "git://github.com/buttercoin/node-zxcvbn.git#master"
+	},
+	"devDependencies": {
+		"uglify-js": "^2.4.15",
+		"insert-css": "^0.2.0",
+		"partialify": "^3.1.1",
+		"watchify": "^1.0.6",
+		"vueify": "*"
+	}
+}
