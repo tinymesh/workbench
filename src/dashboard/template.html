@@ -51,15 +51,11 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-xs-4 control-label">Address</label>
+						<label class="col-xs-4 control-label">Network ID</label>
 						<div class="col-xs-8">
-							<input
-										v-model="network.address"
-										address-field
-										address-field-opts="opts"
-										class="form-control"
-										disabled
-										/>
+							<p class="form-control-static">
+								 {{network.key}} &ndash; <span v-address="network.address" address-endian="big"></span>
+							</p>
 						</div>
 					</div>
 				</form>
@@ -69,7 +65,7 @@
 				<ul>
 					<li v-repeat="network.channels">
 						<h5>
-							<b>Gateway:</b> <i>{{network.devicemap[$key].name || $key}} (uid: {{network.devicemap[$key].address}})</i>
+							<b>Gateway:</b> <i>{{network.devicemap[$key].name || $key}} (uid: <span v-address="network.devicemap[$key].address"></span>)</i>
 							&ndash;
 							<span v-if="active"  class="label label-success">Connected</span>
 							<span v-if="!active" class="label label-danger">Disconnected</span>

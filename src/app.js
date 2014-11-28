@@ -50,6 +50,7 @@ var app = new Vue({
   },
   directives: {
     'fuzzy-date': require('./directives/fuzzy-date.js'),
+    'address': require('./directives/address.js'),
   }
 });
 
