@@ -16,7 +16,9 @@
 		"vue": "git://github.com/yyx990803/vue#next",
 		"bootstrap": "*",
 		"store": "*",
-		"zxcvbn": "git://github.com/buttercoin/node-zxcvbn.git#master"
+		"zxcvbn": "git://github.com/buttercoin/node-zxcvbn.git#master",
+		"pace": "git://github.com/HubSpot/pace#master",
+		"lodash": "*"
 	},
 	"devDependencies": {
 		"uglify-js": "^2.4.15",

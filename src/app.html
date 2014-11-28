@@ -1,4 +1,35 @@
 <div>
+		<nav class="navbar" role="navigation">
+			<div class="container">
+				<div class="navbar-header col-xs-2">
+						<a href="./index.html" class="navbar-brand">Tiny Mesh Cloud</a>
+				</div>
+				<nav class="col-xs-10" role="navigation">
+					<ul class="nav main navbar-nav">
+						<li class="active"><a href="#/dashboard">Getting Started</a></li>
+						<li><a href="https://lafka.github.com/tm-api-docs/v1/">Docs</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li v-if="authenticated"><a href="#/user/logout">Logout</a></li>
+						<!--
+						<li><a href="#login">Login</a></li>
+						<li><a href="#register">Sign Up</a></li>
+						<li><a href="http://tiny-mesh.com">tiny-mesh.com</a></li>
+						-->
+					</ul>
+				</nav>
+			</div>
+		</nav>
+
+	<div v-if="flash" class="alert alert-{{flashClass}}">
+		<div class="container">
+			{{flash}}
+		</div>
+	</div>
+
+	<div v-if="authenticated" v-component="{{view}}">
+	</div>
+
 	<div v-if="!authenticated" id="overview">
 		<div class="container">
 				<div id="user" class="row">
@@ -10,7 +41,7 @@
 						<a
 							 v-transition
 							 v-if="view === 'user-login'"
-							 v-on="click: view = 'user-lregister'">
+							 v-on="click: view = 'user-register'">
 						 Don't have a account? Sign up here!!
 						</a>
 
@@ -39,8 +70,5 @@
 					</div>
 				</div>
 		</div>
-	</div>
-
-	<div v-if="auth" v-component="{{view}}">
 	</div>
 </div>

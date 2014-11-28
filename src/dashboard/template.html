@@ -1,0 +1,97 @@
+<div v-with="networks: networks, user: user, params: params," class="container">
+
+	<div class="col-md-3" v-if="networks.length > 0" style="position:relative;">
+		<div class="page-header">
+			<h4>Networks</h4>
+		</div>
+
+		<ul class="nav nav-stacked">
+			<li v-repeat="networks" v-class="active: key === params.network">
+				<a href="#/dashboard/{{key}}">{{name || key}}</a>
+			</li>
+		</ul>
+		<hr />
+		<ul class="nav nav-stacked">
+			<li v-class="active: undefined == params.network">
+				<a href="#/dashboard"><b>+</b> Create new network</a>
+			</li>
+		</ul>
+	</div>
+
+	<div
+		 v-class="col-md-9: networks.length > 0,
+							col-md-12: networks.length === 0"
+		 v-if="!network">
+
+		<div v-if="!params.network || undefined === network">
+			<div class="row" v-component="network-setup-guide"></div>
+		</div>
+	</div>
+
+
+	<div class="col-md-9">
+		<div class="row" v-if="params.network && network">
+			<div class="page-header">
+					<h4>{{network.name || "Unamed network"}}</h4>
+			</div>
+			<div class="no-margin" v-component="network-setup-guide"></div>
+
+			<div class="col-xs-6 overview">
+				<form role="form" class="form-horizontal">
+					<div class="form-group">
+						<label for="network-name" class="col-xs-4 control-label">Network Name</label>
+						<div class="col-xs-8">
+							<input
+										v-model="network.name"
+										type="text"
+										class="form-control"
+										id="network-name"
+										name="network-name"
+										placeholder="Network name"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 control-label">Address</label>
+						<div class="col-xs-8">
+							<input
+										v-model="network.address"
+										address-field
+										address-field-opts="opts"
+										class="form-control"
+										disabled
+										/>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="col-xs-6 channels">
+				<ul>
+					<li v-repeat="network.channels">
+						<h5>
+							<b>Gateway:</b> <i>{{network.devicemap[$key].name || $key}} (uid: {{network.devicemap[$key].address}})</i>
+							&ndash;
+							<span v-if="active"  class="label label-success">Connected</span>
+							<span v-if="!active" class="label label-danger">Disconnected</span>
+						</h5>
+
+						<div class="body">
+							<span v-if="meta.started">&ndash; Connected <i v-fuzzy-date="meta.started"></i><br /></span>
+						<!--
+							<span>Queue length: <i>{{meta.queue_size}}</i></span><br />
+							<span>% of network traffic:
+									<i class="rx">{{((meta.tcp.rx||0)/(network.meta.net.tcp.rx||1))*100}}% (rx)</i> /
+									<i class="tx">{{((meta.tcp.tx||0)/(network.meta.net.tcp.tx||1))*100}}% (tx)</i>
+							</span>
+						-->
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="row" v-if="params.network && !network">
+			<div v-component="error-404" class="white header-pad" style="padding-top: 100px; padding-left: 50px;"></div>
+		</div>
+	</div>
+</div>

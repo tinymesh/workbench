@@ -1,6 +1,6 @@
 require('insert-css')(require('./style.css'))
 require('zxcvbn2');
-var client = require('tinymesh-cloud-client/tinymesh-cloud-client')();
+var client = require('tinymesh-cloud-client/tinymesh-cloud-client');
     store = require('store');
 
 module.exports = {
@@ -42,7 +42,6 @@ module.exports = {
 
 			var v = this;
 			client.user.register({email: this.email, password: this.password1})
-				.end()
 				.then(function(resp) {
 					if (201 === resp.status) {
 						v.$root.onAuth(resp.body.auth);
