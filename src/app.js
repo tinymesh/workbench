@@ -38,7 +38,8 @@ var app = new Vue({
 		user: undefined,
 		flash: "",
 		flashClass: "warning",
-		params: {}
+		params: {},
+		router: new Router()
   },
   methods: {
     onAuth: function(auth) {
@@ -56,7 +57,6 @@ var app = new Vue({
 
 var storedauth = store.get('auth');
 
-var route = new Router();
 var defaultroute = function(view, callback) {
 	if (app.authenticated) {
 		app.view = view;
@@ -64,32 +64,33 @@ var defaultroute = function(view, callback) {
 	} else
 		app.view = store.get('prevAuth') ? 'user-login' : 'user-register';
 };
-route.on('/', function() {
+app.router.on('/', function() {
+	console.log('route: /dashboard');
 	defaultroute('dashboard', function() {
 		app.$set('params.network', undefined);
 	});
 });
-route.on('/dashboard', function() {
+app.router.on('/dashboard', function() {
+	console.log('route: /dashboard');
 	defaultroute('dashboard', function() {
 		app.$set('params.network', undefined);
 	});
 });
-route.on('/dashboard/:network', function(network) {
+app.router.on('/dashboard/:network', function(network) {
+	console.log('route: /dashboard/' + network);
 	defaultroute('dashboard', function() {
 		app.$set('params.network', network);
 	});
 });
-route.on('/user/logout', function() {
-	client.auth.logout({auth: store.get('auth')})
-		.then(function(resp) {
-			if (205 === resp.status || 401 === resp.status || 403 === resp.status) {
-				app.flash = "You logged out. See you soon :)";
-				app.flashClass = "warning";
-				app.view = 'user-logout';
-			}
-		});
+app.router.on('/user/logout', function() {
+	if (store.get('auth'))
+		client.auth.logout({auth: store.get('auth')});
+
+	app.flash = "You logged out. See you soon :)";
+	app.flashClass = "warning";
+	app.view = 'user-login';
 });
-route.configure({
+app.router.configure({
 	notfound: function () {
 		app.$set('view', 'error-404');
 	}
@@ -102,22 +103,22 @@ if (storedauth) {
 				app.user = resp.body;
 				app.onAuth(storedauth);
 				if ('#/user/logout' === window.location.hash)
-					route.init('/')
+					app.router.init('/')
 				else if (window.location.hash)
-					route.init(window.location.hash.replace(/^#/, ''))
+					app.router.init(window.location.hash.replace(/^#/, ''))
 				else
-					route.init('/')
+					app.router.init('/')
 
 				window.reload();
 			} else if (401 === resp.status) {
 				store.set('auth', null);
 				app.flash = "You have been logged out";
 				app.flashClass = "warning";
-				route.init('/');
+				app.router.init('/');
 			} else {
-				route.init('/');
+				app.router.init('/');
 			}
 		});
 } else {
-	route.init('/');
+	app.router.init('/');
 }

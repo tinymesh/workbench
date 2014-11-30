@@ -42,18 +42,22 @@ module.exports = {
 					if (200 === resp.status) {
 						v.$root.onAuth(resp.body);
 
-						if ('#/user/logout' === window.location.hash)
-							window.location.hash = '/';
-						else if (window.location.hash)
-							window.location.hash = window.location.hash.replace(/^#/, '')
-						else
-							window.location.hash = '/';
-
 						v.$root.flash = undefined;
 
+						console.log('get user', window.location.hash);
 						client.user.get({auth: resp.body})
 							.then(function(resp) {
-								v.$root.user = resp.body;
+								this.$root.router;
+								console.log('got user', window.location.hash);
+								console.log('router', this.$root.router);
+								if ('#/user/logout' === window.location.hash) 
+									this.$root.router.setRoute('/');
+								else if (window.location.hash)
+									this.$root.router.setRoute(window.location.hash.replace(/^#/, ''));
+								else
+									this.$root.router.setRoute('/');
+
+								console.log('router', this.$root.router);
 							});
 					} else if (401 === resp.status) {
 						v.errFlash = "Invalid credentials";
