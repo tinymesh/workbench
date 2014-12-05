@@ -50,5 +50,10 @@ module.exports = {
 				this.network = _.find(this.$root.networks, {key: this.$root.params.network});
 			}
 		}
+	},
+	computed: {
+		hasconnected: function() {
+			return undefined !== this.network.channels[Object.keys(this.network.channels)[0]].last;
+		},
 	}
 };

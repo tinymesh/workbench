@@ -8,4 +8,7 @@ module.exports = {
 			subview: 'user-login'
 		}
 	},
-}
+	ready: function() {
+		console.log('logout', client.auth.logout({auth: this.$root.auth}));
+	}
+};

@@ -36,53 +36,96 @@
 			</div>
 			<div class="no-margin" v-component="network-setup-guide"></div>
 
-			<div class="col-xs-6 overview">
-				<form role="form" class="form-horizontal">
-					<div class="form-group">
-						<label for="network-name" class="col-xs-4 control-label">Network Name</label>
-						<div class="col-xs-8">
-							<input
-										v-model="network.name"
-										type="text"
-										class="form-control"
-										id="network-name"
-										name="network-name"
-										placeholder="Network name"/>
+			<div v-if="hasconnected" class="row padded">
+				<div class="col-xs-12">
+					<ul class="nav nav-pills">
+						<li class="head"><a href="#/dashboard">Dashboard</a><li>
+						<li v-class="active: undefined === params.tab"><a href="#/dashboard/{{params.network}}">Overview</a></li>
+						<li v-class="active: 'devices' === params.tab"><a href="#/dashboard/{{params.network}}/devices">Devices</a></li>
+			 		</ul>
+			 	</div>
+			</div>
+			<div v-if="hasconnected && undefined === params.tab" class="row">
+				<div class="col-xs-6 overview">
+					<form role="form" class="form-horizontal">
+						<div class="form-group">
+							<label for="network-name" class="col-xs-4 control-label">Network Name</label>
+							<div class="col-xs-8">
+								<input
+											v-model="network.name"
+											type="text"
+											class="form-control"
+											id="network-name"
+											name="network-name"
+											placeholder="Network name"/>
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-4 control-label">Network ID</label>
-						<div class="col-xs-8">
-							<p class="form-control-static">
-								 {{network.key}} &ndash; <span v-address="network.address" address-endian="big"></span>
-							</p>
+						<div class="form-group">
+							<label class="col-xs-4 control-label">Network ID</label>
+							<div class="col-xs-8">
+								<p class="form-control-static">
+									 {{network.key}} &ndash; <span v-address="network.address" address-endian="big"></span>
+								</p>
+							</div>
 						</div>
-					</div>
-				</form>
+					</form>
+				</div>
+
+				<div class="col-xs-6 channels">
+					<ul>
+						<li v-repeat="network.channels">
+							<h5>
+								<b>Gateway:</b> <i>{{network.devicemap[$key].name || $key}} (uid: <span v-address="network.devicemap[$key].address"></span>)</i>
+								&ndash;
+								<span v-if="active"  class="label label-success">Connected</span>
+								<span v-if="!active" class="label label-danger">Disconnected</span>
+							</h5>
+
+							<div class="body">
+								<span v-if="meta.started">&ndash; Connected <i v-fuzzy-date="meta.started"></i><br /></span>
+							<!--
+								<span>Queue length: <i>{{meta.queue_size}}</i></span><br />
+								<span>% of network traffic:
+										<i class="rx">{{((meta.tcp.rx||0)/(network.meta.net.tcp.rx||1))*100}}% (rx)</i> /
+										<i class="tx">{{((meta.tcp.tx||0)/(network.meta.net.tcp.tx||1))*100}}% (tx)</i>
+								</span>
+							-->
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
 
-			<div class="col-xs-6 channels">
-				<ul>
-					<li v-repeat="network.channels">
-						<h5>
-							<b>Gateway:</b> <i>{{network.devicemap[$key].name || $key}} (uid: <span v-address="network.devicemap[$key].address"></span>)</i>
-							&ndash;
-							<span v-if="active"  class="label label-success">Connected</span>
-							<span v-if="!active" class="label label-danger">Disconnected</span>
-						</h5>
-
-						<div class="body">
-							<span v-if="meta.started">&ndash; Connected <i v-fuzzy-date="meta.started"></i><br /></span>
-						<!--
-							<span>Queue length: <i>{{meta.queue_size}}</i></span><br />
-							<span>% of network traffic:
-									<i class="rx">{{((meta.tcp.rx||0)/(network.meta.net.tcp.rx||1))*100}}% (rx)</i> /
-									<i class="tx">{{((meta.tcp.tx||0)/(network.meta.net.tcp.tx||1))*100}}% (tx)</i>
-							</span>
-						-->
-						</div>
-					</li>
-				</ul>
+			<div v-if="hasconnected && 'devices' === params.tab" class="row">
+				<div class="col-xs-12">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Key</th>
+								<th>UID</th>
+								<th>Name</th>
+								<th>Last seen</th>
+								<th>In queue</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-repeat="dev: network.devicemap">
+								<td><a href="#/device/{{params.network}}/{{$key}}">{{$key}}</a<</td>
+								<td><span v-address="network.address"></td>
+								<td><a href="#/device/{{params.network}}/{{$key}}">{{dev.name || "unnamed"}}</a<</td>
+								<td><a href="#">Never</a></td>
+								<td><a href="#/device/{{params.network}}{{$key}}/queue">Empty</a<</td>
+								<td>
+										<span class="status text-danger"><i class="glyphicon glyphicon-paperclip"></i> Low battery</span>
+										<span class="status text-danger"><i class="glyphicon glyphicon-signal"></i> Poor signal</span>
+										<span class="status text-info"><i class="glyphicon glyphicon-eject"></i> Unstable link</span>
+										<span class="status text-warning"><i class="glyphicon glyphicon-move"></i> Frequent resets</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 

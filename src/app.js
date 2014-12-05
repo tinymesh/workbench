@@ -74,16 +74,13 @@ app.router.on('/', function() {
 		app.$set('params.network', undefined);
 	});
 });
-app.router.on('/dashboard', function() {
-	defaultroute('dashboard', function() {
-		app.$set('params.network', undefined);
-	});
+
+app.router.on(/dashboard(?:\/([a-zA-Z0-9]+))?(?:\/([a-zA-Z0-9]+))?/, function(network, tab) {
+	app.view = 'dashboard';
+	app.$set('params.network', network);
+	app.$set('params.tab', tab);
 });
-app.router.on('/dashboard/:network', function(network) {
-	defaultroute('dashboard', function() {
-		app.$set('params.network', network);
-	});
-});
+
 app.router.on('/user/logout', function() {
 	if (store.get('auth'))
 		client.auth.logout({auth: store.get('auth')});
