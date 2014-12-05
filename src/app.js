@@ -43,8 +43,8 @@ var app = new Vue({
   },
   methods: {
     onAuth: function(auth) {
-      app.auth = auth;
-      app.authenticated = true;
+      app.$set('auth', auth);
+      app.$set('authenticated', true);
       store.set('prevAuth?', true);
       store.set('auth', auth);
     }
@@ -65,19 +65,16 @@ var defaultroute = function(view, callback) {
 		app.view = store.get('prevAuth') ? 'user-login' : 'user-register';
 };
 app.router.on('/', function() {
-	console.log('route: /dashboard');
 	defaultroute('dashboard', function() {
 		app.$set('params.network', undefined);
 	});
 });
 app.router.on('/dashboard', function() {
-	console.log('route: /dashboard');
 	defaultroute('dashboard', function() {
 		app.$set('params.network', undefined);
 	});
 });
 app.router.on('/dashboard/:network', function(network) {
-	console.log('route: /dashboard/' + network);
 	defaultroute('dashboard', function() {
 		app.$set('params.network', network);
 	});
@@ -97,20 +94,23 @@ app.router.configure({
 });
 
 if (storedauth) {
-	 client.user.get({auth: storedauth})
-		.then(function(resp) {
-			if (200 === resp.status) {
-				app.user = resp.body;
-				app.onAuth(storedauth);
-				if ('#/user/logout' === window.location.hash)
-					app.router.init('/')
-				else if (window.location.hash)
-					app.router.init(window.location.hash.replace(/^#/, ''))
-				else
-					app.router.init('/')
+	app.user = client.user.get({auth: storedauth});
+	app.user.$promise
+		.then(function(user) {
+			app.onAuth(storedauth);
 
-				window.reload();
-			} else if (401 === resp.status) {
+			if ('#/user/logout' === window.location.hash)
+				app.router.init(window.location.hash = '/');
+			else if (window.location.hash)
+				app.router.init(window.location.hash.replace(/^#/, ''))
+			else
+				app.router.init(window.location.hash = '/');
+
+			return resp;
+		},
+		function(resp) {
+			console.log('err', this);
+			if (401 === resp.status) {
 				store.set('auth', null);
 				app.flash = "You have been logged out";
 				app.flashClass = "warning";
