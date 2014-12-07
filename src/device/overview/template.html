@@ -1,0 +1,79 @@
+<div v-with="device: device, params: params">
+		<div class="row">
+			<form name="device" role="form" class="form">
+				<div class="form-group">
+					 <div class="col-xs-4">Device Name</div>
+					 <div class="col-xs-8">{{device.name || "Unnamed device"}}</div>
+				</div>
+
+				<div class="form-group">
+					 <div class="col-xs-4">Device Key</div>
+					 <div class="col-xs-8">{{params.device}}</div>
+				</div>
+
+				<div class="form-group">
+					 <div class="col-xs-4">Device Type</div>
+					 <div class="col-xs-8">{{device.type}}</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-xs-4">UID</div>
+					<div class="col-xs-8">
+						<span v-address="device.address">0.0.0.0</span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					 <div class="col-xs-4">Model</div>
+					 <div class="col-xs-8">
+							{{device['proto/tm'].config.device.part || "not available"}}
+						</div>
+				</div>
+
+				<div class="form-group">
+						<div class="col-xs-4">Hardware Revision</div>
+						<div class="col-xs-8">
+							{{device['proto/tm'].config.device.hw_revision || "not available"}}
+						</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-xs-4">Firmware Revision</div>
+					<div class="col-xs-8">
+						{{device['proto/tm'].config.device.fw_revision || "not available"}}
+					</div>
+				</div>
+			</form>
+		</div>
+
+	<div class="row section">
+
+		<div class="page-header">
+			<h4>GPIO Status</h4>
+		</div>
+
+		<div class="col-xs-6" v-repeat="gpio: gpios">
+			<div class="col-xs-4">GPIO {{$index}}</div>
+
+			<div class="col-xs-8" v-if="0 === gpio.config">
+				<span>Output (high)</span>
+			</div>
+
+			<div class="col-xs-8" v-if="1 === gpio.config">
+				<span>Input: {{device['proto/tm']['gpio_' + $index] || "no value"}}</span>
+			</div>
+
+			<div class="col-xs-8" v-if="2 === gpio.config">
+				<span>Analogue Input</span>
+			</div>
+
+			<div class="col-xs-8" v-if="3 === gpio.config">
+				<span>PWM Output</span>
+			</div>
+
+			<div class="col-xs-8" v-if="3 === gpio.config">
+				<span>Output (low)</span>
+			</div>
+		</div>
+	</div>
+</div>

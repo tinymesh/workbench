@@ -23,6 +23,11 @@ var app = new Vue({
     'user-login': require('./user/login'),
     'user-register': require('./user/register'),
     'user-logout': require('./user/logout'),
+    'device': require('./device'),
+    'device-overview': require('./device/overview'),
+//    'device-config': require('./device/config'),
+//    'device-query': require('./device/query'),
+//    'device-interact': require('./device/interact'),
     'error-404': require('./error/404'),
     'dashboard': require('./dashboard'),
     'network-setup-guide': require('./network/setup-guide')
@@ -87,6 +92,15 @@ app.router.on('/user/logout', function() {
 	app.flashClass = "warning";
 	app.view = 'user-login';
 });
+
+app.router.on(/device\/([^/]*)\/([^/]*)\/?(.*)$/, function(network, device, tab) {
+	app.view = 'device';
+
+	app.$set('params.network', network);
+	app.$set('params.device', device);
+	app.$set('params.tab', tab);
+});
+
 app.router.configure({
 	notfound: function () {
 		app.$set('view', 'error-404');
@@ -105,6 +119,8 @@ if (storedauth) {
 				app.router.init(window.location.hash.replace(/^#/, ''))
 			else
 				app.router.init(window.location.hash = '/');
+
+			app.networks = client.network.list({auth: storedauth});
 
 			return resp;
 		},
