@@ -1,0 +1,75 @@
+<div v-with="device: device, params: params">
+
+	<div v-if="!device['proto/tm'].config">
+		Oh no!!! We couldn't find a configuration for this device. Try
+		sending a <code>`get_config`</code> command.
+	</div>
+
+	<form name="config" role="form" v-on="submit: publishchanges">
+
+		<div v-if="staged" class="alert alert-warning">
+			<p>
+				<b>Warning</b> configuration miss-match: One or more changes
+				Have yet to be confirmed by the device. To remove this warning
+				issue a <code>Get Config</code> command.
+			</p>
+			<p>
+				The following changes have not been confirmed:
+
+				<ul>
+					<li v-repeat="item: staged">
+						Field <code>{{$key}}</code> have the staged value(s) of {{item.vals}} staged by commands {{item.cmds.join(', ')}}
+					</li>
+				</ul>
+			</p>
+		</div>
+
+		<div v-if="changes">
+			<hr />
+			<ul>
+				<li v-repeat="change: changes">
+					Changing <code>{{change.key}}</code> from <code>{{change.oldval}}</code> to <code>{{change.newval}}</code>
+				</li>
+			</ul>
+			<hr />
+		</div>
+
+		<div class="row group" v-repeat="group: config">
+			<div class="page-header">
+				<h3>{{$key}}</h3>
+			</div>
+			<div
+					v-repeat="field: group"
+					v-class="has-warning: has_changes(field.key)"
+					class="col-xs-4 has-feedback form-group">
+				<label for="input-{{field.key}}" class="control-label">{{field.name}}</label>
+				<input
+					value="{{field.value}}"
+					v-on="change: patch(field.key, $event)"
+					type="text"
+					class="form-control"
+					id="input-{{field.key}}"
+					v-attr="disabled: field.readonly ? 'yes' : false">
+				<span v-if="has_changes(field.key)" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+				<p v-if="error[field.key]" class="help-block">
+					{{error[field.key]}}
+				</p>
+			</div>
+		</div>
+
+		<div v-if="changes" class="row">
+			<hr />
+			<ul class="col-xs-12">
+				<li v-repeat="v: changes">
+					Changing <code>{{v.key}}</code> from <code>{{v.oldval}}</code> to <code>{{v.newval}}</code>
+				</li>
+			</ul>
+			<hr />
+		</div>
+
+		<div class="row form-actions">
+			<button type="submit" class="btn btn-primary">Save Configuration</button>
+			<button type="button" class="btn" v-on="click: changeset = undefined">Reset</button>
+		</div>
+	</form>
+</div>

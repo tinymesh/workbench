@@ -25,7 +25,7 @@ var app = new Vue({
     'user-logout': require('./user/logout'),
     'device': require('./device'),
     'device-overview': require('./device/overview'),
-//    'device-config': require('./device/config'),
+    'device-config': require('./device/config'),
 //    'device-query': require('./device/query'),
 //    'device-interact': require('./device/interact'),
     'error-404': require('./error/404'),
@@ -94,11 +94,11 @@ app.router.on('/user/logout', function() {
 });
 
 app.router.on(/device\/([^/]*)\/([^/]*)\/?(.*)$/, function(network, device, tab) {
-	app.view = 'device';
-
-	app.$set('params.network', network);
-	app.$set('params.device', device);
-	app.$set('params.tab', tab);
+	defaultroute('device', function() {
+		app.$set('params.network', network);
+		app.$set('params.device', device);
+		app.$set('params.tab', tab);
+	});
 });
 
 app.router.configure({
