@@ -114,13 +114,16 @@
 								<td><a href="#/device/{{params.network}}/{{$key}}">{{$key}}</a<</td>
 								<td><span v-address="network.address"></td>
 								<td><a href="#/device/{{params.network}}/{{$key}}">{{dev.name || "unnamed"}}</a<</td>
-								<td><a href="#">Never</a></td>
-								<td><a href="#/device/{{params.network}}{{$key}}/queue">Empty</a<</td>
+								<td><a>N/A</a></td>
+								<td><a>Empty</a<</td>
 								<td>
+									<span class="status text-success"><i class="glyphicon glyphicon-ok"></i> Nothing special</span>
+									<!--
 										<span class="status text-danger"><i class="glyphicon glyphicon-paperclip"></i> Low battery</span>
 										<span class="status text-danger"><i class="glyphicon glyphicon-signal"></i> Poor signal</span>
 										<span class="status text-info"><i class="glyphicon glyphicon-eject"></i> Unstable link</span>
 										<span class="status text-warning"><i class="glyphicon glyphicon-move"></i> Frequent resets</span>
+									-->
 								</td>
 							</tr>
 						</tbody>

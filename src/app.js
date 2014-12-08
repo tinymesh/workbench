@@ -66,19 +66,23 @@ var defaultroute = function(view, callback) {
 	if (app.authenticated) {
 		app.view = view;
 		callback();
-	} else
+	} else {
 		app.view = store.get('prevAuth') ? 'user-login' : 'user-register';
+	}
 };
 app.router.on('/', function() {
 	defaultroute('dashboard', function() {
 		app.$set('params.network', undefined);
+		app.$set('params.tab', undefined);
 	});
 });
 
 app.router.on(/dashboard(?:\/([a-zA-Z0-9]+))?(?:\/([a-zA-Z0-9]+))?/, function(network, tab) {
 	app.view = 'dashboard';
-	app.$set('params.network', network);
-	app.$set('params.tab', tab);
+	defaultroute('dashboard', function() {
+		app.$set('params.network', network);
+		app.$set('params.tab', tab);
+	});
 });
 
 app.router.on('/user/logout', function() {
@@ -117,12 +121,11 @@ if (storedauth) {
 			else
 				app.router.init(window.location.hash = '/');
 
-			app.networks = client.network.list({auth: storedauth});
+			app.$set('networks', client.network.list({auth: storedauth}));
 
 			return resp;
 		},
 		function(resp) {
-			console.log('err', this);
 			if (401 === resp.status) {
 				store.set('auth', null);
 				app.flash = "You have been logged out";

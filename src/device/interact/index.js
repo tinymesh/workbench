@@ -10,12 +10,16 @@ module.exports = {
 		this.ev = client.message.stream(this.params.network, this.params.device, {auth: this.$root.auth});
 		this.ev.addEventListener('msg', function(ev) {
 			var ev = JSON.parse(ev.data);
+			if (ev.selector[1] !== this.params.device || !ev['proto/tm'])
+				return;
+
+			console.log(ev);
+
 			if (ev['proto/tm'].detail === 'serial' || ev['proto/tm'].command === 'serial') {
 				this.data += (new Date(ev.datetime)).toLocaleString() + " < (" + ev['proto/tm'].cmd_number + ") " + ev['proto/tm'].data + "\r\n";
 			} else if (ev['proto/tm'].detail === 'ack' || ev['proto/tm'].detail === 'nak') {
 				this.data += (new Date(ev.datetime)).toLocaleString() + " < (" + ev['proto/tm'].cmd_number + ") == " + ev['proto/tm'].detail + "\r\n";
 			} else {
-				console.log(new Date(ev.datetime).toLocaleString() + ' < ' + JSON.stringify(ev['proto/tm']).replace(/[{}"']/g, '') + "\r\n");
 				this.data += (new Date(ev.datetime)).toLocaleString() + " < " + JSON.stringify(ev['proto/tm']).replace(/[{}"']/g, '') + "\r\n";
 			}
 		}.bind(this))	;

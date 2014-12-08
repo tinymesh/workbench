@@ -8,7 +8,7 @@ module.exports = {
 	replace: true,
 	compiled: function () {
 		this.update()
-		this.$watch('params.network', this.update)
+		this.$watch('params.network', this.update);
 	},
 	data: function() {
 		return {
@@ -30,25 +30,14 @@ module.exports = {
 			if (Object.keys(this.errors).length > 0)
 				return;
 
-			this.network = client.network;
-			this.$promise.create({name: this.newnetwork}, {auth: this.$root.auth})
-				.then(function(resp) {
-					if (201 === resp.status) {
-						this.$set(network, resp.body);
-					}
-				});
+			this.network = client.network
+				.create({name: this.newnetwork}, {auth: this.$root.auth});
 		},
 		update: function() {
-			if (this.$root.networks.length === 0) {
-				this.$root.networks = client.network.list({auth: this.$root.$get('auth')})
-				this.$root.networks.$promise
-					.then(function(networks) {
-						this.$root.networks = networks;
-						this.network = _.find(networks, {key: this.$root.params.network});
-					}.bind(this));
-			} else {
+			this.$root.networks.$promise.then(function(networks) {
 				this.network = _.find(this.$root.networks, {key: this.$root.params.network});
-			}
+				this.networks.length = networks.length;
+			}.bind(this));
 		}
 	},
 	computed: {
