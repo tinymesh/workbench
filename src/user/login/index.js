@@ -42,7 +42,14 @@ module.exports = {
 					v.$root.onAuth(body);
 					v.$root.flash = undefined;
 					v.$root.user = client.user.get({auth: body});
-				});
+				},
+				function(err) {
+					if (err.statusType && err.status === 401) {
+						this.errFlash = "It seems like you entered some incorrect data, try again";
+					} else {
+						this.errFlash = "Ops, something went wrong. We are trying to figure it out, please try again later";
+					}
+				}.bind(this));
 		}
 	},
 	computed: {
