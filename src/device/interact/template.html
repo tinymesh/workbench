@@ -1,0 +1,24 @@
+<div v-with="device: device, params: params" class="row">
+	<div class="col-md-3">
+		<ul class="nav nav-stacked">
+			<li v-class="active: type === 'serial'"><a v-on="click: type = 'serial'">Serial</a></li>
+			<li v-class="active: type === 'command'"><a v-on="click: type = 'command'">Packets</a></li>
+		</ul>
+	</div>
+
+	<form v-on="submit: send">
+		<div class="col-md-9" v-if="type === 'serial'">
+			<pre>{{data}}</pre>
+			<input type="text" size="120" v-model="serialOut" />
+		</div>
+
+		<div class="col-md-9" v-if="type === 'command'">
+			<pre>{{data}}</pre>
+			<input type="text" size="120" v-model="cmdOut" v-on="change: cmdOutErr = undefined"/>
+
+			<div v-if="cmdOutErr" class="alert alert-danger">
+				Error parsing input, try something like <code>command: get_status</code>
+			</div>
+		</div>
+	</form>
+</div>

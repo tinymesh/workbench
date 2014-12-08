@@ -27,7 +27,7 @@ var app = new Vue({
     'device-overview': require('./device/overview'),
     'device-config': require('./device/config'),
 //    'device-query': require('./device/query'),
-//    'device-interact': require('./device/interact'),
+    'device-interact': require('./device/interact'),
     'error-404': require('./error/404'),
     'dashboard': require('./dashboard'),
     'network-setup-guide': require('./network/setup-guide')
