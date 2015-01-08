@@ -67,7 +67,7 @@ var defaultroute = function(view, callback) {
 		app.view = view;
 		callback();
 	} else {
-		app.view = store.get('prevAuth') ? 'user-login' : 'user-register';
+		app.view = 'user-login'; //store.get('prevAuth') ? 'user-login' : 'user-register';
 	}
 };
 app.router.on('/', function() {
