@@ -1,4 +1,4 @@
-<form id="loginform" class="form-horizontal" role="form" v-on="submit: login">
+<form id="loginform" class="form-horizontal" role="form" v-on="submit: login(email, password, $event)">
 
 	<div class="page-header">
 		<h3>Login</h3>
@@ -8,7 +8,7 @@
 			<b>Error:</b> {{errFlash}}
 	</div>
 
-	<div class="form-group" v-class="has-error: errors.email">
+	<div class="form-group" v-class="has-error: errors.email,has-warning: errors.credential">
 		<div class="input-group">
 			<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
 			<input
@@ -28,7 +28,7 @@
 		</div>
 	</div>
 
-	<div class="form-group" v-class="has-error: errors.password">
+	<div class="form-group" v-class="has-error: errors.password,has-warning: errors.credential">
 		<div class="input-group">
 			<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
 			<input
@@ -47,19 +47,18 @@
 		</div>
 	</div>
 
-
-
 	<div style="margin-top:10px" class="form-group">
 		<div class="col-sm-12 controls">
-			<button class="btn btn-success">
-				Login
+			<button
+				v-on="click: login(email, password, $event)"
+				v-attr="disabled: loginPromise"
+				v-class="'btn-spinner': loginPromise"
+				class="btn btn-success">
+
+				<span v-wb-spinner="loginPromise"></span>
+
+				<span v-if="loginPromise">Authenticating</span>
+				<span v-if="!loginPromise">Login</span>
 			</button>
-	<!--
-			&nbsp;
-			<label style="padding: 2px 1em; font-weight: normal;">
-				<input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
-				</label>
-		</div>
-	-->
 	</div>
 </form>

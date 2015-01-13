@@ -30,7 +30,7 @@ module.exports = {
 
 			if (!this.network || this.network.key !== this.params.network) {
 				this.$root.user.$promise.then(function(user) {
-					this.$root.networks.$promise.then(function(networks) {
+					this.networks.$promise.then(function(networks) {
 						this.network = _.find(networks, {key: this.params.network});
 						finddev();
 					}.bind(this));

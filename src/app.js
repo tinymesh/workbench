@@ -1,14 +1,14 @@
 require('insert-css')(require('./app.css'))
 
-
-var Vue = require('vue'),
-    Router = require('director').Router,
-    client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
+Vue = require('vue');
+var client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
     store = require('store'),
 	 pace = require('pace'),
     _ = require('lodash');
+    Finch = (require('./vendor/finch')).Finch;
 
 
+//client.$config.set('endpoint', 'http://31.169.50.34:8080');
 client.$config.set('endpoint', 'http://localhost:4000');
 
 pace.start({
@@ -17,124 +17,57 @@ pace.start({
 	}
 });
 
-var app = new Vue({
-  el: '#app',
-  components: {
-    'user-login': require('./user/login'),
-    'user-register': require('./user/register'),
-    'user-logout': require('./user/logout'),
-    'device': require('./device'),
-    'device-overview': require('./device/overview'),
-    'device-config': require('./device/config'),
-//    'device-query': require('./device/query'),
-    'device-interact': require('./device/interact'),
-    'error-404': require('./error/404'),
-    'dashboard': require('./dashboard'),
-    'network-setup-guide': require('./network/setup-guide')
-  },
-  // require html enabled by the partialify transform
-  template: require('./app.html'),
-  data: {
-		auth: false,
-		authenticated: false,
-		prevAuth: store.get('prevAuth?', false),
-		view: '',
-		networks: [],
-		user: undefined,
-		flash: "",
-		flashClass: "warning",
-		params: {},
-		router: new Router()
-  },
-  methods: {
-    onAuth: function(auth) {
-      app.$set('auth', auth);
-      app.$set('authenticated', true);
-      store.set('prevAuth?', true);
-      store.set('auth', auth);
-    }
-  },
-  directives: {
-    'fuzzy-date': require('./directives/fuzzy-date.js'),
-    'address': require('./directives/address.js'),
-  }
+require('./data');
+require('./directives/spinner');
+require('./navigation');
+require('./dashboard');
+require('./landingpage');
+require('./user/login');
+require('./user/logout');
+require('./user/register');
+
+
+
+//Vue.config.debug = true;
+app = new Vue({
+	el: '#app',
+	// require html enabled by the partialify transform
+	template: require('./app.html'),
+	data: {
+		view: undefined
+	},
 });
 
-var storedauth = store.get('auth');
+Finch.route('/', function() { app.$set('view', 'wb-landingpage'); });
 
-var defaultroute = function(view, callback) {
-	if (app.authenticated) {
-		app.view = view;
-		callback();
-	} else {
-		app.view = 'user-login'; //store.get('prevAuth') ? 'user-login' : 'user-register';
-	}
-};
-app.router.on('/', function() {
-	defaultroute('dashboard', function() {
-		app.$set('params.network', undefined);
-		app.$set('params.tab', undefined);
-	});
-});
+Finch.listen();
 
-app.router.on(/dashboard(?:\/([a-zA-Z0-9]+))?(?:\/([a-zA-Z0-9]+))?/, function(network, tab) {
-	app.view = 'dashboard';
-	defaultroute('dashboard', function() {
-		app.$set('params.network', network);
-		app.$set('params.tab', tab);
-	});
-});
+var auth = store.get('auth');
 
-app.router.on('/user/logout', function() {
-	if (store.get('auth'))
-		client.auth.logout({auth: store.get('auth')});
-
-	app.flash = "You logged out. See you soon :)";
-	app.flashClass = "warning";
-	app.view = 'user-login';
-});
-
-app.router.on(/device\/([^/]*)\/([^/]*)\/?(.*)$/, function(network, device, tab) {
-	defaultroute('device', function() {
-		app.$set('params.network', network);
-		app.$set('params.device', device);
-		app.$set('params.tab', tab);
-	});
-});
-
-app.router.configure({
-	notfound: function () {
-		app.$set('view', 'error-404');
-	}
-});
-
-if (storedauth) {
-	app.user = client.user.get({auth: storedauth});
-	app.user.$promise
+if (auth) {
+	app.$.data.user = client.user.get({auth: auth});
+	app.$.data.user.$promise
 		.then(function(user) {
-			app.onAuth(storedauth);
+			app.$.auth.onAuth(auth);
 
 			if ('#/user/logout' === window.location.hash)
-				app.router.init(window.location.hash = '/');
+				Finch.navigate('/');
 			else if (window.location.hash)
-				app.router.init(window.location.hash.replace(/^#/, ''))
+				Finch.navigate(window.location.hash.replace(/^#/, ''));
 			else
-				app.router.init(window.location.hash = '/');
-
-			app.$set('networks', client.network.list({auth: storedauth}));
+				Finch.navigate('/');
 
 			return resp;
 		},
 		function(resp) {
 			if (401 === resp.status) {
 				store.set('auth', null);
-				app.flash = "You have been logged out";
-				app.flashClass = "warning";
-				app.router.init('/');
-			} else {
-				app.router.init('/');
+				app.$.data.notify.set("You have been logged out", "warning");
 			}
+
+			Finch.navigate('/');
 		});
 } else {
-	app.router.init('/');
+	Finch.navigate('/');
 }
+

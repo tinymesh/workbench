@@ -10,7 +10,10 @@ module.exports = {
 		this.ev = client.message.stream(this.params.network, this.params.device, {auth: this.$root.auth});
 		this.ev.addEventListener('msg', function(ev) {
 			var ev = JSON.parse(ev.data);
-			if (ev.selector[1] !== this.params.device || !ev['proto/tm'])
+		
+			console.log(ev);
+
+			if (ev.selector[1] !== (this.params || {}).device|| !ev['proto/tm'])
 				return;
 
 			console.log(ev);
@@ -22,7 +25,7 @@ module.exports = {
 			} else {
 				this.data += (new Date(ev.datetime)).toLocaleString() + " < " + JSON.stringify(ev['proto/tm']).replace(/[{}"']/g, '') + "\r\n";
 			}
-		}.bind(this))	;
+		}.bind(this));
 	},
 	data: function () {
 		return {

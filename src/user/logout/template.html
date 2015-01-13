@@ -1,14 +1,14 @@
 		<div class="container">
 				<div id="user" class="row">
 					<div class="col-md-5 half-border-right right-border">
-						<div class="slidein" v-component="{{subview}}" v-transition></div>
+						<div class="slidein" v-component="{{$data.subview}}" v-transition></div>
 
 						<hr />
 						<p>
 						<a
 							 v-transition
-							 v-if="subview === 'user-login'"
-							 v-on="click: subview = 'user-register'">
+							 v-if="$data.subview === 'user-login'"
+							 v-on="click: $data.subview = 'user-register'">
 						 Don't have a account? Sign up here!!
 						</a>
 

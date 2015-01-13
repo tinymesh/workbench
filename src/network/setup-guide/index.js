@@ -6,6 +6,7 @@ var client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
 module.exports = {
 	template: require('./template.html'),
 	replace: true,
+	inherit: true,
 	data: function() {
 		return {
 			newnetwork: "",
@@ -16,10 +17,11 @@ module.exports = {
 		}
 	},
 	methods: {
-		createNetwork: function(e) {
+		createNetwork: function(name, e) {
+			console.log('mjau');
 			e.preventDefault();
 
-			if (!this.newnetwork)
+			if (!name)
 				this.$set('errors.newnetworkname', "You need to name your network");
 			else
 				delete this.errors.newnetworkname;
@@ -27,13 +29,23 @@ module.exports = {
 			if (Object.keys(this.errors).length > 0)
 				return;
 
-			client.network
-				.create({name: this.newnetwork}, {auth: this.$root.auth})
+
+			console.log('commence network creation',name);
+
+			this.$log();
+			this.network = client.network.create({auth: this.$root.auth}, {name: name});
+			this.network.$promise
 				.then(function(resp) {
 					if (201 === resp.status) {
 						this.$set(network, resp.body);
+						this.router.setRoute('/dashboard/' + this.network.key);
+						console.log('network created!', resp);
 					}
-				});
+				}.bind(this),
+				function(err) {
+					this.$root.$set('flash', 'failed to create network: ' + err.error.message);
+					console.log('failed to create network ' + err.error.message);
+				}.bind(this));
 		},
 		createChannel: function(e) {
 			e.preventDefault();
@@ -59,9 +71,8 @@ module.exports = {
 				type: 'gateway'
 			};
 
-			client.device
-				.create(this.network.key, payload, {auth: this.$root.auth})
-				.then(function(resp) {
+			client.device.create(this.network.key, payload, {auth: this.$root.auth})
+				.$promise.then(function(resp) {
 					if (201 === resp.status) {
 						// simply refetch the network
 						client.network
@@ -83,7 +94,7 @@ module.exports = {
 	},
 	computed: {
 		initialsetup: function() {
-			return 0 === this.networks.length;
+			return 0 === this.networks2.length;
 		},
 		haschannel: function() {
 			return undefined !== this.network && Object.keys(this.network.channels).length > 0;

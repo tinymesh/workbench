@@ -3,9 +3,12 @@ require('zxcvbn2');
 var client = require('tinymesh-cloud-client/tinymesh-cloud-client');
     store = require('store');
 
-module.exports = {
+Vue.component('wb-user-register', {
 	template: require('./template.html'),
 	replace: true,
+	created: function () {
+		console.log('created view: user/register', this);
+	},
 	data: function () {
 		return {
 			email: "",
@@ -69,4 +72,4 @@ module.exports = {
 			return null !== this.email.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/)
 		}
 	}
-}
+});

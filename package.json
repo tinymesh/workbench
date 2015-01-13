@@ -12,13 +12,13 @@
 	"main": "src/app.js",
 	"dependencies": {
 		"cloud-client": "git://github.com/lafka/tinymesh-cloud-client",
-		"director": "^1.2.3",
-		"vue": "git://github.com/yyx990803/vue#next",
+		"vue": "git://github.com/yyx990803/vue#0.11.4",
 		"bootstrap": "*",
 		"store": "*",
 		"zxcvbn": "git://github.com/buttercoin/node-zxcvbn.git#master",
 		"pace": "git://github.com/HubSpot/pace#master",
-		"lodash": "*"
+		"lodash": "*",
+		"promise": ">= 3.2.0"
 	},
 	"devDependencies": {
 		"uglify-js": "^2.4.15",
