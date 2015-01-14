@@ -1,36 +1,29 @@
 <div class="container">
 
-asdads
-
-	<div class="col-md-3" v-if="networks.length > 0" style="position:relative;">
+	<div class="col-md-3" v-if="!$root.$.data.initialSetup" style="position:relative;">
 		<div class="page-header">
 			<h4>Networks</h4>
 		</div>
 
 		<ul class="nav nav-stacked">
-			<li v-repeat="networks" v-class="active: key === params.network">
-				<a href="#/dashboard/{{key}}">{{name || key}}</a>
+			<li v-repeat="t" v-class="active: key === params.network">
+				<a href="#/dashboard/{{key}}">{{name || 'Unnamed Network'}} ({{key}})</a>
 			</li>
-
 		</ul>
 		<hr />
 		<ul class="nav nav-stacked">
-			<li v-class="active: undefined == params.network">
-				<a href="#/dashboard"><b>+</b> Create new network</a>
-			</li>
+			<li v-class="active: undefined == params.network"><a href="#/dashboard"><b>+</b> Create new network</a></li>
 		</ul>
 
 	</div>
 
-	<pre>{{$data|json}}</pre>
-
 	<div
-		v-class="'col-md-9': networks"
+		v-class="col-md-9: $root.$.data.networks,col-md-12: !$root.$.data.networks"
 		v-if="!params.network || !network">
 
 		<div
 			class="row"
-			v-component="network-setup-guide"></div>
+			v-component="wb-network-setup-guide"></div>
 	</div>
 
 
@@ -39,7 +32,7 @@ asdads
 			<div class="page-header">
 					<h4>{{network.name || "Unamed network"}}</h4>
 			</div>
-			<div class="no-margin" v-component="network-setup-guide"></div>
+			<div class="no-margin" v-component="wb-network-setup-guide"></div>
 
 			<div v-if="hasconnected" class="row padded">
 				<div class="col-xs-12">

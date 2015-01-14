@@ -5,9 +5,6 @@ var client = require('tinymesh-cloud-client/tinymesh-cloud-client');
 Vue.component('wb-user-login', {
 	template: require('./template.html'),
 	replace: true,
-	created: function () {
-		console.log('created view: user/login', this);
-	},
 	data: function () {
 		return {
 			email: "",
@@ -45,8 +42,10 @@ Vue.component('wb-user-login', {
 				.then(function(body) {
 					v.$root.$.auth.onAuth(body);
 					v.$root.$.data.user = client.user.get({auth: body});
+					this.loginPromise = undefined;
 				},
 				function(err) {
+					this.loginPromise = undefined;
 					// @todo add notify shit
 					if (err.statusType && err.status === 401) {
 						this.$root.$.notify.set('It seems your details are incorrect, give it another go!');
@@ -57,9 +56,6 @@ Vue.component('wb-user-login', {
 							'Ops, something went wrong. We are trying to figure it out, please try again later',
 							'danger');
 					}
-				}.bind(this))
-				.done(function() {
-					this.loginPromise = undefined;
 				}.bind(this));
 		}
 	},

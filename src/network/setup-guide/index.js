@@ -1,9 +1,10 @@
 require('insert-css')(require('./style.css'));
 
 var client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
+    Vue = require('vue'),
     _ = require('lodash');
 
-module.exports = {
+Vue.component('wb-network-setup-guide', {
 	template: require('./template.html'),
 	replace: true,
 	inherit: true,
@@ -12,13 +13,13 @@ module.exports = {
 			newnetwork: "",
 			channelname: "",
 			channeluid: "1",
-			network: undefined,
 			errors: {},
+			channelPromise: undefined,
+			networkPromise: undefined,
 		}
 	},
 	methods: {
 		createNetwork: function(name, e) {
-			console.log('mjau');
 			e.preventDefault();
 
 			if (!name)
@@ -29,22 +30,21 @@ module.exports = {
 			if (Object.keys(this.errors).length > 0)
 				return;
 
+			this.$root.$.data.network = client.network.create(
+				{auth: this.$root.$.auth.data},
+				{name: name}
+			);
 
-			console.log('commence network creation',name);
-
-			this.$log();
-			this.network = client.network.create({auth: this.$root.auth}, {name: name});
-			this.network.$promise
-				.then(function(resp) {
-					if (201 === resp.status) {
-						this.$set(network, resp.body);
-						this.router.setRoute('/dashboard/' + this.network.key);
-						console.log('network created!', resp);
-					}
+			this.networkPromise = this.$root.$.data.network.$promise;
+			this.networkPromise.then(function(network) {
+					this.$set('networkPromise', undefined);
+					this.$root.$.data.networks.push(network);
+					this.$root.$.data.$set('network', network);
+					Finch.navigate('/dashboard/' + network.key);
 				}.bind(this),
 				function(err) {
-					this.$root.$set('flash', 'failed to create network: ' + err.error.message);
-					console.log('failed to create network ' + err.error.message);
+					this.networkPromise = undefined;
+					this.$root.$.notify.set('Failed to create network: ' + err.error.message, 'danger');
 				}.bind(this));
 		},
 		createChannel: function(e) {
@@ -71,36 +71,33 @@ module.exports = {
 				type: 'gateway'
 			};
 
-			client.device.create(this.network.key, payload, {auth: this.$root.auth})
-				.$promise.then(function(resp) {
-					if (201 === resp.status) {
-						// simply refetch the network
-						client.network
-							.get(this.network.key, {auth: this.$root.auth})
-							.then(function(resp) {
-								if (200 === resp.status) {
-									this.$set('network', resp.body);
-								}
-							}.bind(this));
-					} else if (409 === resp.status) {
-						this.$set('errors.uid', "It seems like something already occupies this address");
-					} else {
-						this.flashClass = "danger";
-						this.flash = "Sorry, we could not create the device...\n";
-						this.flash = '<pre>' + resp.text + '</pre>';
-					}
-				}.bind(this));
+			this.channelPromise = client.device.create(
+				{ auth: this.$root.$.auth.data },
+				payload,
+				{ network: this.network.key }
+			).$promise;
+
+			this.channelPromise.then(function(resp) {
+				this.channelPromise = undefined;
+				this.network.$get({auth: this.$root.$.auth.data})
+					.$promise.then(function(vals) {
+						this.$root.$.data.$set('network', vals);
+						this.$root.$.data.$set('network.channels', vals.channels);
+					}.bind(this));
+			}.bind(this), function(err) {
+				this.channelPromise = undefined;
+				if (409 === err.status) {
+					this.$set('errors.uid', "It seems like something already occupies this address");
+					this.network.$get({auth: this.$root.$.auth.data});
+				} else {
+					this.$root.$.notify.set('Ops, an error occured: ' + err.error, 'danger');
+				}
+			}.bind(this));
 		}
 	},
 	computed: {
-		initialsetup: function() {
-			return 0 === this.networks2.length;
-		},
-		haschannel: function() {
-			return undefined !== this.network && Object.keys(this.network.channels).length > 0;
-		},
-		connected: function() {
-			return this.haschannel && undefined !== this.network.channels[Object.keys(this.network.channels)[0]].last;
+		network: function() {
+			return this.$root.$.data.network;
 		},
 		address: function() {
 			if (this.channeluid.match(/^(?:[0-9a-f]{1,2}:){0,3}[0-9a-f]{1,2}$/i)) {
@@ -118,15 +115,21 @@ module.exports = {
 			}
 		},
 		chanuidbytes: function() {
+			if (!this.network)
+				return [];
+
 			var key = Object.keys(this.network.channels)[0];
 			return _.filter(("00000000" + this.network.devicemap[key].address.toString(16))
 				.slice(-8, 16)
 				.split(/(..)/));
 		},
 		nidbytes: function() {
+			if (!this.network)
+				return [];
+
 			return _.filter(("00000000" + parseInt(this.network.key, 36).toString(16))
 				.slice(-8, 16)
 				.split(/(..)/));
 		}
 	}
-};
+});

@@ -8,12 +8,9 @@ var addDashboardRoute = require('./dashboard');
 // Authentication storage and methods
 Vue.component('wb-auth', {
 	name: 'auth',
-	created: function () {
-		console.log('created auth', this);
-	},
 	data: function() {
 		return {
-			data: {},
+			data: client.auth.login({future: true}),
 			authenticated: false
 		};
 	},
@@ -25,23 +22,20 @@ Vue.component('wb-auth', {
 
 			this.$set('data', auth);
 			this.$set('authenticated', true);
-			this.$root.$.data.networks = client.network.list({auth: auth});
+			this.$root.$.data.networks.$fulfil({auth: auth});
 
-			console.log(addDashboardRoute());
+			addDashboardRoute();
 			if ('#/user/logout' === window.location.hash)
 				Finch.navigate('/');
 			else
 				Finch.reload();
 		}
-	},
+	}
 });
 
 Vue.component('wb-notify', {
 	name: 'notify',
 	template: "#notifytpl",
-	created: function () {
-		console.log('created notify', this);
-	},
 	methods: {
 		set: function(msg, cssclass) {
 			this.messages = [{
@@ -69,18 +63,38 @@ Vue.component('wb-notify', {
 // Shared data for all components
 Vue.component('wb-data', {
 	name: 'data',
-	created: function () {
-		console.log('created data', this);
+	compiled: function() {
+		this.$watch('params.network', function(key) {
+			this.networks.$promise.then(function(networks) {
+				this.$set('network', _.find(networks, {key: key}));
+			}.bind(this));
+		});
 	},
 	data: function() {
 		return {
 			params: {},
 
 			network: undefined,
-			networks: [],
+			networks: client.network.list({future: true}),
 
-			user: undefined,
+			user: undefined
 		};
+	},
+	computed: {
+		hasNetworks: function() {
+			return this.networks.length > 0;
+		},
+		initialSetup: function() {
+			if (!this.hasNetworks) {
+				return true;
+			} else if (1 === this.networks.length) {
+				return !_.any(this.networks, function(net) {
+					return net.haveConnected();
+				});
+			}
+
+			return false;
+		},
 	}
 });
 

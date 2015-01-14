@@ -6,9 +6,6 @@ var client = require('tinymesh-cloud-client/tinymesh-cloud-client');
 Vue.component('wb-user-register', {
 	template: require('./template.html'),
 	replace: true,
-	created: function () {
-		console.log('created view: user/register', this);
-	},
 	data: function () {
 		return {
 			email: "",
