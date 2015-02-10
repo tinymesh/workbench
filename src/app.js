@@ -1,4 +1,4 @@
-require('insert-css')(require('./app.css'))
+require('!style!css!./app.css');
 
 Vue = require('vue');
 var client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
@@ -19,6 +19,8 @@ pace.start({
 
 require('./data');
 require('./directives/spinner');
+require('./directives/modal');
+require('./directives/address');
 require('./navigation');
 require('./dashboard');
 require('./landingpage');
@@ -27,15 +29,97 @@ require('./user/logout');
 require('./user/register');
 
 
+//chrome.runtime.sendMessage('ekiongijgijoaliebinoaneidfclgilc',
+//	'ping',
+//	function(resp) {
+//		console.log(resp);
+//		hasChromeApp = 'pong' === resp;
+//	});
+
+var chromePort = chrome.runtime.connect('ekiongijgijoaliebinoaneidfclgilc', {name: "tinyconnector"});
+var hasChromeApp = false;
+chromePort.onDisconnect.addListener(function(port) {
+	// extension reloaded or crashed....
+	console.log('disconnect', port);
+});
+
+chromePort.onMessage.addListener(function(msg) {
+	console.log('msg', msg);
+});
+
+var callbackOnId = function(ev, id, callback) {
+	var listener = ( function(port, id) {
+		var handler = function(msg) {
+			console.log('recv msg', id, msg);
+			if (msg.id === id) {
+				ev.removeListener(handler);
+				callback(msg);
+			}
+		}
+
+		return handler;
+
+	})(ev, id, callback);
+	ev.addListener(listener);
+};
 
 //Vue.config.debug = true;
 app = new Vue({
 	el: '#app',
 	// require html enabled by the partialify transform
-	template: require('./app.html'),
-	data: {
-		view: undefined
+	template: require('!raw!./app.html'),
+	compiled: function() {
+		this.msgChromeApp({command: "ping"}, function(resp) {
+			hasChromeApp = 'pong' === resp.ping;
+		});
+
 	},
+	data: {
+		view: undefined,
+		modal:{
+			comp: undefined,
+			show: false,
+			dismissable: true
+		}
+	},
+	methods: {
+		msgChromeApp: function(msg, callback) {
+			if (callback) {
+				var id = Math.random().toString(36);
+				callbackOnId(this.chromePort.onMessage, id, callback);
+				msg.id = id;
+			}
+
+			console.log('postMsg', id);
+			this.chromePort.postMessage(msg);
+		}
+	},
+	computed: {
+		isChrome: function() {
+			var isChromium = window.chrome,
+				vendorName = window.navigator.vendor;
+			return isChromium !== null && isChromium !== undefined && vendorName === "Google Inc.";
+		},
+
+		hasChromeApp: function() {
+			return hasChromeApp;
+		},
+
+		chromePort: function() {
+			return chromePort;
+		},
+
+		platform: function() {
+			if (this.isChrome)
+				return "chrome";
+
+			var match = navigator.platform.replace(/[^a-zA-Z]*/, '').toLowerCase();
+			if (match.match(/^mac/))
+				return "mac";
+
+			return match;
+		}
+	}
 });
 
 Finch.route('/', function() { app.$set('view', 'wb-landingpage'); });

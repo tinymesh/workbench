@@ -1,5 +1,9 @@
 @charset "utf-8";
 
+h1,h2,h3,h4,h5,h6 {
+	font-weight: bold;
+}
+
 a { cursor: pointer; }
 
 .capitalize { text-transform: capitalize; }
@@ -139,3 +143,59 @@ footer .links li.active a { font-weight: bold; }
 }
 
 .row.main { margin-top: 40px; }
+
+#modal {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	visibility: hidden;
+	opacity: 0;
+	background: rgba(0, 0, 0, 0.5);
+}
+	#modal.active {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	#modal .popup {
+		position: absolute;
+		display: inline-block;
+		max-width: 70%;
+		margin: 0% 25%;
+		z-index: 2;
+		padding: 0px 20px 20px;
+
+		background: white;
+		box-shadow: 0px 0px 20px rgba( 0, 0, 0, 0.6 );
+		border-radius: 3px;
+
+		-webkit-transform: scale( 0.8 );
+		   -moz-transform: scale( 0.8 );
+		    -ms-transform: scale( 0.8 );
+		     -o-transform: scale( 0.8 );
+		        transform: scale( 0.8 );
+	}
+
+		#modal button.close {
+			position: absolute;
+			top: 25px;
+			right: 5px;
+		}
+
+		#modal .content {
+			position: relative;
+			display: inline-block;
+			padding: 20px;
+			height: 100%;
+			margin: auto;
+		}
+
+.dummy-block {
+	display: inline-block;
+	background: #f3f3f3;
+	width: 100%;
+}
+

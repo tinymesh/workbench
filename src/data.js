@@ -16,6 +16,7 @@ Vue.component('wb-auth', {
 	},
 	methods: {
 		onAuth: function(auth) {
+			delete auth.$promise; // not serializable
 			store.set('prevAuth?', true);
 			store.set('auth', auth);
 
@@ -51,6 +52,9 @@ Vue.component('wb-notify', {
 		},
 		remove: function(ref) {
 			delete this.messages[ref];
+		},
+		clear: function() {
+			this.messages = [];
 		}
 	},
 	data: function() {
@@ -64,9 +68,11 @@ Vue.component('wb-notify', {
 Vue.component('wb-data', {
 	name: 'data',
 	compiled: function() {
+		// This is completely fucked.......
+		// the `networks` key is cursed!!!!
 		this.$watch('params.network', function(key) {
 			this.networks.$promise.then(function(networks) {
-				this.$set('network', _.find(networks, {key: key}));
+				this.network = _.find(networks, {key: key});
 			}.bind(this));
 		});
 	},
@@ -76,8 +82,12 @@ Vue.component('wb-data', {
 
 			network: undefined,
 			networks: client.network.list({future: true}),
+			networks2: client.network.list({future: true}),
 
-			user: undefined
+			user: {
+				name: "",
+				email: ""
+			}
 		};
 	},
 	computed: {
@@ -85,7 +95,10 @@ Vue.component('wb-data', {
 			return this.networks.length > 0;
 		},
 		initialSetup: function() {
-			if (!this.hasNetworks) {
+			if (undefined !== store.get('skipInitialSetup')) {
+				// allow resetting skipInitialSetup
+				return !store.get('skipInitialSetup');
+			} else if (!this.hasNetworks) {
 				return true;
 			} else if (1 === this.networks.length) {
 				return !_.any(this.networks, function(net) {
@@ -95,6 +108,15 @@ Vue.component('wb-data', {
 
 			return false;
 		},
+		setupSkipped: function() {
+			return true === store.get('skipInitialSetup');
+		}
+	},
+	methods: {
+		skipInitialSetup: function(e) {
+			e.preventDefault();
+			store.set('skipInitialSetup', true);
+		}
 	}
 });
 

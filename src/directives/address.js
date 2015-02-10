@@ -1,12 +1,11 @@
-(function() {
-	var _ = require('lodash');
-	module.exports = function(uid){
-		if (!uid)
+Vue.directive('wb-address', {
+	bind: function (args) { },
+	update: function (newValue, oldValue) {
+		if (!newValue)
 			return;
 
-		var parts = _.map(_.filter(("0000000" + uid.toString(16)).substr(-8, 8).split(/^(..)(..)(..)(..)$/g)),
+		var parts = _.map(_.filter(("0000000" + newValue.toString(16)).substr(-8, 8).split(/^(..)(..)(..)(..)$/g)),
 			function(m) { return parseInt(m, 16).toString(); });
-
 
 		switch ((this.el.attributes[this.name + "-endian"] || {}).value || "little") {
 			case "normal":
@@ -19,5 +18,6 @@
 				this.el.innerText = parts.reverse().join('.')
 				break;
 		}
-	};
-})();
+	},
+	unbind: function () { }
+})

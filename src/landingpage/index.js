@@ -1,5 +1,5 @@
 Vue.component('wb-landingpage', {
-	template: require('./template.html'),
+	template: require('!raw!./template.html'),
 	data: function() {
 		return {
 			subview: 'wb-user-login'

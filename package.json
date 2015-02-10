@@ -7,7 +7,7 @@
   },
   "version": "0.0.0",
   "scripts": {
-    "dev": "watchify -e src/app.js -t partialify -o build/build.js"
+    "dev": "webpack-dev-server --progress --colors"
   },
   "main": "src/app.js",
   "dependencies": {
@@ -17,14 +17,14 @@
     "pace": "git://github.com/HubSpot/pace#master",
     "promise": ">= 3.2.0",
     "store": "*",
-    "vue": "git://github.com/yyx990803/vue#0.11.4",
+    "vue": "git://github.com/yyx990803/vue#0.11.5",
     "zxcvbn": "git://github.com/buttercoin/node-zxcvbn.git#master"
   },
   "devDependencies": {
-    "uglify-js": "^2.4.15",
-    "insert-css": "^0.2.0",
-    "partialify": "^3.1.1",
-    "watchify": "^1.0.6",
-    "vueify": "*"
+		"css-loader": "^0.9.0",
+		"style-loader": "^0.8.1",
+		"raw-loader": "*",
+		"vue-loader": "*",
+		"webpack": "^1.4.4"
   }
 }

@@ -1,0 +1,81 @@
+
+<div>
+	<div
+		class="install-chrome"
+		v-if="!$root.isChrome"
+		id="install-google-chrome">
+		 <div class="page-header">
+			 <h3>Install Chrome</h3>
+		 </div>
+
+		 <div>
+			 <p class="lead">You are not using Chrome as your browser.</p>
+			 <p>
+				 To use this method of connection you need to use the
+				 chrome web browser.
+			 </p>
+			 <p>
+				 <a class="btn btn-primary" href="https://www.google.com/chrome/browser/desktop/">Download Chrome</a>
+			 </p>
+		 </div>
+	</div>
+
+	<div
+		 v-if="!$root.hasChromeApp"
+		 id="install-tinyconnector-box">
+		 <div class="col-xs-12 page-header">
+			 <h3>Install Chrome extension</h3>
+		 </div>
+
+		 <p class="col-xs-8">
+			 Install the <a href="https://chrome.google.com/webstore/detail/gggiioljfnkabofaoknolicdlnjadcpn">Tinyconnector software</a>
+			 from Chrome Web Store. The extensions accesses the Tinymesh Gateway device
+			 through it's serial port, configuring all the parameters
+			 and connecting to the cloud service.
+		 </p>
+		 <div class="col-xs-4">
+			 <button
+					class="btn btn-info"
+					v-on="click: installChromeApp($event)"
+					id="tinyconnector-install-button">Add to Chrome</button>
+		 </div>
+	 </div>
+
+
+	<div
+		v-if="$root.hasChromeApp && !port"
+		id="tinyconnector-list">
+
+		 <div class="col-xs-12 page-header">
+			 <h3>Connect Tinymesh Gateway</h3>
+		 </div>
+
+		<ul v-if="ports.length > 0" class="nav nav-stacked">
+			<li v-repeat="e: ports" v-class="active: port.path === e.path">
+				<a v-on="click: port = e">{{port.path}}</a>
+			</li>
+		</ul>
+
+		<div v-if="ports.length == 0">
+			You don't have any serial ports???
+		</div>
+	</div>
+</div>
+<!--
+
+<div id="run-tinyconnector-box">
+	<div class="col-xs-12 page-header">
+		<h4>Run Tinyconnector</h4>
+	</div>
+
+	<p class="col-xs-8">
+		You already have Tinyconnector installed; Great!<br />
+		You just need to select the correct serial port and we
+		will connect you!
+	</p>
+	<div class="col-xs-4">
+		<button class="btn btn-info" v-on="click: provisionWithChrome($event, network.key, address)" id="tinyconnector-launch-button">Auto provision</button>
+	</div>
+</div>
+</div>
+</div>

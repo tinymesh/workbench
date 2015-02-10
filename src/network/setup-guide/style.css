@@ -120,3 +120,30 @@ height: 8px;
 }
 
 
+
+
+.btn .hover {
+	position: absolute;
+	bottom: -18px;
+	font-size: 12px;
+	font-weight: normal;
+	left: 0;
+	text-align: center;
+	width: 100%;
+}
+
+.btn-help {
+	font-weight: bold;
+	font-size:24px;
+	line-height:12px;
+	padding: 10px;
+	color: #fff;
+	position: relative;
+	background: #ddd;
+}
+	.btn-help:hover, .btn-help:active, .btn-help.active {
+		color: #333;
+	}
+	.btn-help:before {
+		content: "?";
+	}

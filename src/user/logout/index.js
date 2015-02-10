@@ -10,7 +10,7 @@ Finch.route('/user/logout', function() {
 });
 
 Vue.component('wb-user-logout', {
-  template: require('./template.html'),
+  template: require('!raw!./template.html'),
   replace: true,
   data: function () {
 		return {

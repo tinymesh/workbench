@@ -1,9 +1,9 @@
-require('insert-css')(require('./style.css'))
+require('!style!css!./style.css');
 
 var client = require('tinymesh-cloud-client/tinymesh-cloud-client');
 
 Vue.component('wb-user-login', {
-	template: require('./template.html'),
+	template: require('!raw!./template.html'),
 	replace: true,
 	data: function () {
 		return {
@@ -43,7 +43,8 @@ Vue.component('wb-user-login', {
 					v.$root.$.auth.onAuth(body);
 					v.$root.$.data.user = client.user.get({auth: body});
 					this.loginPromise = undefined;
-				},
+					this.$root.$.notify.clear();
+				}.bind(this),
 				function(err) {
 					this.loginPromise = undefined;
 					// @todo add notify shit

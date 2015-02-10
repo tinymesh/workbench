@@ -1,13 +1,26 @@
-require('insert-css')(require('./style.css'));
+require('!style!css!./style.css');
+
+require('../tinyconnector-provision');
 
 var client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
     Vue = require('vue'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    Promise = require('../../es6-promise');
 
 Vue.component('wb-network-setup-guide', {
-	template: require('./template.html'),
+	template: require('!raw!./template.html'),
 	replace: true,
 	inherit: true,
+	compiled: function() {
+		switch (this.$root.platform) {
+			case "chrome":
+			case "win":
+			case "linux":
+			case "mac":
+				this.configureTab = this.$root.platform;
+				break;
+		}
+	},
 	data: function() {
 		return {
 			newnetwork: "",
@@ -16,6 +29,11 @@ Vue.component('wb-network-setup-guide', {
 			errors: {},
 			channelPromise: undefined,
 			networkPromise: undefined,
+			configureTab: 'chrome',
+			provisionWithChrome: false,
+			view: {
+				helpText: false
+			}
 		}
 	},
 	methods: {
@@ -93,6 +111,106 @@ Vue.component('wb-network-setup-guide', {
 					this.$root.$.notify.set('Ops, an error occured: ' + err.error, 'danger');
 				}
 			}.bind(this));
+		},
+		provisionWithChrome: function(e, nid, uid) {
+			e.preventDefault();
+
+			this.$root.modal.show = true;
+			this.$root.modal.comp = 'wb-network-tinyconnector-provision';
+
+//			var callback = function(resp) {
+//				// just reload the entire thing...
+//				return this.network.$get({auth: this.$root.$.auth.data})
+//			};
+//
+//			this.channelPromise = this.launchChromeApp(e, {
+//				command: 'provision',
+//				provision: {
+//					nid: nid,
+//					uid: uid,
+//					type: uid ? 'provision' : 'auto-provision'
+//				}
+//			}, callback).then(function(resp) {
+//				switch (resp.status) {
+//					case "connected":
+//						this.$root.$.notify.set('Provision was succesfull', 'success');
+//						break;
+//
+//					case "provisioned":
+//						this.$root.$.notify.set('Device provisioned, but could not connect', 'warning');
+//						break;
+//
+//					case "wait-for-config":
+//						this.$root.$.notify.set('wait for config button', 'warning');
+//						break;
+//
+//					case "no-port":
+//						this.$root.$.notify.set('no port selected', 'warning');
+//						break;
+//
+//					default:
+//						this.$root.$.notify.set('An error occured. Unexpected return status: ' + resp.status, 'danger');
+//						break;
+//				}
+//			});
+		},
+		callChromeApp: function(e, cmd, opts) {
+			/*
+			 * Provision by using the chrome app
+			 *
+			 * # Provision command:
+			 *
+			 * Send a command of the form:
+			 * ```
+			 * {
+			 * 	nid: (integer) the network id as a number
+			 * 	uid: (integer|undefined) the uid of the gateway, use
+			 * 	     undefined to autodetect (will trigger a 'provisioned'
+			 * 	     response)
+			 *    type: 'auto-provision' | 'provision'
+			 * }
+			 * ```
+			 *
+			 * The provisioning works in two ways:
+			 * "auto-provision" -> By automatically detecting the UID of gateway and setting NID manually
+			 * "provision"      -> By giving a specific UID and NID to the device
+			 *
+			 * The response is an object of the form:
+			 * ```
+			 * {
+			 * 	"status": "connected" | "provisioned"  | "wait-for-config" | "no-port",
+			 * 	"ports": [], // list of serial ports (for status := "no-port")
+			 * 	"port": {}, //  port object  (for all status !src/network/setup-guide/index.js= * 	"no-port")
+			 * 	"device": {}, // device info containing nid & uid (for * 	status := ("provisioned" || "connected")),
+			 * }
+			 * ```
+			 */
+
+			var ctx = this;
+			opts = opts || {};
+
+			return new Promise(function(resolve, reject) {
+				if (!this.$root.hasChromeApp)
+					return;
+
+				if (opts.timeout) {
+					var timer = setTimeout(function() {
+						console.log('tinyconnector-err: timeout....');
+						reject(ctx, new Error('timeout'));
+					}, opts.timeout || 5000)
+				}
+
+				console.log('tinyconn-req: ', msg);
+				this.$root.msgChromeApp(cmd, function(resp) {
+					console.log('tinyconnector-resp: ', resp, this);
+					if (opts.callback)
+						opts.callback();
+
+					resolve.call(ctx, resp);
+				});
+
+			}.bind(this));
+
 		}
 	},
 	computed: {

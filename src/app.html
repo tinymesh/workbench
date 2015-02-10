@@ -1,8 +1,11 @@
 <div>
+
 	<div v-component="wb-data" v-ref="data"></div>
 	<div v-component="wb-auth" v-ref="auth"></div>
+
 	<div v-component="wb-navigation" v-ref="navigation"></div>
 	<div v-component="wb-notify" v-ref="notify" id="notify"></div>
+
 	<script type="x-template" id="notifytpl">
 		<div v-if="messages.length > 0">
 			<div v-attr="'class': 'alert alert-dismissible alert-' + (messages[0].cssclass || 'warning')">
@@ -18,11 +21,22 @@
 		</div>
 	</script>
 
+	<div
+		v-wb-modal="false !== modal.show && modal.comp"
+		id="modal">
+		<div class="popup">
+			 <!--<div class="content" v-component="{{modalComp}}"></div>-->
+			<div class="content">
+				<button type="button" class="close" v-on="click: modal.show = false"><span>&times;</span></button>
+				<div v-component="{{modal.comp}}"></div>
+			</div>
+		</div>
+	</div>
+
 
   <div v-component="{{$root.view}}">
 		<div class="container">
 			<h1>Loading</h1>
 		</div>
 	</div>
-
 </div>

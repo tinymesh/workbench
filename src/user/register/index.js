@@ -1,10 +1,10 @@
-require('insert-css')(require('./style.css'))
+require('!style!css!./style.css');
 require('zxcvbn2');
 var client = require('tinymesh-cloud-client/tinymesh-cloud-client');
     store = require('store');
 
 Vue.component('wb-user-register', {
-	template: require('./template.html'),
+	template: require('!raw!./template.html'),
 	replace: true,
 	data: function () {
 		return {

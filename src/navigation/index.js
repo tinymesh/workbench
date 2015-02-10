@@ -1,4 +1,4 @@
 Vue.component('wb-navigation', {
-	template: require('./template.html'),
+	template: require('!raw!./template.html'),
 });
 
