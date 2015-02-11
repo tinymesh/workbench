@@ -1,7 +1,7 @@
     _ = require('lodash');
 var Vue = require('vue'),
     store = require('store'),
-    client = require('tinymesh-cloud-client/tinymesh-cloud-client');
+    client = require('tinymesh-cloud-client');
 
 var addDashboardRoute = require('./dashboard');
 

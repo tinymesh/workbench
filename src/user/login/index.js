@@ -1,6 +1,6 @@
 require('!style!css!./style.css');
 
-var client = require('tinymesh-cloud-client/tinymesh-cloud-client');
+var client = require('tinymesh-cloud-client');
 
 Vue.component('wb-user-login', {
 	template: require('!raw!./template.html'),

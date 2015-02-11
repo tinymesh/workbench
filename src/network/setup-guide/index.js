@@ -2,7 +2,7 @@ require('!style!css!./style.css');
 
 require('../tinyconnector-provision');
 
-var client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
+var client = require('tinymesh-cloud-client'),
     Vue = require('vue'),
     _ = require('lodash'),
     Promise = require('../../es6-promise');

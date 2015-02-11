@@ -1,7 +1,7 @@
 require('!style!css!./style.css');
 
 var
-	client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
+	client = require('tinymesh-cloud-client'),
 	_ = require('lodash'),
 	Vue = require('vue'),
 	Finch = (require('../vendor/finch')).Finch,

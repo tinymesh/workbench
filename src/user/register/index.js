@@ -1,6 +1,6 @@
 require('!style!css!./style.css');
 require('zxcvbn2');
-var client = require('tinymesh-cloud-client/tinymesh-cloud-client');
+var client = require('tinymesh-cloud-client');
     store = require('store');
 
 Vue.component('wb-user-register', {

@@ -1,6 +1,6 @@
 require('insert-css')(require('./style.css'))
 
-var client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
+var client = require('tinymesh-cloud-client'),
 	Vue = require('vue'),
 	Finch = (require('../../vendor/finch')).Finch;
 

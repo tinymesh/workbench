@@ -1,7 +1,7 @@
 require('!style!css!./app.css');
 
 Vue = require('vue');
-var client = require('tinymesh-cloud-client/tinymesh-cloud-client'),
+var client = require('tinymesh-cloud-client'),
     store = require('store'),
 	 pace = require('pace'),
     _ = require('lodash');
