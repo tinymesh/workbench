@@ -49,9 +49,11 @@ Vue.component('dashboard', {
 				address: undefined,
 				type: "device"
 			},
+			deviceError: {},
 			viewOpts: {
 				field: 'address',
-				reverse: false
+				reverse: false,
+				addressType: '',
 			}
 		}
 	},
@@ -80,8 +82,8 @@ Vue.component('dashboard', {
 			}.bind(this));
 		},
 		provision: function(device, e) {
-			device.address = parseInt(device.address || "");
 			e.preventDefault();
+
 			this.devicePromise = client.device.create(
 				{auth: this.$root.$.auth.data},
 				device,
@@ -133,6 +135,50 @@ Vue.component('dashboard', {
 			return _.map(this.network.types, function(v, k) {
 				return {text: v.name || k, value: k};
 			});
+		},
+		deviceAddress: {
+			get: function() {
+				return this.newdevice.address;
+			},
+			set: function(value) {
+				// convert ip like format into long
+				if (value.match(/\./)) {
+					this.viewOpts.addressType = 'Decimal Address';
+					if (!value.match(/^([0-9]{0,3}(?:\.|$)){1,4}$/)) {
+						this.$set('deviceError.address', "Invalid address format");
+						return;
+
+					}
+					value = parseInt(x = _.foldl(value.split(/\./).concat(["0","0","0","0"]).slice(0, 4), function(acc, e, i) {
+						return ("0" + parseInt(e || "0").toString(16)).slice(-2, 4) + acc
+					}, ""), 16);
+				} else if (value.match(/:/) || value.match(/[a-f]/i)) {
+					this.viewOpts.addressType = 'HEX Address';
+					if (!value.match(/^([a-f0-9]{0,2}(?::|$)){1,4}$/)) {
+						this.$set('deviceError.address', "Invalid hex format");
+						this.newdevice.address = undefined;
+						return;
+					}
+
+					value = parseInt(_.foldl(value.split(/:/), function(acc, e, i) {
+						return ("00" + (e || "")).slice(-2, 4) + acc;
+					}, ""), 16);
+				} else {
+					this.$set('deviceError.address', undefined);
+					this.viewOpts.addressType = 'Int Address';
+				}
+
+				if (0x00ffffff === (value & 0x00ffffff)) {
+					this.$set('deviceError.address', 'You cannot use group address for device');
+					this.newdevice.address = undefined;
+				} else if (value > 0 && value <= 0xFFFFFFFF) {
+					this.$set('deviceError.address', undefined);
+					this.newdevice.address = value;
+				} else {
+					this.$set('deviceError.address', 'Address must be in range 0 - ' + 0xffffffff);
+					this.newdevice.address = undefined;
+				}
+			}
 		}
 	}
 });

@@ -199,3 +199,22 @@ footer .links li.active a { font-weight: bold; }
 	width: 100%;
 }
 
+.inline-label {
+	width: auto;
+	height: auto;
+	margin: 8px 5px 0 0;
+}
+
+.inline-label.label-danger {
+	color: #fff;
+}
+
+input.keep-placeholder + .placeholder {
+	position: absolute;
+	top: 7px;
+	left: 13px;
+	display: none;
+}
+input:focus.keep-placeholder + .placeholder {
+	color: red;
+}

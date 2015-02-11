@@ -203,16 +203,26 @@
 												placeholder="Device name"/>
 								</div>
 							</div>
-							<div class="form-group col-xs-4">
+							<div class="form-group col-xs-4" v-class="has-error: deviceError.address">
 								<label for="device-name">Device UID</label>
-								<div>
+								<div class=" has-feedback">
 									<input
-												v-model="newdevice.address"
+												v-model="deviceAddress"
 												type="text"
 												class="form-control"
 												id="device-uid"
 												name="device-uid"
-												placeholder="0.0.0.0"/>
+												placeholder="0.0.0.0" />
+									<span
+										class="form-control-feedback inline-label label"
+										v-class="label-info: !deviceError.address,label-danger: deviceError.address">{{viewOpts.addressType}}</span>
+									<p v-if="deviceError.address" class="help-block">{{deviceError.address}}</p>
+									<p class="help-block mute">
+										Enter device address either as hex
+										<code>`00:00:00:00`</code> or binary
+										<code>`0.0.0.0`</code>.
+									</p>
+									{{newdevice.address}}
 								</div>
 							</div>
 							<div class="form-group col-xs-4">
