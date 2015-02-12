@@ -87,7 +87,7 @@
 								<label class="col-xs-4 control-label">Network ID</label>
 								<div class="col-xs-8">
 									<p class="form-control-static">
-										 {{network.key}} &ndash; <span v-wb-address="network.address" wb-address-endian="big"></span>
+										 {{network.key}} &ndash; <span class="mono" v-wb-address="network.address" wb-address-endian="big"></span>
 									</p>
 								</div>
 							</div>
@@ -152,7 +152,7 @@
 							<tbody>
 								<tr v-repeat="dev: network.devicemap | orderBy viewOpts.field viewOpts.reverse">
 									<td><a href="#/device/{{params.network}}/{{$key}}">{{$key}}</a<</td>
-									<td><span v-wb-address="dev.address"></td>
+									<td><span class="mono" v-wb-address="dev.address"></span></td>
 									<td><a href="#/device/{{params.network}}/{{$key}}">{{dev.name || "unnamed"}}</a<</td>
 									<td><a>N/A</a></td>
 				<!--
@@ -222,7 +222,6 @@
 										<code>`00:00:00:00`</code> or binary
 										<code>`0.0.0.0`</code>.
 									</p>
-									{{newdevice.address}}
 								</div>
 							</div>
 							<div class="form-group col-xs-4">

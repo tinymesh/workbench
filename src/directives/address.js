@@ -4,19 +4,30 @@ Vue.directive('wb-address', {
 		if (!newValue)
 			return;
 
-		var parts = _.map(_.filter(("0000000" + newValue.toString(16)).substr(-8, 8).split(/^(..)(..)(..)(..)$/g)),
-			function(m) { return parseInt(m, 16).toString(); });
+		var val = "0" + parseInt(newValue).toString(16)
+		val = val.slice(0 + (val.length % 2))
 
 		switch ((this.el.attributes[this.name + "-endian"] || {}).value || "little") {
 			case "normal":
 			case "big":
-				this.el.innerText = parts.join('.')
-				break;
+				this.el.innerText = ["0","0","0","0"].concat(val.split(/(..)/))
+					.filter(function(part) { return !!part.match(/^[a-z0-9]+$/) })
+					.map(function(part) { return ("0" + part).slice(-2,4); })
+					.slice(-4)
+					.join(' : ')
+				break
 
 			case "little":
 			default:
-				this.el.innerText = parts.reverse().join('.')
-				break;
+				this.el.innerText = val
+					.split(/(..)/)
+					.reverse()
+					.concat(["0", "0", "0", "0"])
+					.filter(function(part) { return !!part.match(/^[a-z0-9]+$/) })
+					.map(function(part) { return ("0" + part).slice(-2,4); })
+					.slice(0, 4)
+					.join(' : ')
+				break
 		}
 	},
 	unbind: function () { }

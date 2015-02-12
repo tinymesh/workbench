@@ -218,3 +218,7 @@ input.keep-placeholder + .placeholder {
 input:focus.keep-placeholder + .placeholder {
 	color: red;
 }
+
+.mono {
+	font-family: Consolas, Lucida Console, monospace;
+}
