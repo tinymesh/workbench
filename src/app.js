@@ -21,6 +21,7 @@ require('./data');
 require('./directives/spinner');
 require('./directives/modal');
 require('./directives/address');
+require('./directives/fuzzy-date');
 require('./navigation');
 require('./dashboard');
 require('./landingpage');
