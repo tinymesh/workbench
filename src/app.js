@@ -75,6 +75,9 @@ app = new Vue({
 		});
 
 	},
+	components: {
+		'device': require('./device.vue').init()
+	},
 	data: {
 		view: undefined,
 		modal:{
