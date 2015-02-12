@@ -29,6 +29,8 @@ require('./user/login');
 require('./user/logout');
 require('./user/register');
 
+require('./filters');
+
 
 //chrome.runtime.sendMessage('ekiongijgijoaliebinoaneidfclgilc',
 //	'ping',

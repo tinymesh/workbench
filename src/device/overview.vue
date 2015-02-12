@@ -176,19 +176,6 @@ module.exports = {
 				return {text: v.name || k, value: k};
 			});
 		},
-	},
-	filters: {
-		patcher: {
-			write: function(value, prevVal, source) {
-				return value;
-			},
-			read: function(value, source) {
-				if (!value)
-					value = this.$get(source)
-
-				return value;
-			}
-		}
 	}
 };
 </script>
