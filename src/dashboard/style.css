@@ -23,13 +23,6 @@
 	font-weight: bold;
 	border-bottom: 2px solid #52bad5;
 }
-.nav.nav-pills > li:first-child {
-	background: #eee;
-}
-.nav.nav-pills > li:first-child > a {
-	color: #333;
-	font-weight: bold
-}
 
 .status {
 	text-transform: uppercase;

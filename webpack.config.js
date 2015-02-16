@@ -9,7 +9,8 @@ module.exports = {
         loaders: [
             { test: /\.css$/, loader: "style!css" },
 				{ test: /\.html$/, loader: "html" },
-				{ test: /\.vue$/, loader: "vue" }
+				{ test: /\.vue$/, loader: "vue" },
+				{ test: /\.json/, loader: "json" }
         ]
     }
 };

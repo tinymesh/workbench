@@ -1,12 +1,38 @@
 <style lang="css">
+.row.subbar {
+	background: #343d46
+}
+.row.subbar li > a {
+	color: #fff;
+	font-weight: bold;
+	padding: 10px 25px 7px;
+}
+
+.row.subbar li > a:hover {
+	background: #454d57;
+	border-bottom: 2px solid #454d57;
+}
+.row.subbar li.active > a {
+	background: #565e68;
+	display: inline-block;
+	color: #fff;
+}
+.row.subbar li:first-child > a {
+	background: #232b35;
+	display: inline-block;
+	color: #fff;
+}
+.row.subbar li:first-child > a:hover {
+	border-bottom: 2px solid #565e68;
+}
 </style>
 
 <template lang="html">
-		<div class="container">
-			<div class="row main">
+		<div class="container-fluid">
+			<div class="row subbar">
 				<div class="col-xs-12">
 					<ul class="nav nav-pills">
-						<li class="head">
+						<li>
 							<a href="#/dashboard/{{params.network}}">
 								<span class="glyphicon glyphicon-chevron-left">&nbsp;</span>
 								Network &ndash; {{params.network}}
@@ -14,14 +40,10 @@
 						</li>
 						<li v-class="active: '' === params.tab || 'overview' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}">Overview</a></li>
 						<li v-class="active: 'config' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/config">Configuration</a></li>
-						<!--<li v-class="active: 'query' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/query">Query</a></li>-->
+						<li v-class="active: 'query' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/query">Query</a></li>
 						<!--<li v-class="active: 'interact' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/interact">Console</a></li>-->
 					</ul>
 				</div>
-			</div>
-
-			<div class="page-header">
-				<h3>{{device.name || "Unnamed device"}}</h3>
 			</div>
 
 			<div v-if="!device['proto/tm']" class="row">
@@ -57,6 +79,7 @@ module.exports = {
 	components: {
 		'device-overview': require('./device/overview.vue'),
 		'device-config': require('./device/config.vue'),
+		'device-query': require('./device/query.vue'),
 	},
 	compiled: function() {
 		this.$root.$.data.networks.$promise.then(function() {

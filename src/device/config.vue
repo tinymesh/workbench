@@ -1,5 +1,8 @@
 <template lang="html">
 	<form name="config" class="config" role="form" v-if="config">
+		<div class="page-header">
+			<h3>{{device.name || "Unnamed device"}}</h3>
+		</div>
 
 		<div class="alert alert-warning" v-if="!deviceConfig.device.part_number">
 			<h4>No configuration found!!</h4>

@@ -1,5 +1,8 @@
 <template lang="html">
 	<div>
+			<div class="page-header">
+				<h3>{{device.name || "Unnamed device"}}</h3>
+			</div>
 			<div class="row">
 				<form name="device" role="form" class="form form-horizontal">
 					<div class="col-xs-6">
