@@ -1,20 +1,5 @@
 <div>
 	<div v-component="wb-notify" v-ref="notify" id="setupSteps"></div>
-		<script type="x-template" id="notifytpl">
-			<div v-if="messages.length > 0">
-				<div v-attr="'class': 'alert alert-dismissible alert-' + (messages[0].cssclass || 'warning')">
-					<div class="container">
-						<button type="button" class="close" v-on="click: messages.shift()"><span>&times;</span></button>
-						<span class="capitalize bold">{{messages[0].cssclass || "warning"}}:</span>
-						<span class="notification">{{messages[0].message}}</span>
-						<span v-if="messages.length > 1"class="label label-info">
-							{{messages.length - 1}} more
-						</span>
-					</div>
-				</div>
-			</div>
-		</script>
-	</div>
 	<div class="container">
 	
 		<div class="col-md-3" v-if="!$root.$.data.initialSetup" style="position:relative;">
@@ -142,6 +127,7 @@
 									<th><a v-on="click: setDeviceOrderBy('key');">Key</a></th>
 									<th><a v-on="click: setDeviceOrderBy('address');">UID</a></th>
 									<th><a v-on="click: setDeviceOrderBy('name');">Name</a></th>
+									<th><a v-on="click: setDeviceOrderBy('type');">Type</a></th>
 									<th><a v-on="click: setDeviceOrderBy('lastseen');">Last seen</a></th>
 				<!--
 									<th>In queue</th>
@@ -154,6 +140,7 @@
 									<td><a href="#/device/{{params.network}}/{{$key}}">{{$key}}</a<</td>
 									<td><span class="mono" v-wb-address="dev.address"></span></td>
 									<td><a href="#/device/{{params.network}}/{{$key}}">{{dev.name || "unnamed"}}</a<</td>
+									<td><a href="#/device/{{params.network}}/{{$key}}">{{dev.type}}</a<</td>
 									<td><a>N/A</a></td>
 				<!--
 									<td><a>Empty</a<</td>
@@ -172,6 +159,7 @@
 				-->
 								</tr>
 								<tr v-repeat="(x=[]).length = Math.max(5 - network.meta.device.count, 0);x">
+									<td><span class="dummy-block">&nbsp;</span></td>
 									<td><span class="dummy-block">&nbsp;</span></td>
 									<td><span class="dummy-block">&nbsp;</span></td>
 									<td><span class="dummy-block">&nbsp;</span></td>

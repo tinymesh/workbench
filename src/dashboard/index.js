@@ -40,6 +40,19 @@ Finch.route('/dashboard/:nid/:tab', route);
 
 Vue.component('dashboard', {
 	template: require('!raw!./template.html'),
+	watch: {
+		'network': function(val, oldVal) {
+			this.$.notify.clear()
+			if (0 === Object.keys(val.channels).length) {
+				this.$.notify.add('You don\'t have any gateways configured for this network', 'info');
+			}
+
+			if (!val.haveConnected()) {
+				this.$.notify.add('The gateway device have never been connected. Have you set it up correctly?', 'info');
+			}
+
+		}
+	},
 	data: function() {
 		return {
 			updatePromise: undefined,
