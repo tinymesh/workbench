@@ -48,7 +48,7 @@
 		</div>
 
 		<div
-			v-class="col-md-12: skipSetupGuide"
+			v-class="col-md-12: $root.$.data.inititalSetup || !skipSetupGuide,col-md-9: !$root.$.data.initialSetup || skipSetupGuide"
 			v-if="!params.network || !network">
 
 			<div
@@ -64,7 +64,7 @@
 						<h4>{{network.name || "Unamed network"}}</h4>
 				</div>
 				<div
-					v-if="!skipSetupGuide"
+					v-if="!network.haveConnected() && !skipSetupGuide"
 					class="no-margin"
 					v-component="wb-network-setup-guide"></div>
 
