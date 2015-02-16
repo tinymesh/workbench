@@ -8,7 +8,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "webpack-dev-server --progress --colors",
-    "build": "webpack -p"
+    "build": "webpack -p --progress"
   },
   "main": "src/app.js",
   "dependencies": {
