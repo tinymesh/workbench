@@ -180,6 +180,7 @@ Vue.component('dashboard', {
 				} else {
 					this.$set('deviceError.address', undefined);
 					this.viewOpts.addressType = 'Int Address';
+					value = parseInt(value)
 				}
 
 				if (0x00ffffff === (value & 0x00ffffff)) {
@@ -192,6 +193,8 @@ Vue.component('dashboard', {
 					this.$set('deviceError.address', 'Address must be in range 0 - ' + 0xffffffff);
 					this.newdevice.address = undefined;
 				}
+
+				return value
 			}
 		}
 	}
