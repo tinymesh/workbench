@@ -101,6 +101,11 @@ Vue.component('wb-network-setup-guide', {
 					.$promise.then(function(vals) {
 						this.$root.$.data.$set('network', vals);
 						this.$root.$.data.$set('network.channels', vals.channels);
+						if (this.$parent.$.notify)
+							this.$parent.$.notify.set('Channel was created, try refreshing if the page does not move on', 'success')
+						// data is not synced correctly, fix later and just
+						// refresh now
+						location.reload()
 					}.bind(this));
 			}.bind(this), function(err) {
 				this.channelPromise = undefined;

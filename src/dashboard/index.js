@@ -47,7 +47,7 @@ Vue.component('dashboard', {
 				this.$.notify.add('The gateway device have never been connected. Have you set it up correctly?', 'info');
 			}
 
-			if (0 === Object.keys(val.channels).length) {
+			if (0 === Object.keys(val.channels || {}).length) {
 				this.$.notify.add('You don\'t have any gateways configured for this network', 'info');
 			}
 		}

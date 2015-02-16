@@ -2,7 +2,7 @@
 	<div v-component="wb-notify" v-ref="notify" id="setupSteps"></div>
 	<div class="container" style="position:relative;">
 
-		<div class="col-md-3" v-if="!$root.$.data.initialSetup" style="position:relative;">
+		<div class="col-md-3" v-if="!$root.$.data.initialSetup || skipSetupGuide" style="position:relative;">
 			<div class="page-header">
 				<h4>Networks</h4>
 			</div>
@@ -43,7 +43,7 @@
 		</div>
 
 		<div
-			v-class="col-md-9: networks || $root.$.data.setupSkipped,col-md-12: !networks && !$root.$.data.setupSkipped"
+			v-class="col-md-12: skipSetupGuide"
 			v-if="!params.network || !network">
 
 			<div
@@ -51,7 +51,9 @@
 				v-component="wb-network-setup-guide"></div>
 		</div>
 
-		<div class="col-md-9" v-if="params.network && network">
+		<div
+			v-if="params.network && network"
+			v-class="col-md-12: $root.$.data.inititalSetup || !skipSetupGuide,col-md-9: !$root.$.data.initialSetup || skipSetupGuide">
 			<div class="row">
 				<div class="page-header">
 						<h4>{{network.name || "Unamed network"}}</h4>
@@ -61,7 +63,7 @@
 					class="no-margin"
 					v-component="wb-network-setup-guide"></div>
 
-				<div v-if="skipSetupGuide || network.haveConnected()">
+				<div v-if="skipSetupGuide || (network && network.haveConnected())">
 					<div class="row padded">
 						<div class="col-xs-12">
 							<ul class="nav nav-pills">
