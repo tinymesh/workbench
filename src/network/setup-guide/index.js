@@ -29,7 +29,7 @@ Vue.component('wb-network-setup-guide', {
 			errors: {},
 			channelPromise: undefined,
 			networkPromise: undefined,
-			configureTab: 'chrome',
+			configureTab: this.$root.platform,
 			provisionWithChrome: false,
 			view: {
 				helpText: false

@@ -29,16 +29,16 @@
 				<button
 					v-if="skipSetupGuide"
 					v-on="click: toggleSetupGuide"
-					class="btn btn-info">
-					<span>&times;</span>
-					Skip setup guide
+					class="btn btn-success">
+					Resume setup guide
 				</button>
 
 				<button
 					v-if="!skipSetupGuide"
 					v-on="click: toggleSetupGuide"
-					class="btn btn-success">
-					Resume setup guide
+					class="btn btn-info">
+					<span>&times;</span>
+					Skip setup guide
 				</button>
 		</div>
 

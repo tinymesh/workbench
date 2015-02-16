@@ -116,10 +116,10 @@ app = new Vue({
 		},
 
 		platform: function() {
-			if (this.isChrome)
-				return "chrome";
+			//if (this.isChrome)
+			//	return "chrome";
 
-			var match = navigator.platform.replace(/[^a-zA-Z]*/, '').toLowerCase();
+			var match = navigator.platform.replace(/^([a-zA-Z]*).*$/, '$1').toLowerCase()
 			if (match.match(/^mac/))
 				return "mac";
 

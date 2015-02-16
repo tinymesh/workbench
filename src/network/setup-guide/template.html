@@ -154,6 +154,7 @@
 					<span v-if="!channelPromise">Create Channel</span>
 				</button>
 
+				<!--
 				<button
 					class="btn btn-primary"
 					v-if="$root.isChrome"
@@ -166,7 +167,9 @@
 					<span v-if="channelPromise">Provisioning Channel</span>
 					<span v-if="!channelPromise">Provision with Chrome</span>
 				</button>
+				-->
 
+<!--
 				<a
 					class="btn btn-mute btn-help pull-right"
 					v-class="active: view.helpText"
@@ -174,6 +177,7 @@
 
 					<span class="hover">Help</span>
 				</a>
+-->
 			</form>
 
 			<div class="helpText" v-if="view.helpText">
@@ -222,11 +226,13 @@
 					</div>
 
 					<ul class="nav nav-stacked">
+<!--
 						<li
 							v-if="'chrome' == configureTab || $root.isChrome"
 							v-class="active: 'chrome' == configureTab">
 							<a v-on="click: configureTab = 'chrome'">Chrome Extension</a>
 						</li>
+-->
 						<li v-class="active: 'linux' == configureTab">
 							<a v-on="click: configureTab = 'linux'">Linux</a>
 						</li>
