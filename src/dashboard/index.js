@@ -139,6 +139,34 @@ Vue.component('dashboard', {
 		network: function() {
 			return this.$root.$.data.network;
 		},
+
+		// group network into owner -> networks
+		networkGroups: function() {
+			if (!this.networks || !this.$root.$.data.user.email)
+				return [];
+
+			var user = this.$root.$.data.user;
+			var groups = _.groupBy(this.networks, function(net) {
+				var forUser = _.any(net.parents, function(v) {
+					return 'user/' + user.email === v
+				});
+
+				if (forUser)
+					return 'user/' + user.email
+
+				return _.filter(net.parents, function(v) {
+					return v.match(/^organization\//)
+				})[0];
+			})
+
+			return _.map(groups, function(networks, k) {
+				return {
+					name: k,
+					items: networks
+				}
+			}).sort().reverse();
+		},
+
 		networks: function() {
 			return this.$root.$.data.networks;
 		},

@@ -8,8 +8,13 @@
 			</div>
 
 			<ul class="nav nav-stacked" v-if="networks">
-				<li v-repeat="net: networks" v-class="active: net.key === params.network">
-					<a href="#/dashboard/{{net.key}}">{{net.name || 'Unnamed Network'}} ({{net.key}})</a>
+				<li v-repeat="netGroup: networkGroups" class="parent" v-class="active: net && net.key === params.network">
+					<span>{{netGroup.name}}</span>
+					<ul class="nav nav-stacked" v-if="networks">
+						<li v-repeat="net: netGroup.items" v-class="active: net.key === params.network">
+							<a href="#/dashboard/{{net.key}}">{{net.name || 'Unnamed Network'}} ({{net.key}})</a>
+						</li>
+					</ul>
 				</li>
 			</ul>
 			<div class="" v-if="0 === networks.length">

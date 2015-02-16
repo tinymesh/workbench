@@ -42,3 +42,17 @@
 	right: 15px;
 	z-index: 5;
 }
+
+.nav-stacked > .parent {
+	margin-top: 1em;
+}
+
+.nav-stacked > .parent > span {
+	font-weight: bold;
+	padding: 6px;
+	display: inline-block;
+	width: 100%;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 3px;
+	text-transform: uppercase;
+}
