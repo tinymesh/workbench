@@ -1,0 +1,398 @@
+{
+	"rf.channel": {
+		"name": "RF Channel"
+	},
+	"rf.power": {
+		"name": "RF Output Power"
+	},
+	"rf.data_rate": {
+		"name": "RF Data Rate",
+		"enum": [
+			{ "value": 1, "text": "1.2 kbit/s" },
+			{ "value": 2, "text": "4.8 kbit/s" },
+			{ "value": 3, "text": "19.2 kbit/s" },
+			{ "value": 4, "text": "32.7 kbit/s" },
+			{ "value": 5, "text": "76.8 kbit/s" },
+			{ "value": 6, "text": "100 kbit/s" }
+		]
+	},
+	"rf.mac_rnd_mask_1": {
+		"name": "MAC RndTime 1 Mask"
+	},
+	"rf.mac_rnd_mask_2": {
+		"name": "MAC RndTime 2 Mask"
+	},
+
+
+	"ima.time": {
+		"name": "IMA Time"
+	},
+	"ima.time_base": {
+		"name": "IMA Time base"
+	},
+	"ima.on_connect": {
+		"name": "IMA On Connect",
+		"enum": [
+			{"value": "0", "text": "Off"},
+			{"value": "1", "text": "On"}
+		]
+	},
+	"ima.data_field": {
+		"name": "IMA Data Field Contents"
+	},
+	"ima.address_field": {
+		"name": "IMA Address Field Contents"
+	},
+	"ima.trig_hold": {
+		"name": "Trig Hold"
+	},
+
+	"net.rssi_threshold": {
+		"name": "RSSI Acceptance Level"
+	},
+	"net.rssi_cc_assesment": {
+		"name": "RSSI Clear Channel Assesment level"
+	},
+	"net.hiam_time": {
+		"name": "HIAM Time"
+	},
+	"net.connect_check_time": {
+		"name": "Connect Check Time"
+	},
+	"net.max_jump_level": {
+		"name": "Max Jump Level"
+	},
+	"net.max_jump_count": {
+		"name": "Max Jump Count"
+	},
+	"net.max_packet_latency": {
+		"name": "Max Packet Latency"
+	},
+	"net.tx_retry_limit": {
+		"name": "RF Transmit Retry Limit"
+	},
+	"net.excellent_rssi": {
+		"name": "Excellent RSSI Level"
+	},
+	"net.command_accept_time": {
+		"name": "Accept New Command Time out"
+	},
+	"net.command_retries": {
+		"name": "Command Retry"
+	},
+	"net.connect_change_margin": {
+		"name": "Connection Change Margin"
+	},
+
+	"uart.timeout": {
+		"name": "Serial Port Time Out"
+	},
+	"uart.cts_hold_time": {
+		"name": "CTS Hold Time"
+	},
+	"uart.baud_rate": {
+		"name": "UART Baud Rate",
+		"enum": [
+			{"value": "1", "text": "2 400"},
+			{"value": "2", "text": "4 800"},
+			{"value": "3", "text": "9 600"},
+			{"value": "4", "text": "14 400"},
+			{"value": "5", "text": "19 200"},
+			{"value": "6", "text": "28 800"},
+			{"value": "7", "text": "38 400"},
+			{"value": "8", "text": "56 700"},
+			{"value": "9", "text": "76 800"},
+			{"value":"11", "text": "115 200"},
+			{"value":"12", "text": "230 400"}
+		]
+	},
+	"uart.bits": {
+		"name": "UART Bits"
+	},
+	"uart.parity": {
+		"name": "UART Parity"
+	},
+	"uart.stop_bits": {
+		"name": "UART Stop Bits"
+	},
+	"uart.flow_control": {
+		"name": "UART Flow Control",
+		"mask": {
+			 "1": "CTS",
+			 "2": "RTS",
+			 "4": "RXTX",
+			 "8": "Xon/Xoff",
+			"16": "ACK/NAK",
+			"32": "Wait For Ack"
+		}
+	},
+	"uart.buffer_margin": {
+		"name": "Serial Buffer Full Margin"
+	},
+
+
+	"device.indicators_timeout": {
+		"name": "Indicators On (60s)"
+	},
+	"device.sniff_neighbours": {
+		"name": "Receive Neighbour Messages"
+	},
+	"device.part": {
+		"name": "Part Number"
+	},
+	"device.hw_revision": {
+		"name": "HW Revision"
+	},
+	"device.fw_revision": {
+		"name": "FW Revision"
+	},
+	"device.protocol_mode": {
+		"name": "Protocol Mode",
+		"enum": [
+			{"value": "0", "text": "Packet"},
+			{"value": "1", "text": "Transparent"}
+		]
+	},
+	"device.type": {
+		"name": "Device Type",
+		"enum": [
+			{"value": "1", "text": "Gateway"},
+			{"value": "2", "text": "Router"},
+			{"value": "3", "text": "End Device"}
+		]
+	},
+	"device.locator": {
+		"name": "Locator Enable",
+		"enum": [
+			{"value": "0", "text": "Off"},
+			{"value": "1", "text": "On"}
+		]
+	},
+	"device.uid": {
+		"name": "Unique ID"
+	},
+	"device.sid": {
+		"name": "System ID"
+	},
+	"device.command_ack": {
+		"name": "Command Acknowledge"
+	},
+	"device.sleep_or_rts_pin": {
+		"name": "Sleep or RTS"
+	},
+	"device.detect_busy_network": {
+		"name": "Detect Busy Network"
+	},
+
+
+	"gpio_0.config": {
+		"name": "GPIO 0 Configuration",
+		"enum": [
+			{"value": "0", "text": "Output (default High)"},
+			{"value": "1", "text": "Input"},
+			{"value": "2", "text": "Analogue In"},
+			{"value": "4", "text": "Output (default Low)"}
+		]
+	},
+	"gpio_0.trigger": {
+		"name": "GPIO 0 Trigger",
+		"enum": [
+			{"value": "0", "text": "No trig"},
+			{"value": "1", "text": "Rising edge"},
+			{"value": "2", "text": "Falling edge"},
+			{"value": "3", "text": "Both edges"}
+		]
+	},
+	"gpio_0.analogue_high_trig": {
+		"name": "GPIO 0 Analogue High trig"
+	},
+	"gpio_0.analogue_low_trig": {
+		"name": "GPIO 0 Analogue Low trig"
+	},
+	"gpio_0.analogue_sample_rate": {
+		"name": "GPIO 0 Analogue Sampling interval (10ms)"
+	},
+	"gpio_1.config": {
+		"name": "GPIO 1 Configuration",
+		"enum": [
+			{"value": "0", "text": "Output (default High)"},
+			{"value": "1", "text": "Input"},
+			{"value": "4", "text": "Output (default Low)"}
+		]
+	},
+	"gpio_1.trigger": {
+		"name": "GPIO 1 Trigger",
+		"enum": [
+			{"value": "0", "text": "No trig"},
+			{"value": "1", "text": "Rising edge"},
+			{"value": "2", "text": "Falling edge"},
+			{"value": "3", "text": "Both edges"}
+		]
+	},
+	"gpio_1.analogue_high_trig": {
+		"name": "GPIO 1 Analogue High Trig"
+	},
+	"gpio_1.analogue_low_trig": {
+		"name": "GPIO 1 Analogue Low Trig"
+	},
+	"gpio_1.analogue_sample_rate": {
+		"name": "GPIO 1 Analogue Sampling interval (10ms)"
+	},
+	"gpio_2.config": {
+		"name": "GPIO 2 Configuration",
+		"enum": [
+			{"value": "0", "text": "Output (default High)"},
+			{"value": "1", "text": "Input"},
+			{"value": "4", "text": "Output (default Low)"}
+		]
+	},
+	"gpio_2.trigger": {
+		"name": "GPIO 2 Trigger",
+		"enum": [
+			{"value": "0", "text": "No trig"},
+			{"value": "1", "text": "Rising edge"},
+			{"value": "2", "text": "Falling edge"},
+			{"value": "3", "text": "Both edges"}
+		]
+	},
+	"gpio_3.config": {
+		"name": "GPIO 3 Configuration",
+		"enum": [
+			{"value": "0", "text": "Output (default High)"},
+			{"value": "1", "text": "Input"},
+			{"value": "4", "text": "Output (default Low)"}
+		]
+	},
+	"gpio_3.trigger": {
+		"name": "GPIO 3 Trigger",
+		"enum": [
+			{"value": "0", "text": "No trig"},
+			{"value": "1", "text": "Rising edge"},
+			{"value": "2", "text": "Falling edge"},
+			{"value": "3", "text": "Both edges"}
+		]
+	},
+	"gpio_4.config": {
+		"name": "GPIO 4 Configuration",
+		"enum": [
+			{"value": "0", "text": "Output (default High)"},
+			{"value": "1", "text": "Input"},
+			{"value": "4", "text": "Output (default Low)"}
+		]
+	},
+	"gpio_4.trigger": {
+		"name": "GPIO 4 Trigger",
+		"enum": [
+			{"value": "0", "text": "No trig"},
+			{"value": "1", "text": "Rising edge"},
+			{"value": "2", "text": "Falling edge"},
+			{"value": "3", "text": "Both edges"}
+		]
+	},
+	"gpio_5.config": {
+		"name": "GPIO 5 Configuration",
+		"enum": [
+			{"value": "0", "text": "Output (default High)"},
+			{"value": "1", "text": "Input"},
+			{"value": "4", "text": "Output (default Low)"}
+		]
+	},
+	"gpio_5.trigger": {
+		"name": "GPIO 5 Trigger",
+		"enum": [
+			{"value": "0", "text": "No trig"},
+			{"value": "1", "text": "Rising edge"},
+			{"value": "2", "text": "Falling edge"},
+			{"value": "3", "text": "Both edges"}
+		]
+	},
+	"gpio_6.config": {
+		"name": "GPIO 6 Configuration",
+		"enum": [
+			{"value": "0", "text": "Output (default High)"},
+			{"value": "1", "text": "Input"},
+			{"value": "4", "text": "Output (default Low)"}
+		]
+	},
+	"gpio_6.trigger": {
+		"name": "GPIO 6 Trigger",
+		"enum": [
+			{"value": "0", "text": "No trig"},
+			{"value": "1", "text": "Rising edge"},
+			{"value": "2", "text": "Falling edge"},
+			{"value": "3", "text": "Both edges"}
+		]
+	},
+	"gpio_7.config": {
+		"name": "GPIO 7 Configuration",
+		"enum": [
+			{"value": "0", "text": "Output (default High)"},
+			{"value": "1", "text": "Input"},
+			{"value": "3", "text": "PWM Output"},
+			{"value": "4", "text": "Output (default Low)"}
+		]
+	},
+	"gpio_7.trigger": {
+		"name": "GPIO 7 Trigger",
+		"enum": [
+			{"value": "0", "text": "No trig"},
+			{"value": "1", "text": "Rising edge"},
+			{"value": "2", "text": "Falling edge"},
+			{"value": "3", "text": "Both edges"}
+		]
+	},
+	"gpio_7.pwm_default": {
+		"name": "PWM Default"
+	},
+
+	"gpio.input_debounce": {
+		"name": "Input De-bounce (ms)"
+	},
+
+	"security.level": {
+		"name": "Security Level"
+	},
+
+	"end_device.keepalive": {
+		"name": "End Device Wait for Command"
+	},
+	"end_device.wakeon": {
+		"name": "End Device Wakeup Enable"
+	},
+	"end_device.wakeon_port": {
+		"name": "End Device Awake Port"
+	},
+
+	"cluster.device_limit": {
+		"name": "Cluster Node Device Limit"
+	},
+	"cluster.rssi_threshold": {
+		"name": "Cluster Node RSSI"
+	},
+
+	"rf_jamming.detect": {
+		"name": "RF Jamming Port"
+	},
+	"rf_jamming.port": {
+		"name": "RF Jamming Detect"
+	},
+
+	"pulse_counter.mode": {
+		"name": "Pulse Counter Mode"
+	},
+	"pulse_counter.debounce": {
+		"name": "Pulse Counter Debounce"
+	},
+	"pulse_counter.feedback_port": {
+		"name": "Feedback Port"
+	},
+	"pulse_counter.feedback": {
+		"name": "Feedback Enable"
+	},
+
+	"group.membership": {
+		"name": "Group Table"
+	}
+}
+
+

@@ -21,7 +21,7 @@
 			</div>
 
 			<div class="page-header">
-				<h4>{{device.name || "Unnamed device"}}</h4>
+				<h3>{{device.name || "Unnamed device"}}</h3>
 			</div>
 
 			<div v-if="!device['proto/tm']" class="row">
@@ -56,6 +56,7 @@ module.exports = {
 	},
 	components: {
 		'device-overview': require('./device/overview.vue'),
+		'device-config': require('./device/config.vue'),
 	},
 	compiled: function() {
 		this.$root.$.data.networks.$promise.then(function() {
