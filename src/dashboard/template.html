@@ -25,7 +25,7 @@
 
 		</div>
 
-		<div id="skipSetupGuide" v-if="!network.haveConnected()">
+		<div id="skipSetupGuide" v-if="network && !network.haveConnected()">
 				<button
 					v-if="skipSetupGuide"
 					v-on="click: toggleSetupGuide"

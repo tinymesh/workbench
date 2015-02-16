@@ -215,7 +215,7 @@
 				Mesh Cloud
 			</p>
 
-			<div class="container">
+			<div class="row">
 				<div class="col-xs-4" style="position:relative;">
 					<div class="page-header">
 						<h3>Connection Method</h3>
@@ -342,7 +342,7 @@
 				</p>
 	-->
 	
-				<div v-if="configureTab === 'windows'">
+				<div v-if="configureTab === 'windows'" class="col-xs-8">
 					<div class="page-header">
 						<h3>Setup Network Connector software for Windows</h3>
 					</div>
@@ -358,7 +358,7 @@
 					</p>
 				</div>
 	
-				<div v-if="configureTab === 'mac'">
+				<div v-if="configureTab === 'mac'" class="col-xs-8">
 					<div class="page-header">
 						<h3>Setup Network Connector software for Mac OS X</h3>
 					</div>
@@ -379,7 +379,7 @@
 					</p>
 				</div>
 	
-				<div v-if="configureTab === 'linux'">
+				<div v-if="configureTab === 'linux'" class="col-xs-8">
 					<div class="page-header">
 						<h3>Setup Network Connector software for Linux</h3>
 					</div>
