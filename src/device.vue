@@ -15,7 +15,7 @@
 						<li v-class="active: '' === params.tab || 'overview' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}">Overview</a></li>
 						<li v-class="active: 'config' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/config">Configuration</a></li>
 						<!--<li v-class="active: 'query' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/query">Query</a></li>-->
-						<li v-class="active: 'interact' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/interact">Console</a></li>
+						<!--<li v-class="active: 'interact' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/interact">Console</a></li>-->
 					</ul>
 				</div>
 			</div>
