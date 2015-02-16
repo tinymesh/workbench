@@ -39,32 +39,8 @@ require('./filters');
 //		hasChromeApp = 'pong' === resp;
 //	});
 
-var chromePort = chrome.runtime.connect('ekiongijgijoaliebinoaneidfclgilc', {name: "tinyconnector"});
-var hasChromeApp = false;
-chromePort.onDisconnect.addListener(function(port) {
-	// extension reloaded or crashed....
-	console.log('disconnect', port);
-});
-
-chromePort.onMessage.addListener(function(msg) {
-	console.log('msg', msg);
-});
-
-var callbackOnId = function(ev, id, callback) {
-	var listener = ( function(port, id) {
-		var handler = function(msg) {
-			console.log('recv msg', id, msg);
-			if (msg.id === id) {
-				ev.removeListener(handler);
-				callback(msg);
-			}
-		}
-
-		return handler;
-
-	})(ev, id, callback);
-	ev.addListener(listener);
-};
+var
+	hasChromeApp = false;
 
 //Vue.config.debug = true;
 app = new Vue({
@@ -90,14 +66,6 @@ app = new Vue({
 	},
 	methods: {
 		msgChromeApp: function(msg, callback) {
-			if (callback) {
-				var id = Math.random().toString(36);
-				callbackOnId(this.chromePort.onMessage, id, callback);
-				msg.id = id;
-			}
-
-			console.log('postMsg', id);
-			this.chromePort.postMessage(msg);
 		}
 	},
 	computed: {
