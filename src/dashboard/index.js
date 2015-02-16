@@ -67,6 +67,7 @@ Vue.component('dashboard', {
 				field: 'address',
 				reverse: false,
 				addressType: '',
+				skipSetupGuide: undefined
 			}
 		}
 	},
@@ -81,6 +82,7 @@ Vue.component('dashboard', {
 		toggleSetupGuide: function() {
 			var old = store.get('skipSetupGuide.' + this.params.network);
 			store.set('skipSetupGuide.' + this.params.network, !old);
+			this.$set('viewOpts.skipSetupGuide', !old)
 		},
 		save: function(network, e) {
 			e.preventDefault();
@@ -130,7 +132,7 @@ Vue.component('dashboard', {
 	},
 	computed: {
 		skipSetupGuide: function() {
-			return true === store.get('skipSetupGuide.' + this.params.network);
+			return true === this.viewOpts.skipSetupGuide || store.get('skipSetupGuide.' + this.params.network)
 		},
 		params: function() {
 			return this.$root.$.data.params;

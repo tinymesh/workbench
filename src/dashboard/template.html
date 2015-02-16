@@ -1,12 +1,12 @@
 <div>
 	<div v-component="wb-notify" v-ref="notify" id="setupSteps"></div>
-	<div class="container">
-	
+	<div class="container" style="position:relative;">
+
 		<div class="col-md-3" v-if="!$root.$.data.initialSetup" style="position:relative;">
 			<div class="page-header">
 				<h4>Networks</h4>
 			</div>
-	
+
 			<ul class="nav nav-stacked" v-if="networks">
 				<li v-repeat="net: networks" v-class="active: net.key === params.network">
 					<a href="#/dashboard/{{net.key}}">{{net.name || 'Unnamed Network'}} ({{net.key}})</a>
@@ -17,231 +17,250 @@
 				Go setup your first network by clicking through a few simple
 				steps on your right side!
 			</div>
-	
+
 			<hr />
 			<ul class="nav nav-stacked">
 				<li v-class="active: undefined == params.network"><a href="#/dashboard"><b>+</b> Create new network</a></li>
 			</ul>
-	
+
 		</div>
-	
+
+		<div id="skipSetupGuide" v-if="!network.haveConnected()">
+				<button
+					v-if="skipSetupGuide"
+					v-on="click: toggleSetupGuide"
+					class="btn btn-info">
+					<span>&times;</span>
+					Skip setup guide
+				</button>
+
+				<button
+					v-if="!skipSetupGuide"
+					v-on="click: toggleSetupGuide"
+					class="btn btn-success">
+					Resume setup guide
+				</button>
+		</div>
+
 		<div
 			v-class="col-md-9: networks || $root.$.data.setupSkipped,col-md-12: !networks && !$root.$.data.setupSkipped"
 			v-if="!params.network || !network">
-	
+
 			<div
 				class="row"
 				v-component="wb-network-setup-guide"></div>
 		</div>
-	
+
 		<div class="col-md-9" v-if="params.network && network">
 			<div class="row">
 				<div class="page-header">
 						<h4>{{network.name || "Unamed network"}}</h4>
 				</div>
 				<div
-					v-if="skipSetupGuide"
+					v-if="!skipSetupGuide"
 					class="no-margin"
 					v-component="wb-network-setup-guide"></div>
-	
-				<div class="row padded">
-					<div class="col-xs-12">
-						<ul class="nav nav-pills">
-							<li class="head"><a href="#/dashboard">Dashboard</a><li>
-							<li v-class="active: undefined === params.tab"><a href="#/dashboard/{{params.network}}">Overview</a></li>
-							<li v-class="active: 'devices' === params.tab"><a href="#/dashboard/{{params.network}}/devices">Devices</a></li>
-				 		</ul>
-				 	</div>
-				</div>
-				<div v-if="undefined === params.tab" class="row">
-					<div class="col-xs-6 overview">
-						<form role="form" class="form-horizontal">
-							<div class="form-group">
-								<label for="network-name" class="col-xs-4 control-label">Network Name</label>
-								<div class="col-xs-8">
-									<input
-												v-model="network.name"
-												type="text"
-												class="form-control"
-												id="network-name"
-												name="network-name"
-												placeholder="Network name"/>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-xs-4 control-label">Network ID</label>
-								<div class="col-xs-8">
-									<p class="form-control-static">
-										 {{network.key}} &ndash; <span class="mono" v-wb-address="network.address" wb-address-endian="big"></span>
-									</p>
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-sm-offset-4 col-sm-8"> 
-									<button
-										v-on="click: save(network, $event)"
-										v-attr="disabled: updatePromise"
-										v-class="'btn-spinner': updatePromise"
-										class="btn btn-success">
 
-										<span v-wb-spinner="updatePromise"></span>
-
-										<span v-if="updatePromise">Saving changes</span>
-										<span v-if="!updatePromise">Save changes</span>
-									</button>
-								</div>
-							</div>
-						</form>
+				<div v-if="skipSetupGuide || network.haveConnected()">
+					<div class="row padded">
+						<div class="col-xs-12">
+							<ul class="nav nav-pills">
+								<li class="head"><a href="#/dashboard">Dashboard</a><li>
+								<li v-class="active: undefined === params.tab"><a href="#/dashboard/{{params.network}}">Overview</a></li>
+								<li v-class="active: 'devices' === params.tab"><a href="#/dashboard/{{params.network}}/devices">Devices</a></li>
+							</ul>
+						</div>
 					</div>
-
-					<div class="col-xs-6 channels">
-						<ul>
-							<li v-repeat="network.channels">
-								<h5>
-									<b>Gateway:</b> <i>{{network.devicemap[$key].name || $key}} (uid: <span v-wb-address="network.devicemap[$key].address"></span>)</i>
-									&ndash;
-									<span v-if="active"  class="label label-success">Connected</span>
-									<span v-if="!active" class="label label-danger">Disconnected</span>
-								</h5>
-
-								<div class="body">
-									<span v-if="meta.started">&ndash; Connected <i v-wb-fuzzy-date="meta.started"></i><br /></span>
-								<!--
-									<span>Queue length: <i>{{meta.queue_size}}</i></span><br />
-									<span>% of network traffic:
-											<i class="rx">{{((meta.tcp.rx||0)/(network.meta.net.tcp.rx||1))*100}}% (rx)</i> /
-											<i class="tx">{{((meta.tcp.tx||0)/(network.meta.net.tcp.tx||1))*100}}% (tx)</i>
-									</span>
-								-->
+					<div v-if="undefined === params.tab" class="row">
+						<div class="col-xs-6 overview">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label for="network-name" class="col-xs-4 control-label">Network Name</label>
+									<div class="col-xs-8">
+										<input
+													v-model="network.name"
+													type="text"
+													class="form-control"
+													id="network-name"
+													name="network-name"
+													placeholder="Network name"/>
+									</div>
 								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
+								<div class="form-group">
+									<label class="col-xs-4 control-label">Network ID</label>
+									<div class="col-xs-8">
+										<p class="form-control-static">
+											 {{network.key}} &ndash; <span class="mono" v-wb-address="network.address" wb-address-endian="big"></span>
+										</p>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-4 col-sm-8"> 
+										<button
+											v-on="click: save(network, $event)"
+											v-attr="disabled: updatePromise"
+											v-class="'btn-spinner': updatePromise"
+											class="btn btn-success">
 
-				<div v-if="'devices' === params.tab" class="row">
-					<div class="col-xs-12">
-						<table class="table">
-							<thead>
-								<tr>
-									<th><a v-on="click: setDeviceOrderBy('key');">Key</a></th>
-									<th><a v-on="click: setDeviceOrderBy('address');">UID</a></th>
-									<th><a v-on="click: setDeviceOrderBy('name');">Name</a></th>
-									<th><a v-on="click: setDeviceOrderBy('type');">Type</a></th>
-									<th><a v-on="click: setDeviceOrderBy('lastseen');">Last seen</a></th>
-				<!--
-									<th>In queue</th>
-									<th>Status</th>
-				-->
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-repeat="dev: network.devicemap | orderBy viewOpts.field viewOpts.reverse">
-									<td><a href="#/device/{{params.network}}/{{$key}}">{{$key}}</a<</td>
-									<td><span class="mono" v-wb-address="dev.address"></span></td>
-									<td><a href="#/device/{{params.network}}/{{$key}}">{{dev.name || "unnamed"}}</a<</td>
-									<td><a href="#/device/{{params.network}}/{{$key}}">{{dev.type}}</a<</td>
-									<td><a>N/A</a></td>
-				<!--
-									<td><a>Empty</a<</td>
-									<td>
-										<span class="status text-success"><i class="glyphicon glyphicon-ok"></i> Nothing special</span>
-										<!--
-											<span class="status text-danger"><i class="glyphicon glyphicon-paperclip"></i> Low battery</span>
-											<span class="status text-danger"><i class="glyphicon glyphicon-signal"></i> Poor signal</span>
-											<span class="status text-info"><i class="glyphicon glyphicon-eject"></i> Unstable link</span>
-											<span class="status text-warning"><i class="glyphicon glyphicon-move"></i> Frequent resets</span>
-											<span class="status text-warning"><i class="glyphicon glyphicon-_"></i> Late IMA</span>
-											<span class="status text-warning"><i class="glyphicon glyphicon-_"></i> No Response</span>
-										-->
-				<!--
-									</td>
-				-->
-								</tr>
-								<tr v-repeat="(x=[]).length = Math.max(5 - network.meta.device.count, 0);x">
-									<td><span class="dummy-block">&nbsp;</span></td>
-									<td><span class="dummy-block">&nbsp;</span></td>
-									<td><span class="dummy-block">&nbsp;</span></td>
-									<td><span class="dummy-block">&nbsp;</span></td>
-									<td><span class="dummy-block">&nbsp;</span></td>
-				<!--
-									<td><span class="dummy-block">&nbsp;</span></td>
-									<td><span class="dummy-block">&nbsp;</span></td>
-				-->
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="col-xs-12">
-						<div class="page-header">
-							<h5>Create a new device</h5>
+											<span v-wb-spinner="updatePromise"></span>
+
+											<span v-if="updatePromise">Saving changes</span>
+											<span v-if="!updatePromise">Save changes</span>
+										</button>
+									</div>
+								</div>
+							</form>
 						</div>
 
-						<form role="form">
-							<div class="row">
-							<div class="form-group col-xs-4">
-								<label for="device-name">Device Name</label>
-								<div>
-									<input
-												v-model="newdevice.name"
-												type="text"
-												class="form-control"
-												id="device-name"
-												name="device-name"
-												placeholder="Device name"/>
-								</div>
-							</div>
-							<div class="form-group col-xs-4" v-class="has-error: deviceError.address">
-								<label for="device-name">Device UID</label>
-								<div class=" has-feedback">
-									<input
-												v-model="deviceAddress"
-												type="text"
-												class="form-control"
-												id="device-uid"
-												name="device-uid"
-												placeholder="0.0.0.0" />
-									<span
-										class="form-control-feedback inline-label label"
-										v-class="label-info: !deviceError.address,label-danger: deviceError.address">{{viewOpts.addressType}}</span>
-									<p v-if="deviceError.address" class="help-block">{{deviceError.address}}</p>
-									<p class="help-block mute">
-										Enter device address either as hex
-										<code>`00:00:00:00`</code> or binary
-										<code>`0.0.0.0`</code>.
-									</p>
-								</div>
-							</div>
-							<div class="form-group col-xs-4">
-								<label for="device-name">Device Name</label>
-								<div>
-									<select
-										v-model="newdevice.type"
-										options="networkTypes"
-										id="device-type"
-										name="device-type"
-										class="form-control">
-									</select>
-								</div>
-							</div>
-							<div class="form-group col-xs-12">
-								<button
-									v-on="click: provision(newdevice, $event)"
-									v-attr="disabled: devicePromise"
-									v-class="'btn-spinner': devicePromise"
-									class="btn btn-success pull-right">
+						<div class="col-xs-6 channels">
+							<ul>
+								<li v-repeat="network.channels">
+									<h5>
+										<b>Gateway:</b> <i>{{network.devicemap[$key].name || $key}} (uid: <span v-wb-address="network.devicemap[$key].address"></span>)</i>
+										&ndash;
+										<span v-if="active"  class="label label-success">Connected</span>
+										<span v-if="!active" class="label label-danger">Disconnected</span>
+									</h5>
 
-									<span v-wb-spinner="devicePromise"></span>
+									<div class="body">
+										<span v-if="meta.started">&ndash; Connected <i v-wb-fuzzy-date="meta.started"></i><br /></span>
+									<!--
+										<span>Queue length: <i>{{meta.queue_size}}</i></span><br />
+										<span>% of network traffic:
+												<i class="rx">{{((meta.tcp.rx||0)/(network.meta.net.tcp.rx||1))*100}}% (rx)</i> /
+												<i class="tx">{{((meta.tcp.tx||0)/(network.meta.net.tcp.tx||1))*100}}% (tx)</i>
+										</span>
+									-->
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
 
-									<span v-if="devicePromise">Creating device</span>
-									<span v-if="!devicePromise">Create device</span>
-								</button>
+					<div v-if="'devices' === params.tab" class="row">
+						<div class="col-xs-12">
+							<table class="table">
+								<thead>
+									<tr>
+										<th><a v-on="click: setDeviceOrderBy('key');">Key</a></th>
+										<th><a v-on="click: setDeviceOrderBy('address');">UID</a></th>
+										<th><a v-on="click: setDeviceOrderBy('name');">Name</a></th>
+										<th><a v-on="click: setDeviceOrderBy('type');">Type</a></th>
+										<th><a v-on="click: setDeviceOrderBy('lastseen');">Last seen</a></th>
+					<!--
+										<th>In queue</th>
+										<th>Status</th>
+					-->
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-repeat="dev: network.devicemap | orderBy viewOpts.field viewOpts.reverse">
+										<td><a href="#/device/{{params.network}}/{{$key}}">{{$key}}</a<</td>
+										<td><span class="mono" v-wb-address="dev.address"></span></td>
+										<td><a href="#/device/{{params.network}}/{{$key}}">{{dev.name || "unnamed"}}</a<</td>
+										<td><a href="#/device/{{params.network}}/{{$key}}">{{dev.type}}</a<</td>
+										<td><a>N/A</a></td>
+					<!--
+										<td><a>Empty</a<</td>
+										<td>
+											<span class="status text-success"><i class="glyphicon glyphicon-ok"></i> Nothing special</span>
+											<!--
+												<span class="status text-danger"><i class="glyphicon glyphicon-paperclip"></i> Low battery</span>
+												<span class="status text-danger"><i class="glyphicon glyphicon-signal"></i> Poor signal</span>
+												<span class="status text-info"><i class="glyphicon glyphicon-eject"></i> Unstable link</span>
+												<span class="status text-warning"><i class="glyphicon glyphicon-move"></i> Frequent resets</span>
+												<span class="status text-warning"><i class="glyphicon glyphicon-_"></i> Late IMA</span>
+												<span class="status text-warning"><i class="glyphicon glyphicon-_"></i> No Response</span>
+											-->
+					<!--
+										</td>
+					-->
+									</tr>
+									<tr v-repeat="(x=[]).length = Math.max(5 - network.meta.device.count, 0);x">
+										<td><span class="dummy-block">&nbsp;</span></td>
+										<td><span class="dummy-block">&nbsp;</span></td>
+										<td><span class="dummy-block">&nbsp;</span></td>
+										<td><span class="dummy-block">&nbsp;</span></td>
+										<td><span class="dummy-block">&nbsp;</span></td>
+					<!--
+										<td><span class="dummy-block">&nbsp;</span></td>
+										<td><span class="dummy-block">&nbsp;</span></td>
+					-->
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-xs-12">
+							<div class="page-header">
+								<h5>Create a new device</h5>
 							</div>
-						</form>
+
+							<form role="form">
+								<div class="row">
+								<div class="form-group col-xs-4">
+									<label for="device-name">Device Name</label>
+									<div>
+										<input
+													v-model="newdevice.name"
+													type="text"
+													class="form-control"
+													id="device-name"
+													name="device-name"
+													placeholder="Device name"/>
+									</div>
+								</div>
+								<div class="form-group col-xs-4" v-class="has-error: deviceError.address">
+									<label for="device-name">Device UID</label>
+									<div class=" has-feedback">
+										<input
+													v-model="deviceAddress"
+													type="text"
+													class="form-control"
+													id="device-uid"
+													name="device-uid"
+													placeholder="0.0.0.0" />
+										<span
+											class="form-control-feedback inline-label label"
+											v-class="label-info: !deviceError.address,label-danger: deviceError.address">{{viewOpts.addressType}}</span>
+										<p v-if="deviceError.address" class="help-block">{{deviceError.address}}</p>
+										<p class="help-block mute">
+											Enter device address either as hex
+											<code>`00:00:00:00`</code> or binary
+											<code>`0.0.0.0`</code>.
+										</p>
+									</div>
+								</div>
+								<div class="form-group col-xs-4">
+									<label for="device-name">Device Name</label>
+									<div>
+										<select
+											v-model="newdevice.type"
+											options="networkTypes"
+											id="device-type"
+											name="device-type"
+											class="form-control">
+										</select>
+									</div>
+								</div>
+								<div class="form-group col-xs-12">
+									<button
+										v-on="click: provision(newdevice, $event)"
+										v-attr="disabled: devicePromise"
+										v-class="'btn-spinner': devicePromise"
+										class="btn btn-success pull-right">
+
+										<span v-wb-spinner="devicePromise"></span>
+
+										<span v-if="devicePromise">Creating device</span>
+										<span v-if="!devicePromise">Create device</span>
+									</button>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
-	
+
 			<div class="row" v-if="params.network && !network">
 				<div v-component="error-404" class="white header-pad" style="padding-top: 100px; padding-left: 50px;"></div>
 			</div>
