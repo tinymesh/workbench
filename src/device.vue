@@ -68,7 +68,7 @@ module.exports = {
 					key: this.$root.$.data.params.device
 				}
 			).$promise.then(function(device) {
-				if ([] === device['proto/tm'] || Object.keys(device['proto/tm']).length === 0)
+				if ([] === device['proto/tm'] || Object.keys(device['proto/tm'] || {}).length === 0)
 					device['proto/tm'] = {
 						config: {
 							device: {
