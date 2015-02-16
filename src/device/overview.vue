@@ -159,7 +159,7 @@ module.exports = {
 				return []
 
 			var config = this.device['proto/tm'].config
-			if (config.gpio_0)
+			if (config.gpio_0.config)
 				return [
 					config.gpio_0, config.gpio_1, config.gpio_2,
 					config.gpio_3, config.gpio_4, config.gpio_5,
