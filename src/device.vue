@@ -26,7 +26,7 @@
 
 			<div v-if="!device['proto/tm']" class="row">
 				<p class="lead text-center">
-					I can't find that device... Are you sure you put it the right address? If not try to 
+					I can't find that device... Are you sure you put it the right address? If not reload the page!
 				</p>
 			</div>
 			<div v-if="device['proto/tm']" v-component="device-{{params.tab}}"> </div>
@@ -80,6 +80,10 @@ module.exports = {
 					}
 
 				this.$set('device', device)
+			}.bind(this), function(err) {
+				if (403 === err.status) {
+					this.$root.$.notify.set('There seems to be an error with the resource, device could not be read', 'danger');
+				}
 			}.bind(this));
 		}.bind(this));
 	},
