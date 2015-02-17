@@ -4,7 +4,7 @@
 				<h3>{{device.name || "Unnamed device"}}</h3>
 			</div>
 			<div class="row">
-				<form name="device" role="form" class="form form-horizontal">
+				<form name="device" role="form" class="form form-horizontal container-fluid">
 					<div class="col-xs-6">
 						<div class="form-group">
 								<label class="col-xs-4 control-label">Device Name</label>
@@ -99,37 +99,39 @@
 
 		<div class="row section">
 
-			<div class="page-header">
-				<h4>GPIO Status</h4>
-			</div>
+			<div class="container-fluid">
+				<div class="page-header">
+					<h4>GPIO Status</h4>
+				</div>
 
-			<div v-if="gpios.length === 0">
-				<p class="lead text-center">
-					No GPIO configuration found, did you try to fetch the config?
-				</p>
-			</div>
-			<div v-if="gpios.length > 0">
-				<div class="col-xs-6" v-repeat="gpio: gpios">
-					<div class="col-xs-4">GPIO {{$index}}</div>
+				<div v-if="gpios.length === 0">
+					<p class="lead text-center">
+						No GPIO configuration found, did you try to fetch the config?
+					</p>
+				</div>
+				<div v-if="gpios.length > 0">
+					<div class="col-xs-6" v-repeat="gpio: gpios">
+						<div class="col-xs-4">GPIO {{$index}}</div>
 
-					<div class="col-xs-8" v-if="0 === gpio.config">
-						<span>Output (high)</span>
-					</div>
+						<div class="col-xs-8" v-if="0 === gpio.config">
+							<span>Output (high)</span>
+						</div>
 
-					<div class="col-xs-8" v-if="1 === gpio.config">
-						<span>Input: {{device['proto/tm']['gpio_' + $index] || "no value"}}</span>
-					</div>
+						<div class="col-xs-8" v-if="1 === gpio.config">
+							<span>Input: {{device['proto/tm']['gpio_' + $index] || "no value"}}</span>
+						</div>
 
-					<div class="col-xs-8" v-if="2 === gpio.config">
-						<span>Analogue Input</span>
-					</div>
+						<div class="col-xs-8" v-if="2 === gpio.config">
+							<span>Analogue Input</span>
+						</div>
 
-					<div class="col-xs-8" v-if="3 === gpio.config">
-						<span>PWM Output</span>
-					</div>
+						<div class="col-xs-8" v-if="3 === gpio.config">
+							<span>PWM Output</span>
+						</div>
 
-					<div class="col-xs-8" v-if="3 === gpio.config">
-						<span>Output (low)</span>
+						<div class="col-xs-8" v-if="3 === gpio.config">
+							<span>Output (low)</span>
+						</div>
 					</div>
 				</div>
 			</div>

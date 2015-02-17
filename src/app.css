@@ -20,7 +20,7 @@ footer {
 color: #777;
 		text-align: center;
 }
-footer > .container {
+footer > .container-fluid {
 	border-top: 1px solid #e5e5e5;
 	padding-top: 2.5em;
 	margin-top: 2em;

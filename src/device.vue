@@ -17,12 +17,13 @@
 	display: inline-block;
 	color: #fff;
 }
-.row.subbar li:first-child > a {
+.row.subbar li.head > a {
 	background: #232b35;
 	display: inline-block;
 	color: #fff;
+	border-bottom: 2px solid transparent;
 }
-.row.subbar li:first-child > a:hover {
+.row.subbar li.head > a:hover {
 	border-bottom: 2px solid #565e68;
 }
 </style>
@@ -32,7 +33,7 @@
 			<div class="row subbar">
 				<div class="col-xs-12">
 					<ul class="nav nav-pills">
-						<li>
+						<li class="head">
 							<a href="#/dashboard/{{params.network}}">
 								<span class="glyphicon glyphicon-chevron-left">&nbsp;</span>
 								Network &ndash; {{params.network}}
@@ -45,7 +46,11 @@
 					</ul>
 				</div>
 			</div>
+		</div>
 
+		<div v-component="wb-notify" v-ref="notify" id="notify"></div>
+
+		<div class="container-fluid">
 			<div v-if="!device['proto/tm']" class="row">
 				<p class="lead text-center">
 					I can't find that device... Are you sure you put it the right address? If not reload the page!
@@ -105,7 +110,7 @@ module.exports = {
 				this.$set('device', device)
 			}.bind(this), function(err) {
 				if (403 === err.status) {
-					this.$root.$.notify.set('There seems to be an error with the resource, device could not be read', 'danger');
+					this.$.notify.set('There seems to be an error with the resource, device could not be read', 'danger');
 				}
 			}.bind(this));
 		}.bind(this));
@@ -129,7 +134,7 @@ module.exports = {
 			// this.device.$promise not available, use returned promise
 			this.devicePromise = this.device.$update({auth: this.$root.$.auth.data}, device, qopts).$promise
 			this.devicePromise.then(function(device) {
-				this.$root.$.notify.set('Device was successfully updated', 'success')
+				this.$.notify.set('Device was successfully updated', 'success')
 
 				if ([] === device['proto/tm'] || Object.keys(device['proto/tm']).length === 0)
 					device['proto/tm'] = {
@@ -146,7 +151,7 @@ module.exports = {
 				this.devicePromise = undefined
 			}.bind(this), function(err) {
 				var msg = err.text || err.message;
-				this.$root.$.notify.set('Failed to update device: ' + msg, 'danger')
+				this.$.notify.set('Failed to update device: ' + msg, 'danger')
 				this.devicePromise = undefined
 			}.bind(this));
 		},

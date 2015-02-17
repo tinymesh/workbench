@@ -3,8 +3,6 @@ var Vue = require('vue'),
     store = require('store'),
     client = require('tinymesh-cloud-client');
 
-var addDashboardRoute = require('./dashboard');
-
 // Authentication storage and methods
 Vue.component('wb-auth', {
 	name: 'auth',
@@ -15,7 +13,7 @@ Vue.component('wb-auth', {
 		};
 	},
 	methods: {
-		onAuth: function(auth) {
+		onAuth: function(auth, onUser, onUserErr) {
 			delete auth.$promise; // not serializable
 			store.set('prevAuth?', true);
 			store.set('auth', auth);
@@ -23,9 +21,15 @@ Vue.component('wb-auth', {
 
 			this.$set('data', auth);
 			this.$set('authenticated', true);
+
 			this.$root.$.data.networks.$fulfil({auth: auth});
 
-			addDashboardRoute();
+			this.$root.$.data.user = client.user.get({auth: auth});
+			this.$root.$.data.user.$promise.then(function(user) {
+				this.$root.$broadcast('user:auth', user)
+				onUser && onUser(user)
+			}.bind(this), onUserErr);
+
 			if ('#/user/logout' === window.location.hash)
 				Finch.navigate('/');
 			else

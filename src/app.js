@@ -23,7 +23,6 @@ require('./directives/modal');
 require('./directives/address');
 require('./directives/fuzzy-date');
 require('./navigation');
-require('./dashboard');
 require('./landingpage');
 require('./user/login');
 require('./user/logout');
@@ -54,6 +53,7 @@ app = new Vue({
 
 	},
 	components: {
+		'dashboard': require('./dashboard.vue').init(),
 		'device': require('./device.vue').init()
 	},
 	data: {
@@ -96,18 +96,19 @@ app = new Vue({
 	}
 });
 
-Finch.route('/', function() { app.$set('view', 'wb-landingpage'); });
+Finch.route('/', function() {
+	console.log('hello landing')
+	app.$set('view', 'wb-landingpage');
+});
 
 Finch.listen();
 
 var auth = store.get('auth');
 
 if (auth) {
-	app.$.data.user = client.user.get({auth: auth});
-	app.$.data.user.$promise
-		.then(function(user) {
-			app.$.auth.onAuth(auth);
-
+	app.$.auth.onAuth(
+		auth,
+		function(user) {
 			if ('#/user/logout' === window.location.hash)
 				Finch.navigate('/');
 			else if (window.location.hash)
@@ -124,7 +125,8 @@ if (auth) {
 			}
 
 			Finch.navigate('/');
-		});
+		}
+	)
 } else {
 	Finch.navigate('/');
 }

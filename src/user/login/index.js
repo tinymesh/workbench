@@ -41,7 +41,6 @@ Vue.component('wb-user-login', {
 			this.loginPromise
 				.then(function(body) {
 					v.$root.$.auth.onAuth(body);
-					v.$root.$.data.user = client.user.get({auth: body});
 					this.loginPromise = undefined;
 					this.$root.$.notify.clear();
 				}.bind(this),
