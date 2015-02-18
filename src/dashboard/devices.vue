@@ -131,7 +131,7 @@
 						</div>
 					</div>
 					<div class="form-group col-xs-4">
-						<label for="device-name">Device Name</label>
+						<label for="device-name">Device Type</label>
 						<div>
 							<select
 								v-model="device.type"
