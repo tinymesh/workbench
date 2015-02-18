@@ -404,8 +404,8 @@ height: 8px;
 							<li v-class="active: 'linux' == configureTab">
 								<a v-on="click: configureTab = 'linux'">Linux</a>
 							</li>
-							<li v-class="active: 'windows' == configureTab">
-								<a v-on="click: configureTab = 'windows'">Windows</a>
+							<li v-class="active: 'win' == configureTab">
+								<a v-on="click: configureTab = 'win'">Windows</a>
 							</li>
 							<li v-class="active: 'mac' == configureTab">
 								<a v-on="click: configureTab = 'mac'">Mac OS X</a>
@@ -516,7 +516,7 @@ height: 8px;
 					</p>
 		-->
 
-					<div v-if="configureTab === 'windows'" class="col-xs-8">
+					<div v-if="configureTab === 'win'" class="col-xs-8">
 						<div class="page-header">
 							<h3>Setup Network Connector software for Windows</h3>
 						</div>
