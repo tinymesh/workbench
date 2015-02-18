@@ -12,7 +12,7 @@
 					<label for="network-name" class="col-xs-4 control-label">Network Name</label>
 					<div class="col-xs-8">
 						<input
-									v-model="network.name"
+									v-model="networkPatch.name | patcher network.name"
 									type="text"
 									class="form-control"
 									id="network-name"
@@ -31,15 +31,15 @@
 				<div class="form-group">
 					<div class="col-sm-offset-4 col-sm-8 text-right"> 
 						<button
-							v-on="click: save(network, $event)"
-							v-attr="disabled: updatePromise"
-							v-class="'btn-spinner': updatePromise"
+							v-on="click: $parent.save(networkPatch, $event)"
+							v-attr="disabled: networkPromise"
+							v-class="'btn-spinner': networkPromise"
 							class="btn btn-success">
 
-							<span v-wb-spinner="updatePromise"></span>
+							<span v-wb-spinner="networkPromise"></span>
 
-							<span v-if="updatePromise">Saving changes</span>
-							<span v-if="!updatePromise">Save changes</span>
+							<span v-if="networkPromise">Saving changes</span>
+							<span v-if="!networkPromise">Save changes</span>
 						</button>
 					</div>
 				</div>
@@ -57,7 +57,7 @@
 					</h5>
 
 					<div class="body">
-						<span v-if="meta.started">&ndash; Connected <i v-wb-fuzzy-date="meta.started"></i><br /></span>
+						<span v-if="meta && meta.started">&ndash; Connected <i v-wb-fuzzy-date="meta.started"></i><br /></span>
 					<!--
 						<span>Queue length: <i>{{meta.queue_size}}</i></span><br />
 						<span>% of network traffic:
@@ -81,6 +81,14 @@ module.exports = {
 
 		network: function() {
 			return this.$root.$.data.network
+		},
+
+		networkPatch: function() {
+			return this.$parent.networkPatch
+		},
+
+		networkPromise: function() {
+			return this.$parent.networkPromise
 		}
 	}
 }

@@ -171,6 +171,21 @@ module.exports = {
 	methods: {
 		save: function(network, e) {
 			e.preventDefault();
+
+			var qopts = { key: this.params.network };
+
+			// this.device.$promise not available, use returned promise
+			this.networkPromise = this.$root.$.data.network.$update({auth: this.$root.$.auth.data}, network, qopts).$promise
+			this.networkPromise.then(function(network) {
+				this.$.notify.set('Network was successfully updated', 'success')
+
+				this.$root.$.data.$set('network', network);
+				this.networkPromise = undefined
+			}.bind(this), function(err) {
+				var msg = err.text || err.message;
+				this.$.notify.set('Failed to update network: ' + msg, 'danger')
+				this.networkPromise = undefined
+			}.bind(this));
 		}
 	},
 
