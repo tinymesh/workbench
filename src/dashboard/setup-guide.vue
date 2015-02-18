@@ -404,7 +404,7 @@ height: 8px;
 							<li v-class="active: 'linux' == configureTab">
 								<a v-on="click: configureTab = 'linux'">Linux</a>
 							</li>
-							<li v-class="active: 'wind' == configureTab">
+							<li v-class="active: 'windows' == configureTab">
 								<a v-on="click: configureTab = 'windows'">Windows</a>
 							</li>
 							<li v-class="active: 'mac' == configureTab">
@@ -610,6 +610,7 @@ module.exports = {
 				type: 'gateway',
 				$promise: undefined
 			},
+			configureTab: this.$root.platform
 		}
 	},
 
@@ -741,10 +742,6 @@ module.exports = {
 			return _.filter(("00000000" + parseInt(this.network.key, 36).toString(16))
 				.slice(-8, 16)
 				.split(/(..)/));
-		},
-
-		configureTab: function() {
-			return this.$root.platform
 		}
 	}
 }
