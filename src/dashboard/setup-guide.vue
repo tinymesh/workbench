@@ -661,8 +661,6 @@ module.exports = {
 			else
 				delete this.errors.address
 
-			console.log(this.errors);
-
 			if (Object.keys(this.errors).length > 0)
 				return
 

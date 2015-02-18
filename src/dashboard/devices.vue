@@ -195,7 +195,6 @@ module.exports = {
 		// orderBy needs array love to be able to sort
 		devicemap: function() {
 			return _.transform(this.network.devicemap, function(acc, v, k) {
-				console.log(_.indexOf(this.filters.type, v.type), this.filters.type, v.type)
 				if (0 === this.filters.type.length || -1 !== _.indexOf(this.filters.type, v.type)) {
 					v.key = k
 					acc.push(v)

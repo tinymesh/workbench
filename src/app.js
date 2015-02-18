@@ -97,7 +97,6 @@ app = new Vue({
 });
 
 Finch.route('/', function() {
-	console.log('hello landing')
 	app.$set('view', 'wb-landingpage');
 });
 

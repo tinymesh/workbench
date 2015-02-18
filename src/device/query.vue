@@ -346,7 +346,7 @@ module.exports = {
 
 		stopStreamQuery: function(ev) {
 			ev.preventDefault()
-			console.log('hello', this.streamQuery);
+
 			this.streamQuery.evhandler.close()
 			this.streamQuery = undefined
 			this.$parent.$.notify.set('Streaming query was stopped', 'info')
