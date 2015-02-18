@@ -60,9 +60,21 @@
 					class="btn btn-primary">
 
 					<span v-wb-spinner="queryPromise"></span>
+					<span v-if="!queryPromise" class="glyphicon glyphicon-search">&nbsp;</span>
 
 					<span v-if="queryPromise">Running Query</span>
 					<span v-if="!queryPromise">Run Query</span>
+				</button>
+				<button
+					v-on="click: streamQuery ? stopStreamQuery($event) : doStreamQuery(query, $event)"
+					v-class="'btn-spinner': streamQuery"
+					class="btn btn-info">
+
+					<span v-wb-spinner="streamQuery"></span>
+					<span v-if="!streamQuery" class="glyphicon glyphicon-random">&nbsp;</span>
+
+					<span v-if="streamQuery">Streaming (click to stop)</span>
+					<span v-if="!streamQuery">Stream Query</span>
 				</button>
 			</div>
 
@@ -220,14 +232,18 @@ module.exports = {
 					key: 'last-5min'
 				},
 			},
+
 			filters: ['datetime', 'key', 'proto/tm.type'],
 			filtersInput: "",
+
 			queryPromise: undefined,
+			streamQuery: undefined,
+
 			result: {
 				result: [],
 				meta: {},
-				orderBy: '[\'proto/tm\'].type',
-				reverse: false
+				orderBy: 'datetime',
+				reverse: true
 			}
 		}
 	},
@@ -256,6 +272,19 @@ module.exports = {
 			this.$log()
 		},
 
+		addHints: function(result) {
+			_.each(result, function(v) {
+				hints = _.union(
+					hints,
+					Object.keys(v),
+					_.map(Object.keys(v['proto/tm']),
+						function(v) { return 'proto/tm.' + v })
+				)
+			})
+
+			store.set('device.query.hints', hints)
+		},
+
 		doQuery: function(query, ev) {
 			ev.preventDefault();
 			this.queryPromise = client.message.query(
@@ -275,23 +304,52 @@ module.exports = {
 					this.result.result = result.result
 					this.result.meta = result.meta
 
-					// add quick hints
-					_.each(result.result, function(v) {
-						hints = _.union(
-							hints,
-							Object.keys(v),
-							_.map(Object.keys(v['proto/tm']),
-								function(v) { return 'proto/tm.' + v })
-						)
-					})
-
-					store.set('device.query.hints', hints)
-
-
+					// add autocomplete hints
+					this.addHints(result.result)
 				}.bind(this),
 				function(err) {
 					this.queryPromise = undefined
 				}.bind(this));
+		},
+
+		doStreamQuery: function(query, ev) {
+			ev.preventDefault();
+
+			this.$parent.$.notify.clear()
+			this.streamQuery = client.message.stream(
+				{
+					auth: this.$root.$.auth.data,
+					evhandlers: {
+						msg: function(msg) {
+							this.result.result.push(msg)
+							// add autocomplete hints
+							this.addHints([msg])
+						}.bind(this),
+						error: function(err) {
+							this.$parent.$.notify.set('Could not perform query, an unknown error occured', 'danger')
+							this.streamQuery = undefined
+						}.bind(this),
+					}
+				},
+				null,
+				{
+					'network': this.params.network,
+					'device': this.params.device,
+					'date.from': this.query.range.from,
+					'data-encoding': 'binary',
+					'accept': 'application/json',
+					'query': 'raw>0', // only return actual messages
+					'stream': 'stream/' + this.params.network + '/' + this.params.device,
+				}
+			);
+		},
+
+		stopStreamQuery: function(ev) {
+			ev.preventDefault()
+			console.log('hello', this.streamQuery);
+			this.streamQuery.evhandler.close()
+			this.streamQuery = undefined
+			this.$parent.$.notify.set('Streaming query was stopped', 'info')
 		},
 
 		get: function(k, item) {
