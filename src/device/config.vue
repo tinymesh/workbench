@@ -4,7 +4,7 @@
 			<h3>{{device.name || "Unnamed device"}}</h3>
 		</div>
 
-		<div class="alert alert-warning" v-if="!deviceConfig.device.part_number">
+		<div class="alert alert-warning" v-if="!deviceConfig.device.part">
 			<h4>No configuration found!!</h4>
 			<p>
 				The firmware revision and part number could not be found.
@@ -24,27 +24,28 @@
 				</div>
 
 
-				<div class="params">
-					<div v-repeat="field: group.items" class="col-xs-4">
+				<div class="params row" v-repeat="sub: group.subgroups" groups>
+					<div class="container">
+						<div v-repeat="field: sub" class="col-xs-4">
+							<div v-if="field.enum">
+								<label for="input-{{group.key}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
+								<select
+									v-model="deviceConfig[field.group][field.subkey]"
+									options="field.enum"
+									class="form-control"></select>
+							</div>
 
-						<div v-if="field.enum">
-							<label for="input-{{group.key}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
-							<select
-								v-model="patchConfig"
-								options="field.enum"
-								class="form-control"></select>
-						</div>
-
-						<div v-if="!field.enum">
-							<label for="input-{{group.key}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
-							<input
-								v-model="patchConfig"
-								value="{{field.value}}"
-								type="text"
-								id="input-{{group.key}}-{{field.subkey}}"
-								class="form-control"
-								v-attr="disabled: field.ro ? 'yes' : false"
-								number />
+							<div v-if="!field.enum">
+								<label for="input-{{group.key}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
+								<input
+									v-model="deviceConfig[field.group][field.subkey]"
+									value="{{field.value}}"
+									type="text"
+									id="input-{{group.key}}-{{field.subkey}}"
+									class="form-control"
+									v-attr="disabled: field.ro ? 'yes' : false"
+									number />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -155,7 +156,7 @@ module.exports = {
 					acc[group] = {
 						key: group,
 						name: nameMap[group],
-						items: {}
+						subgroups: {}
 					}
 				}
 
@@ -177,16 +178,19 @@ module.exports = {
 					if (field.since && field.since > vsn)
 						return
 
-					field.group = k;
+					field.group = k
+					field.subkey = i
 
-					acc[group].items[i] = _.merge(field, fieldDefs[field.key])
-					acc[group].items[i].subkey = i
+					if (field['enum'])
+						field['enum'] = _.map(field['enum'], function(v) {
+							return v.toString()
+						})
+
+					field = _.merge(field, fieldDefs[field.key])
 					acc[group].itemsLength++;
-					//this.device['proto/tm'].config[k][i] = this.device['proto/tm'].config[k][i] || undefined;
-					if (!this.field) {
-						this.$set('field', field);
-						this.$set('group', acc[group])
-					}
+					acc[group].subgroups[k] = acc[group].subgroups[k] || {}
+					acc[group].subgroups[k][i] = field
+
 				}.bind(this))
 				return acc
 			}.bind(this), {})
