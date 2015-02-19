@@ -28,18 +28,17 @@
 					<div class="container">
 						<div v-repeat="field: sub" class="col-xs-4">
 							<div v-if="field.enum">
-								<label for="input-{{group.key}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
+								<label for="input-{{field.group}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
 								<select
-									v-model="deviceConfig[field.group][field.subkey]"
+									v-model="devicePatch | configPatch deviceConfig"
 									options="field.enum"
 									class="form-control"></select>
 							</div>
 
 							<div v-if="!field.enum">
-								<label for="input-{{group.key}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
+								<label for="input-{{field.group}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
 								<input
-									v-model="deviceConfig[field.group][field.subkey]"
-									value="{{field.value}}"
+									v-model="devicePatch['proto/tm'].config[field.group][field.subkey] | configPatch deviceConfig"
 									type="text"
 									id="input-{{group.key}}-{{field.subkey}}"
 									class="form-control"
@@ -55,7 +54,7 @@
 		<div class="form-group">
 			<div class="col-sm-offset-8 col-sm-4"> 
 				<button
-					v-on="click: save(configpatch, $event)"
+					v-on="click: save(devicePatch, $event)"
 					v-attr="disabled: $parent.devicePromise"
 					v-class="'btn-spinner': $parent.devicePromise"
 					class="btn btn-success">
@@ -75,24 +74,38 @@ var config = JSON.parse(require('!raw!./config/0.4.0.json'))
 var fieldDefs = JSON.parse(require('!raw!./config/0.4.0-names.json'))
 
 module.exports = {
-	data: function() {
-		return {
-			configpatch: {
-				'device': {},
-			}
-		}
-	},
+	data: function() {},
 	methods: {
-		save: function(cfg, e) {
-			var patch = {
-				'proto/tm': {
-					config: cfg
-				}
-			}
-
+		save: function(patch, e) {
 			this.$parent.save.call(this, patch, e);
 		}
 	},
+
+	created: function() {
+		_.each(config, function(v, k) {
+			if (!this.devicePatch['proto/tm'])
+				this.$parent.$set('devicePatch[\'proto/tm\']', {})
+
+			if (!this.devicePatch['proto/tm'].config)
+				this.$parent.$set('devicePatch[\'proto/tm\'].config', {})
+
+			if (!this.devicePatch['proto/tm'].config[k])
+				this.$parent.$set('devicePatch[\'proto/tm\'].config.' + k, {})
+		}.bind(this))
+	},
+
+	filters: {
+		configPatch: {
+			write: function(value, prevVal, source) {
+				this.$set('devicePatch[\'proto/tm\'].config.' + this.field.group + '.' + this.field.subkey, value)
+				return value
+			},
+			read: function(value, source ) {
+				return value ? value : ((this.$get(source) || {})[this.field.group] || {})[this.field.subkey] || undefined
+			}
+		}
+	},
+
 	computed: {
 		params: function() {
 			return this.$root.$.data.params;
@@ -106,15 +119,8 @@ module.exports = {
 			return this.$parent.device['proto/tm'].config;
 		},
 
-		patchConfig: {
-			get: function(val) {
-				return this.deviceConfig[this.field.group][this.field.subkey];
-			},
-			set: function(val) {
-				console.log('patch', 'configpatch.' + this.field.key, val)
-				this.$set('configpatch.' + this.field.key, val)
-				return val
-			}
+		devicePatch: function() {
+			return this.$parent.devicePatch
 		},
 
 		config: function() {
@@ -166,7 +172,6 @@ module.exports = {
 						this.$parent.$set(
 						'device[\'proto/tm\'].config.' + k,
 						{})
-						this.configpatch[k] = {}
 				}
 
 				acc[group].itemsLength = 0;
@@ -200,4 +205,3 @@ module.exports = {
 	}
 }
 </script>
-
