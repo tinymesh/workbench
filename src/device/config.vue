@@ -41,14 +41,14 @@
 		</div>
 
 		<div class="row group" v-repeat="group: config" v-show="group.itemsLength > 0">
-			<div class="container">
+			<div class="container-fluid">
 				<div class="page-header">
 					<h4>{{group.name || $key}}</h4>
 				</div>
 
 
 				<div class="params row" v-repeat="sub: group.subgroups" groups>
-					<div class="container">
+					<div class="container-fluid">
 						<div v-repeat="field: sub" class="col-xs-4">
 							<div v-if="field.enum">
 								<label for="input-{{field.group}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
