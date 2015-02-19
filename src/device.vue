@@ -118,7 +118,7 @@ module.exports = {
 	data: function() {
 		return {
 			device: { },
-			devicepatch: { },
+			devicePatch: { },
 			devicePromise: undefined
 		}
 	},

@@ -10,7 +10,7 @@
 								<label class="col-xs-4 control-label">Device Name</label>
 								<div class="col-xs-8">
 									<input
-												v-model="devicepatch.name | patcher device.name"
+												v-model="devicePatch.name | patcher device.name"
 												type="text"
 												class="form-control"
 												id="network-name"
@@ -32,7 +32,7 @@
 								<label class="col-xs-4 control-label">Device Type</label>
 								<div class="col-xs-8">
 									<select
-										v-model="devicepatch.type | patcher device.type"
+										v-model="devicePatch.type | patcher device.type"
 										options="availableDeviceTypes"
 										id="device-type"
 										name="device-type"
@@ -82,7 +82,7 @@
 					<div class="form-group">
 						<div class="col-sm-offset-8 col-sm-4"> 
 							<button
-								v-on="click: save(devicepatch, $event)"
+								v-on="click: save(devicePatch, $event)"
 								v-attr="disabled: $parent.devicePromise"
 								v-class="'btn-spinner': $parent.devicePromise"
 								class="btn btn-success">
@@ -155,8 +155,8 @@ module.exports = {
 			return this.$parent.device;
 		},
 
-		devicepatch: function() {
-			return this.$parent.devicepatch;
+		devicePatch: function() {
+			return this.$parent.devicePatch;
 		},
 
 		gpios: function() {
