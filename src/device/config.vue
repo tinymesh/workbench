@@ -17,6 +17,29 @@
 			</p>
 		</div>
 
+		<div class="alert alert-warning" v-if="deviceConfig._staged">
+			<h4>Configuration in process</h4>
+			<p>
+				Device configuration has diverged, the following updates are pending:
+
+				<ul>
+					<li v-repeat="stage: stagedFlattend">
+						<b>Message:</b> <a>{{$key}}</a>
+						<ul>
+							<li v-repeat="item: stage">
+								Update <b>{{item.key}}</b>
+									from <code>{{item.prevVal}}</code> to <code>{{item.value}}</code>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</p>
+			<p>
+				If this message persists try sending a <code>`command/get_config`</code>
+				packet to update the configuration.
+			</p>
+		</div>
+
 		<div class="row group" v-repeat="group: config" v-show="group.itemsLength > 0">
 			<div class="container">
 				<div class="page-header">
@@ -121,6 +144,26 @@ module.exports = {
 
 		devicePatch: function() {
 			return this.$parent.devicePatch
+		},
+
+		stagedFlattend: function() {
+			var
+				ret = {},
+				cfg = this.deviceConfig
+
+			_.each(this.deviceConfig._staged, function(items, k) {
+				ret[k] = _.reduce(items, function(acc, v, k) {
+					 return acc.concat(_.map(v, function(item, k2) {
+						 return {
+							key: [k, k2].join('.'),
+							value: item,
+							prevVal: cfg[k][k2]
+						}
+					}))
+				}, [])
+			})
+
+			return ret
 		},
 
 		config: function() {
