@@ -12,8 +12,9 @@
 }
 
 .navbar .navbar-header a {
-	padding: 0px 15px;
+	padding: 14px 15px 12px;
 	height: auto;
+	font-weight: bold;
 }
 
 .navbar li a {
@@ -50,7 +51,7 @@
 	<nav class="navbar" role="navigation">
 		 <div class="container-fluid">
 				<div class="navbar-header col-xs-2">
-					 <a href="./index.html" class="navbar-brand">Tiny Mesh Cloud</a>
+					 <a href="./index.html" class="navbar-brand">Tinymesh Workbench</a>
 				</div>
 				<nav class="col-xs-10" role="navigation">
 					 <ul class="nav main navbar-nav">
