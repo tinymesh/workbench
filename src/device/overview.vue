@@ -15,7 +15,7 @@
 												class="form-control"
 												id="network-name"
 												name="network-name"
-												placeholder="Network name"/>
+												placeholder="Device name"/>
 								</div>
 						</div>
 
