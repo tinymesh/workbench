@@ -41,6 +41,7 @@ var
 	hasChromeApp = false;
 
 //Vue.config.debug = true;
+var navigation = require('./navigation.vue').init(navigation)
 app = new Vue({
 	el: '#app',
 	// require html enabled by the partialify transform
@@ -52,9 +53,9 @@ app = new Vue({
 
 	},
 	components: {
-		'dashboard': require('./dashboard.vue').init(),
-		'device': require('./device.vue').init(),
-		'wb-navigation': require('./navigation.vue'),
+		'dashboard': require('./dashboard.vue').init(navigation),
+		'device': require('./device.vue').init(navigation),
+		'wb-navigation': navigation,
 	},
 	data: {
 		view: undefined,

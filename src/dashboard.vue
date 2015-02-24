@@ -146,9 +146,17 @@ var route = function(args) {
 }
 
 module.exports = {
-	init: function() {
+	init: function(navigation) {
 		Finch.route('/dashboard/:nid', route)
 		Finch.route('/dashboard/:nid/:tab', route)
+
+		navigation.methods.add.call(navigation.proxy(), {
+			text: 'Dashboard',
+			href: '/dashboard',
+			auth: true,
+			active: [/^\/$/, /^\/dashboard(\/|$)/],
+			icon: 'glyphicon glyphicon-dashboard'
+		})
 
 		return this;
 	},

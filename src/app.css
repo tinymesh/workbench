@@ -46,30 +46,6 @@ footer .links li:first-child {
 }
 footer .links li.active a { font-weight: bold; }
 
-
-.navbar {
-	background: #f7f7f7;
-	height: 66px;
-		border-bottom: 1px solid #eee;
-		margin-bottom: 0px;
-}
-
-.navbar .navbar-header a { padding-top: 21px; }
-
-.navbar li a {
-	line-height: 32px;
-}
-
-.navbar .main li a {
-	color: #3a3a3a;
-	font-weight: bold;
-}
-
-.navbar .main li.active a {
-	color: #52bad5;
-	border-bottom: 3px solid #52bad5;
-}
-
 .half-border-right { padding-right: 4.16%; }
 .half-border-left { padding-left: 4.16%; }
 .right-border {

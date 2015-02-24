@@ -1,6 +1,6 @@
 <style lang="css">
 .row.subbar {
-	background: #343d46
+	background: #343d46;
 }
 .row.subbar li > a {
 	color: #fff;
