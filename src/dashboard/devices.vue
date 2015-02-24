@@ -172,7 +172,7 @@ module.exports = {
 			orderBy: 'name',
 			orderReverse: false,
 
-			addressType: false,
+			addressType: "Decimal Address",
 
 			device: {},
 			deviceError: {},
