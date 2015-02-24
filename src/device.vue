@@ -39,9 +39,24 @@
 								Network &ndash; {{params.network}}
 							</a>
 						</li>
-						<li v-class="active: '' === params.tab || 'overview' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}">Overview</a></li>
-						<li v-class="active: 'config' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/config">Configuration</a></li>
-						<li v-class="active: 'query' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/query">Query</a></li>
+						<li v-class="active: '' === params.tab || 'overview' === params.tab">
+							<a href="#/device/{{params.network}}/{{params.device}}">
+								<span class="glyphicon glyphicon-pencil">&nbsp;</span>
+								Overview
+							</a>
+						</li>
+						<li v-class="active: 'config' === params.tab">
+							<a href="#/device/{{params.network}}/{{params.device}}/config">
+								<span class="glyphicon glyphicon-cog">&nbsp;</span>
+								Configuration
+							</a>
+						</li>
+						<li v-class="active: 'query' === params.tab">
+							<a href="#/device/{{params.network}}/{{params.device}}/query">
+								<span class="glyphicon glyphicon-th-list">&nbsp;</span>
+								Query
+							</a>
+						</li>
 						<!--<li v-class="active: 'interact' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/interact">Console</a></li>-->
 					</ul>
 				</div>

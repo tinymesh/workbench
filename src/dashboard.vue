@@ -22,7 +22,7 @@
 <div>
 		<div class="container-fluid">
 			<div class="row subbar" v-if="!params.network || network">
-				<div class="col-xs-9">
+				<div class="col-xs-12">
 					<ul class="nav nav-pills">
 						<li
 							class="head">
@@ -154,8 +154,9 @@ module.exports = {
 			text: 'Dashboard',
 			href: '/dashboard',
 			auth: true,
-			active: [/^\/$/, /^\/dashboard(\/|$)/],
-			icon: 'glyphicon glyphicon-dashboard'
+			active: [/^\/$/, /^\/dashboard(\/|$)/, /^\/device(\/|$)/],
+			icon: 'glyphicon glyphicon-dashboard',
+			appendClasses: ['has-subbar']
 		})
 
 		return this;

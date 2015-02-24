@@ -4,6 +4,9 @@
 	min-height: 1px !important;
 	border-bottom: 1px solid #eee;
 	margin-bottom: 0px;
+	border-radius: 0px;
+}
+.navbar.has-subbar {
 	border: none;
 }
 
@@ -12,9 +15,10 @@
 }
 
 .navbar .navbar-header a {
-	padding: 14px 15px 12px;
+	padding: 15px 0 10px 15px;
 	height: auto;
 	font-weight: bold;
+	height: 46px;
 }
 
 .navbar li a {
@@ -22,42 +26,60 @@
 }
 
 .navbar .main li a {
-	color: #3a3a3a;
 	font-weight: bold;
+	padding-left: 30px;
+	padding-right: 30px;
 }
 
-.navbar .main li.active a {
+.has-subbar .navbar .main li.active a {
 	color: #52bad5;
-	padding-top: 10px;
-	padding-bottom: 4px;
 }
 .navbar .main li.active a:focus {
 	background: transparent;
 }
 .nav.main li.active {
-	background: #343d46
+	background: #f3f3f3;
 }
 	.nav.main li.active a {
+		color: #337ab7;
+		border-bottom: 3px solid #337ab7;
+	}
+	.nav.main li.active a:hover {
+		border-bottom-color: #337ab7;
+		background: #e7e7e7;
+	}
+
+.has-subbar .navbar .main li.active a {
+	color: #52bad5;
+	padding-top: 10px;
+	padding-bottom: 4px;
+}
+.has-subbar .nav.main li.active {
+	background: #343d46
+}
+	.has-subbar .nav.main li.active a {
 		color: #fff;
 		border-bottom-color: #343d46
 	}
-	.nav.main li.active a:hover {
+	.has-subbar .nav.main li.active a:hover {
 		background: #454e57;
 		border-bottom-color: #4a545b;
 	}
 </style>
 
 <template lang="html">
-	<nav class="navbar" role="navigation">
+	<nav
+		class="navbar {{active ? (active.appendClasses || '') : ''}}"
+		role="navigation">
 		 <div class="container-fluid">
 				<div class="navbar-header col-xs-2">
-					 <a href="./index.html" class="navbar-brand">Tinymesh Workbench</a>
+					 <a href="./index.html" class="navbar-brand">Workbench</a>
 				</div>
 				<nav class="col-xs-10" role="navigation">
 					 <ul class="nav main navbar-nav">
 							<li
 								v-show="undefined === link.auth || link.auth === $root.$.auth.authenticated"
-								v-class="active: isActive(link)"
+								v-class="active: setAndCheckActive(link)"
 								v-repeat="link: links">
 									<a href="#{{link.href}}">
 										<span v-if="link.icon" v-attr="class: link.icon">&nbsp;</span>
@@ -112,6 +134,7 @@ module.exports = {
 	data: function() {
 		return {
 			links: links,
+			active: undefined,
 			hash: window.location.hash.replace(/^#/, '')
 		}
 	},
@@ -123,13 +146,21 @@ module.exports = {
 	},
 
 	methods: {
-		isActive: function(link) {
-			return _.any(link.active || [], function(match) {
+		setAndCheckActive: function(link) {
+			if (undefined !== link.auth && link.auth !== this.$root.$.auth.authenticated)
+				return false
+
+			var res = _.any(link.active || [], function(match) {
 				if (_.isRegExp(match))
 					return this.hash.match(match)
 				else
 					return match === this.hash
 			}.bind(this))
+
+			if (res)
+				this.active = link
+
+			return res;
 		},
 
 		// adds a link, if a link with similar .href exists it will be
