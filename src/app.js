@@ -22,7 +22,6 @@ require('./directives/spinner');
 require('./directives/modal');
 require('./directives/address');
 require('./directives/fuzzy-date');
-require('./navigation');
 require('./landingpage');
 require('./user/login');
 require('./user/logout');
@@ -54,7 +53,8 @@ app = new Vue({
 	},
 	components: {
 		'dashboard': require('./dashboard.vue').init(),
-		'device': require('./device.vue').init()
+		'device': require('./device.vue').init(),
+		'wb-navigation': require('./navigation.vue'),
 	},
 	data: {
 		view: undefined,
