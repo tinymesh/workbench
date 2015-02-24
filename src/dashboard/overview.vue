@@ -47,8 +47,14 @@
 		</div>
 
 		<div class="col-xs-6 channels">
-			<ul>
-				<li v-repeat="network.channels">
+			<div v-if="channels.length === 0">
+				<p class="lead">
+					You don't have any gateways in this network. If you want to
+					connect you can always add one <a href="#/dashboard/{{network.key}}/devices">under the Devices tab!</a>
+				</p>
+			</div>
+			<ul v-if="channels.length > 0">
+				<li v-repeat="channels">
 					<h5>
 						<b>Gateway:</b> <i>{{network.devicemap[$key].name || $key}} (uid: <span v-wb-address="network.devicemap[$key].address"></span>)</i>
 						&ndash;
@@ -89,6 +95,10 @@ module.exports = {
 
 		networkPromise: function() {
 			return this.$parent.networkPromise
+		},
+
+		channels: function() {
+			return _.toArray(this.network.channels);
 		}
 	}
 }
