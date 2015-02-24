@@ -89,7 +89,10 @@
 					 </ul>
 					 <ul class="nav navbar-nav navbar-right">
 							<li v-if="$root.$.auth.authenticated">
-								<a href="#/user/logout">Logout</a>
+								<a href="#/user/logout">
+									<span class="glyphicon glyphicon-off">&nbsp;</span>
+									Logout
+								</a>
 							</li>
 							<!--
 							<li><a href="#login">Login</a></li>
