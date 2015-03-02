@@ -140,12 +140,66 @@
 </template>
 
 <script lang="js">
+var
+	client = require('tinymesh-cloud-client')
+
 module.exports = {
+	data: function() {
+		return {
+			msgStream: undefined
+		}
+	},
+
+	ready: function() {
+		this.initiateStream()
+	},
+
 	methods: {
 		save: function(device, e) {
 			this.$parent.save.call(this, device, e);
 		},
+
+		initiateStream: function() {
+			var x
+			this.$parent.$.notify.clear();
+			this.streamQuery = x, client.message.stream(
+				{
+					auth: this.$root.$.auth.data,
+					evhandlers: {
+						msg: function(msg) {
+							console.log('received message')
+						}.bind(this),
+
+						error: function(err) {
+							if (err) {
+								if (EventSource.CONNECTING === err.target.readyState) {
+									this.$parent.$.notify.set('Device stream disconnected, trying to reconnect', 'info')
+								} else if (EventSource.CLOSED === err.target.readyState) {
+									this.$parent.$.notify.set('Device stream disconnected', 'warning')
+									this.streamQuery = undefined
+								}
+							}
+						}.bind(this),
+
+						open: function(e) {
+							console.log('open', this)
+						}.bind(this),
+					}
+				},
+				null,
+				{
+					'network': this.params.network,
+					'device': this.params.device,
+					'date.from': 'NOW',
+					'data-encoding': 'binary',
+					'accept': 'application/json',
+					'query': 'raw>0', // only return actual messages
+					'stream': 'stream/' + this.params.network + '/' + this.params.device,
+				}
+			);
+		},
 	},
+
 	computed: {
 		params: function() {
 			return this.$root.$.data.params;
