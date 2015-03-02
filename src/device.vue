@@ -88,6 +88,10 @@ var route = function(args) {
 	app.$.data.$set('params.network', args.nid)
 	app.$.data.$set('params.device', args.device)
 	app.$.data.$set('params.tab', args.tab || "overview")
+
+	Finch.observe('action', function(action) {
+		app.$.data.$set('params.action', action)
+	})
 }
 
 module.exports = {

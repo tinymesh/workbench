@@ -55,7 +55,7 @@
 								<select
 									v-model="devicePatch | configPatch deviceConfig"
 									options="field.enum"
-									class="form-control"></select>
+									class="form-control" number></select>
 							</div>
 
 							<div v-if="!field.enum">

@@ -194,3 +194,5 @@ input:focus.keep-placeholder + .placeholder {
 .mono {
 	font-family: Consolas, Lucida Console, monospace;
 }
+
+.tabhead { margin-bottom: 2em; }
