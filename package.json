@@ -19,7 +19,8 @@
     "promise": ">= 3.2.0",
     "store": "*",
     "vue": "git://github.com/yyx990803/vue#0.11.5",
-    "zxcvbn": "git://github.com/buttercoin/node-zxcvbn.git#master"
+    "zxcvbn": "git://github.com/buttercoin/node-zxcvbn.git#master",
+    "d3": "*"
   },
   "devDependencies": {
     "css-loader": "^0.9.0",
