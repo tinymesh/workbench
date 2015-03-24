@@ -1,4 +1,14 @@
 <style lang="css">
+	.dropdown-control:hover > .dropdown-menu, .dropdown-menu:hover {
+		display: block;
+	}
+
+	.dropdown-control:focus > .dropdown-menu,
+	.dropdown-control:active > .dropdown-menu {
+		display: block;
+	}
+	.dropdown-control > .dropdown-menu { margin-top: -1px; }
+
 </style>
 <template lang="html">
 	<div class="device-overview">
@@ -150,68 +160,12 @@
 				v-with="device: device, msgs: msgs, params: params"
 				></div>
 
-			<div class="container-fluid" v-if="params.action === 'serial'">
-				<div class="col-xs-12">
-
-					<pre>{{serialOutput}}</pre>
-					<textarea
-						v-model="serialInput"
-						v-on="keyup:sendSerial | key enter"
-						class="form-control" rows="2"></textarea>
-
-					<div class="action">
-						<div class="pull-right">
-							<label>
-								<input v-model="useAck" type="checkbox"> Request acknowledge
-							</label>
-							&nbsp;
-
-							<div class="btn-group">
-								<button type="submit" class="btn btn-default">
-									Input type <b>({{serialInputType}})</b>
-								</button>
-								<button type="submit" class="btn btn-default">
-									<span class="caret">&nbsp;</span>
-								</button>
-							</div>
-							<ul class="dropdown-menu" role="menu">
-								<li><a href="#">ASCII</a></li>
-								<li><a href="#">HEX</a></li>
-							</ul>
-
-							<div class="btn-group">
-								<button type="submit" class="btn btn-info dropdown-control">
-									<span class="glyphicon glyphicon-retweet">&nbsp;</span>
-									Send Every (1 second)
-								</button>
-
-								<button type="submit" class="btn btn-info dropdown-control">
-									<span class="caret"></span>
-								</button>
-
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="#">1 second</a></li>
-									<li><a href="#">5 seconds</a></li>
-									<li><a href="#">15 seconds</a></li>
-									<li><a href="#">60 seconds</a></li>
-									<li>
-										<div class="input-group">
-											<input type="number" class="form-control" placeholder="Custom Time">
-											<div class="input-group-addon">seconds</div>
-										</div>
-									</li>
-								</ul>
-
-							</div>
-
-							<button type="submit" class="btn btn-primary">
-								<span class="glyphicon glyphicon-log-in">&nbsp;</span>
-								Send
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
+			<div
+				class="container-fluid"
+				v-if="!params.action || params.action === 'serial'"
+				v-component="serial"
+				v-with="device: device, msgs: msgs, params: params"
+				></div>
 
 			<div class="container-fluid" v-if="params.action === 'packets'">
 				<div class="col-xs-12" v-component="packets"></div>
@@ -232,17 +186,13 @@ module.exports = {
 			msgs: [],
 
 			pwmOutput: 100,
-
-			serialInput: '',
-			serialInputType: 'ASCII',
-
-			useAck: false
 		}
 	},
 
 	components: {
-		'packets': require('./packets.vue'),
-		'gpio': require('./overview/gpio.vue')
+		'gpio': require('./overview/gpio.vue'),
+		'serial': require('./overview/serial.vue'),
+		'packets': require('./packets.vue')
 	},
 
 	ready: function() {
@@ -267,10 +217,10 @@ module.exports = {
 								for (var i = 0; i < shift; i++)
 									this.msgs.shift()
 
-
-								this.$broadcast('data:msg:device', msg)
 								this.msgs.push(msg)
 							}
+
+							this.$broadcast('data:msg:device', msg)
 
 						}.bind(this),
 
@@ -296,7 +246,7 @@ module.exports = {
 					'network': this.params.network,
 					'device': this.params.device,
 					'date.from': 'NOW',
-					'data-encoding': 'binary',
+					'data-encoding': 'hex',
 					'accept': 'application/json',
 					'query': 'raw>0', // only return actual messages
 					'stream': 'stream/' + this.params.network + '/' + this.params.device,
