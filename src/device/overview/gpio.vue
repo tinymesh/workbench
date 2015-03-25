@@ -197,8 +197,6 @@ var
 	client = require('tinymesh-cloud-client'),
 	d3 = require('d3/d3')
 
-var cubes = {}
-
 var analogueChart = function(cubes, ref, opts) {
 	if (cubes[ref])
 		return cubes[ref]
@@ -289,6 +287,8 @@ module.exports = {
 	components: {},
 
 	ready: function() {
+		// keep it here to avoid it beeing exposed to observers
+		this._cubes = {}
 		this.device.$promise.then(function(device) {
 			this.pwmOutput = 100 - device['proto/tm'].pwm
 		}.bind(this))
@@ -296,18 +296,17 @@ module.exports = {
 
 	events: {
 		'data:msg:device': function(msg) {
-			if (2 === this.device['proto/tm'].config.gpio_0.config && !cubes['analogue-cube-0'])
-				analogueChart(cubes, 'analogue-cube-0')
+			if (2 === this.device['proto/tm'].config.gpio_0.config && !this._cubes['analogue-cube-0'])
+				analogueChart(this._cubes, 'analogue-cube-0')
 
-			if (2 === this.device['proto/tm'].config.gpio_1.config && !cubes['analogue-cube-1'])
-				analogueChart(cubes, 'analogue-cube-1')
+			if (2 === this.device['proto/tm'].config.gpio_1.config && !this._cubes['analogue-cube-1'])
+				analogueChart(this._cubes, 'analogue-cube-1')
 
-			if (cubes['analogue-cube-0'])
-				cubes['analogue-cube-0'].append(msg['proto/tm'].aio0 / 2047 * 1.25)
+			if (this._cubes['analogue-cube-0'])
+				this._cubes['analogue-cube-0'].append(msg['proto/tm'].aio0 / 2047 * 1.25)
 
-			if (cubes['analogue-cube-1'])
-				cubes['analogue-cube-1'].append(msg['proto/tm'].aio1 / 2047 * 1.25)
-
+			if (this._cubes['analogue-cube-1'])
+				this._cubes['analogue-cube-1'].append(msg['proto/tm'].aio1 / 2047 * 1.25)
 
 			return false;
 		}
