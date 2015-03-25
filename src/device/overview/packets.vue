@@ -88,25 +88,43 @@
 									</div>
 								</div>
 							</div>
+
+							<div v-show="!supportsOutputs">
+								<div class="alert alert-info">
+									This device does not have any output GPIO's
+									configured. You can add them through the
+									<a href="#/device/{{params.network}}/{{params.device}}/configuration">configuration view</a>
+								</div>
+							</div>
 						</div>
 					</div>
 
-					<div v-show="'set_pwm' === command">
-						<span
-							class="type bold col-xs-3">PWM Output</span>
+					<div v-show="'set_pwm' === command" class="container-fluid">
+						<div v-show="supportsPWM">
+							<span
+								class="type bold col-xs-3">PWM Output</span>
 
-						<div class="col-xs-7">
-							<input
-								id="pwmoutput"
-								type="range"
-								min="0"
-								max="100"
-								step="1"
-								v-model="pwmOutput"
-								number />
+							<div class="col-xs-7">
+								<input
+									id="pwmoutput"
+									type="range"
+									min="0"
+									max="100"
+									step="1"
+									v-model="pwmOutput"
+									number />
+							</div>
+							<div class="col-xs-2">
+								<span>{{pwmOutput}}%</span>
+							</div>
 						</div>
-						<div class="col-xs-2">
-							<span>{{pwmOutput}}%</span>
+
+						<div v-show="!supportsPWM">
+							<div class="alert alert-info">
+								This device does not have a GPIO configured for PWM.
+								You add one in the
+								<a href="#/device/{{params.network}}/{{params.device}}/configuration">configuration view</a>
+							</div>
 						</div>
 					</div>
 
@@ -184,7 +202,7 @@ module.exports = {
 
 	ready: function() {
 		this.device.$promise.then(function(device) {
-			this.pwmOutput = 100 - device['proto/tm'].pwm
+			this.pwmOutput = undefined !== device['proto/tm'].pwm ?  device['proto/tm'].pwm : 0
 		}.bind(this))
 	},
 
@@ -245,6 +263,18 @@ module.exports = {
 			} else {
 				return []
 			}
+		},
+
+		supportsOutputs: function() {
+			return _.some(this.gpios, function(v) {
+				return v.config === 0 || v.config === 4
+			})
+		},
+
+		supportsPWM: function() {
+			return _.some(this.gpios, function(v) {
+				return v.config === 3
+			})
 		},
 
 		commands: function() {
