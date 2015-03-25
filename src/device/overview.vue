@@ -167,9 +167,13 @@
 				v-with="device: device, msgs: msgs, params: params"
 				></div>
 
-			<div class="container-fluid" v-if="params.action === 'packets'">
-				<div class="col-xs-12" v-component="packets"></div>
-			</div>
+			<div
+				class="container-fluid"
+				v-if="params.action === 'packets'"
+				v-component="packets"
+				v-with="device: device, msgs: msgs, params: params"
+				></div>
+
 		</div>
 	</div>
 </template>
@@ -192,7 +196,7 @@ module.exports = {
 	components: {
 		'gpio': require('./overview/gpio.vue'),
 		'serial': require('./overview/serial.vue'),
-		'packets': require('./packets.vue')
+		'packets': require('./overview/packets.vue')
 	},
 
 	ready: function() {

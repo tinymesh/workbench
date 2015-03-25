@@ -18,7 +18,8 @@
 	.gpio-overview > .gpio .value .output {
 		margin-top: 1.6rem;
 	}
-	.gpio-overview .gpio .value .type {
+	.gpio-overview .gpio .value .type,
+	.gpio-overview .gpio .value .meta {
 		font-weight: bold;
 		color: #ccc;
 		text-transform: uppercase;
@@ -26,11 +27,20 @@
 		margin-top: 1.9rem;
 		}
 
+	.gpio-overview .gpio .value .meta.on {
+		color: #00cc00;
+	}
+
+	.gpio-overview .gpio .value .meta.off {
+		color: #cc0000;
+	}
+
 	.gpio-overview > .gpio:hover {
 		background: #efefef;
 		border-bottom-color: #aaa;
 		}
-		 .gpio-overview .gpio:hover .value .type {
+		 .gpio-overview .gpio:hover .value .type,
+		 .gpio-overview .gpio:hover .value .meta {
 			 color: #bbb;
 			 }
 
