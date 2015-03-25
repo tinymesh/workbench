@@ -41,7 +41,7 @@ Vue.component('wb-auth', {
 
 			setTimeout(function() {
 				this.$set('autenticated', false)
-			}, (parseInt(this.data.ttl) * 1000) - new Date().getTime())
+			}.bind(this), (parseInt(this.data.ttl) * 1000) - new Date().getTime())
 
 			if ('#/user/logout' === window.location.hash)
 				Finch.navigate('/');
