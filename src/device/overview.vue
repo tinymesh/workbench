@@ -98,12 +98,12 @@
 										<span v-wb-fuzzy-date="msgs[msgs.length - 1].datetime"></span>
 										<span>&ndash; {{msgs[msgs.length - 1].datetime}}</span>
 									</span>
-									<span v-if="msgs.length === 0 && device.meta.msg.last.date">
+									<span v-if="msgs.length === 0 && device.meta.msg.last && device.meta.msg.last.date">
 										<span v-wb-fuzzy-date="device.meta.msg.last.date">Unknown</span>
 										<span>&ndash; {{device.meta.msg.last.date}}</span>
 									</span>
 									<span
-										v-if="msgs.length === 0 && !device.meta.msg.last.date">Unknown</span>
+										v-if="msgs.length === 0 && (!device.meta.msg.last || !device.meta.msg.last.date)">Unknown</span>
 								</p>
 							</div>
 						</div>
@@ -162,7 +162,7 @@
 
 			<div
 				class="container-fluid"
-				v-if="!params.action || params.action === 'serial'"
+				v-if="params.action === 'serial'"
 				v-component="serial"
 				v-with="device: device, msgs: msgs, params: params"
 				></div>
