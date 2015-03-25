@@ -54,16 +54,24 @@
 				</p>
 			</div>
 			<ul v-if="channels.length > 0">
-				<li v-repeat="channels">
+				<li v-repeat="chan: channels">
 					<h5>
-						<b>Gateway:</b> <i>{{network.devicemap[$key].name || $key}} (uid: <span v-wb-address="network.devicemap[$key].address"></span>)</i>
+						<b>Gateway:</b> <i>{{network.devicemap[chan.key].name || chan.key}} (uid: <span v-wb-address="network.devicemap[chan.key].address"></span>)</i>
 						&ndash;
-						<span v-if="active"  class="label label-success">Connected</span>
-						<span v-if="!active" class="label label-danger">Disconnected</span>
+						<span v-if="chan.active"  class="label label-success">Connected</span>
+						<span v-if="!chan.active" class="label label-danger">Disconnected</span>
 					</h5>
 
 					<div class="body">
-						<span v-if="meta && meta.started">&ndash; Connected <i v-wb-fuzzy-date="meta.started"></i><br /></span>
+						<span v-if="chan.meta && chan.meta.started">
+							&ndash; Connected <i v-wb-fuzzy-date="chan.meta.started"></i><br />
+						</span>
+						<span v-if="chan.created">
+							&ndash; Created <i v-wb-fuzzy-date="chan.created"></i><br />
+						</span>
+						<span v-if="chan.last && chan.last.end > 0">
+							&ndash; Disconnected <i v-wb-fuzzy-date="chan.last.end"></i><br />
+						</span>
 					<!--
 						<span>Queue length: <i>{{meta.queue_size}}</i></span><br />
 						<span>% of network traffic:
@@ -98,7 +106,11 @@ module.exports = {
 		},
 
 		channels: function() {
-			return _.toArray(this.network.channels);
+			return _.reduce(this.network.channels, function(acc, v, k) {
+				v.key = k
+				acc.push(v)
+				return acc
+			}, [])
 		}
 	}
 }
