@@ -46,17 +46,21 @@ app = new Vue({
 	el: '#app',
 	// require html enabled by the partialify transform
 	template: require('!raw!./app.html'),
+
 	compiled: function() {
 		this.msgChromeApp({command: "ping"}, function(resp) {
 			hasChromeApp = 'pong' === resp.ping;
 		});
 
 	},
+
 	components: {
 		'dashboard': require('./dashboard.vue').init(navigation),
 		'device': require('./device.vue').init(navigation),
+		'wb-blockloader': require('./util/blockloader.vue'),
 		'wb-navigation': navigation,
 	},
+
 	data: {
 		view: undefined,
 		modal:{
@@ -65,10 +69,12 @@ app = new Vue({
 			dismissable: true
 		}
 	},
+
 	methods: {
 		msgChromeApp: function(msg, callback) {
 		}
 	},
+
 	computed: {
 		isChrome: function() {
 			var isChromium = window.chrome,

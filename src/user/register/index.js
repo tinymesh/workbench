@@ -41,7 +41,7 @@ Vue.component('wb-user-register', {
 			}
 
 			var v = this;
-			client.user.register({email: this.email, password: this.password1})
+			var p = client.user.register({email: this.email, password: this.password1})
 				.then(function(resp) {
 					if (201 === resp.status) {
 						v.$root.onAuth(resp.body.auth);
@@ -49,6 +49,8 @@ Vue.component('wb-user-register', {
 						v.$set('errors.email', "Did you already registered? The email is already in use");
 					}
 				});
+
+			this.$root.$.loader.await(p.$promise)
 		}
 	},
 	computed: {

@@ -66,7 +66,7 @@
 		<div v-component="wb-notify" v-ref="notify" id="notify"></div>
 
 		<div class="container-fluid">
-			<div v-if="!device['proto/tm']" class="row">
+			<div v-if="error" class="row">
 				<p class="lead text-center">
 					I can't find that device... Are you sure you put it the right address? If not reload the page!
 				</p>
@@ -100,21 +100,28 @@ module.exports = {
 		Finch.route('/device/:nid/:device/:tab', route)
 		return this;
 	},
+
 	components: {
 		'device-overview': require('./device/overview.vue'),
 		'device-config': require('./device/config.vue'),
 		'device-query': require('./device/query.vue'),
 	},
+
 	compiled: function() {
 		this.$root.$.data.networks.$promise.then(function() {
-			client.device.get(
+			var p = client.device.get(
 				{auth: this.$root.$.auth.data},
 				this.device,
 				{
 					network: this.$root.$.data.params.network,
 					key: this.$root.$.data.params.device
 				}
-			).$promise.then(function(device) {
+			).$promise
+
+			this.$root.$.loader.await(p)
+
+			p.then(function(device) {
+				this.error = false
 				if ([] === device['proto/tm'] || Object.keys(device['proto/tm'] || {}).length === 0)
 					device['proto/tm'] = {
 						config: {
@@ -128,19 +135,24 @@ module.exports = {
 
 				this.$set('device', device)
 			}.bind(this), function(err) {
+				this.error = true
 				if (403 === err.status) {
 					this.$.notify.set('There seems to be an error with the resource, device could not be read', 'danger');
 				}
 			}.bind(this));
+
 		}.bind(this));
 	},
+
 	data: function() {
 		return {
 			device: { },
 			devicePatch: { },
-			devicePromise: undefined
+			devicePromise: undefined,
+			error: false
 		}
 	},
+
 	methods: {
 		save: function(device, e) {
 			e.preventDefault();

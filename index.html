@@ -6,18 +6,78 @@
 		<link type="text/css" rel="stylesheet" media="all" href="node_modules/bootstrap/dist/css/bootstrap.css">
 		<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/gggiioljfnkabofaoknolicdlnjadcpn"></link>
 
-	</head>
-	<body>
-		<div id="app">
-			<div class="container-fluid">
-				<h1>Loading..</h1>
+		<style type="text/css">
+			body.blockloader-init {
+				background: #111;
+			}
 
-				<p>
-					If this message persists for an unreasonable time an error
-					might have occurred. Try refreshing or come back later!
-				</p>
+			#initial-loader p {
+				position: absolute;
+				top: 55%;
+				width: 760px;
+				left: 50%;
+				margin: 50px  0 0 -380px;
+				color: #555;
+				text-align: center:
+			}
+
+			body.blockloader-init .loader { min-height: 0px; }
+
+			body.blockloader-init {
+				background: #111;
+			}
+
+			body.blockloader-init footer {
+				color: #eee;
+				position: fixed;
+				bottom: 0px;
+				width: 100%;
+				text-align: center;
+				padding-bottom: 40px;
+			}
+				body.blockloader-init footer .container-fluid {
+					border: none;
+					padding-right: 15px;
+					padding-left: 15px;
+					margin-right: auto;
+					margin-left: auto;
+				}
+				body.blockloader-init footer .links {
+					color: #444;
+				}
+				body.blockloader-init footer .links a {
+					color: #777;
+				}
+
+			body.blockloader-init #data,
+			body.blockloader-init #auth,
+			body.blockloader-init #modal {
+				display: none;
+			}
+		</style>
+	</head>
+	<body class="blockloader-init">
+		<div class="container-fluid" id="initial-loader" class="fade">
+			<div class="loader">
+				<div class="square" ></div>
+				<div class="square"></div>
+				<div class="square last"></div>
+				<div class="square clear"></div>
+				<div class="square"></div>
+				<div class="square last"></div>
+				<div class="square clear"></div>
+				<div class="square "></div>
+				<div class="square last"></div>
 			</div>
+			<p class="loader-text">
+				Application is loading. This shouldn't take more than a few
+				seconds. If it takes a very long time, make sure you are
+				using a modern web browser (preferably chrome) - if you are
+				try refreshing the page or contact support.
+			</p>
 		</div>
+
+		<div id="app"></div>
 
 		<footer>
 			<div class="container-fluid">

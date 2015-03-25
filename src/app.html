@@ -1,9 +1,9 @@
 <div>
 
-	<div v-component="wb-data" v-ref="data"></div>
-	<div v-component="wb-auth" v-ref="auth"></div>
+	<div id="data" v-component="wb-data" v-ref="data"></div>
+	<div id="auth" v-component="wb-auth" v-ref="auth"></div>
 
-	<div v-component="wb-navigation" v-ref="navigation"></div>
+	<div id="navigation" v-component="wb-navigation" v-ref="navigation"></div>
 
 	<script type="x-template" id="notifytpl">
 		<div v-if="messages.length > 0">
@@ -34,10 +34,11 @@
 		</div>
 	</div>
 
-
-  <div v-component="{{$root.view}}" v-ref="view">
+  <div v-component="{{$root.view}}" v-ref="view" id="main">
 		<div class="container-fluid">
 			<h1>Loading</h1>
 		</div>
 	</div>
+
+	<div v-component="wb-blockloader" v-ref="loader" class="blockloader"></div>
 </div>

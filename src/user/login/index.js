@@ -37,6 +37,7 @@ Vue.component('wb-user-login', {
 			var v = this;
 			this.$root.$.auth.data = client.auth.login({}, {email: email, password: password});
 			this.loginPromise = this.$root.$.auth.data.$promise;
+			this.$root.$.loader.await(this.loginPromise)
 
 			this.loginPromise
 				.then(function(body) {

@@ -32,12 +32,14 @@ Vue.component('wb-auth', {
 			this.$set('authenticated', true);
 
 			this.$root.$.data.networks.$fulfil({auth: auth});
+			this.$root.$.loader.await(this.$root.$.data.networks.$promise)
 
 			this.$root.$.data.user = client.user.get({auth: auth});
 			this.$root.$.data.user.$promise.then(function(user) {
 				this.$root.$broadcast('user:auth', user)
 				onUser && onUser(user)
 			}.bind(this), onUserErr);
+			this.$root.$.loader.await(this.$root.$.data.user.$promise)
 
 			setTimeout(function() {
 				this.$set('autenticated', false)
@@ -99,7 +101,6 @@ Vue.component('wb-data', {
 
 			network: undefined,
 			networks: client.network.list({future: true}),
-			networks2: client.network.list({future: true}),
 
 			user: {
 				name: "",

@@ -298,11 +298,14 @@ module.exports = {
 					'data-encoding': 'binary'
 				}
 			).$promise;
+
+			this.$root.$.loader.await(this.queryPromise)
+
 			this.queryPromise.then(
 				function(result) {
 					this.queryPromise = undefined
-					this.result.result = result.result
 					this.result.meta = result.meta
+					this.result.result = result.result
 
 					// add autocomplete hints
 					this.addHints(result.result)

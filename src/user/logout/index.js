@@ -27,5 +27,7 @@ Vue.component('wb-user-logout', {
 			app.$.notify.set("We could not log you out at this point", "danger");
 			Finch.navigate('/');
 		});
+
+		this.$root.$.loader.await(logout.$promise)
 	}
 });
