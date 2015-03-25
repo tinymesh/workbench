@@ -5,10 +5,10 @@
 		</div>
 
 		<div class="alert alert-warning" v-if="!deviceConfig.device.part">
-			<h4>No configuration found!!</h4>
+			<h4>Configuration Disabled</h4>
 			<p>
 				The firmware revision and part number could not be found.
-				This is most likely that the device have never transmitted its
+				It's most likely that the device never transmitted its
 				configuration, <b>configuration changes are dangerous since
 				certain fields are dependant on firmware vision or part number.</b>
 			</p>
@@ -40,33 +40,38 @@
 			</p>
 		</div>
 
-		<div class="row group" v-repeat="group: config" v-show="group.itemsLength > 0">
-			<div class="container-fluid">
-				<div class="page-header">
-					<h4>{{group.name || $key}}</h4>
-				</div>
+		<div v-show="deviceConfig.device.part">
+			<div
+					class="row group"
+					v-repeat="group: config"
+					v-show="group.itemsLength > 0">
+				<div class="container-fluid">
+					<div class="page-header">
+						<h4>{{group.name || $key}}</h4>
+					</div>
 
 
-				<div class="params row" v-repeat="sub: group.subgroups" groups>
-					<div class="container-fluid">
-						<div v-repeat="field: sub" class="col-xs-4">
-							<div v-if="field.enum">
-								<label for="input-{{field.group}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
-								<select
-									v-model="devicePatch | configPatch deviceConfig"
-									options="field.enum"
-									class="form-control" number></select>
-							</div>
+					<div class="params row" v-repeat="sub: group.subgroups" groups>
+						<div class="container-fluid">
+							<div v-repeat="field: sub" class="col-xs-4">
+								<div v-if="field.enum">
+									<label for="input-{{field.group}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
+									<select
+										v-model="devicePatch | configPatch deviceConfig"
+										options="field.enum"
+										class="form-control" number></select>
+								</div>
 
-							<div v-if="!field.enum">
-								<label for="input-{{field.group}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
-								<input
-									v-model="devicePatch['proto/tm'].config[field.group][field.subkey] | configPatch deviceConfig"
-									type="text"
-									id="input-{{group.key}}-{{field.subkey}}"
-									class="form-control"
-									v-attr="disabled: field.ro ? 'yes' : false"
-									number />
+								<div v-if="!field.enum">
+									<label for="input-{{field.group}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
+									<input
+										v-model="devicePatch['proto/tm'].config[field.group][field.subkey] | configPatch deviceConfig"
+										type="text"
+										id="input-{{group.key}}-{{field.subkey}}"
+										class="form-control"
+										v-attr="disabled: field.ro ? 'yes' : false"
+										number />
+								</div>
 							</div>
 						</div>
 					</div>
@@ -75,8 +80,19 @@
 		</div>
 
 		<div class="form-group">
-			<div class="col-sm-offset-8 col-sm-4"> 
+			<div class="col-sm-offset-8 col-sm-4">
 				<button
+					v-on="click: getConfig"
+					v-class="'btn-spinner': $parent.devicePromise"
+					class="btn btn-primary">
+
+					<span v-wb-spinner="$parent.devicePromise"></span>
+
+					<span v-if="$parent.devicePromise">Fetching Configuration</span>
+					<span v-if="!$parent.devicePromise">Fetch Configuration</span>
+				</button>
+				<button
+					v-show="deviceConfig.device.part"
 					v-on="click: save(devicePatch, $event)"
 					v-attr="disabled: $parent.devicePromise"
 					v-class="'btn-spinner': $parent.devicePromise"
@@ -93,14 +109,38 @@
 </template>
 
 <script lang="js">
+var
+	client = require('tinymesh-cloud-client')
+
 var config = JSON.parse(require('!raw!./config/0.4.0.json'))
 var fieldDefs = JSON.parse(require('!raw!./config/0.4.0-names.json'))
 
 module.exports = {
 	data: function() {},
+
 	methods: {
-		save: function(patch, e) {
-			this.$parent.save.call(this, patch, e);
+		save: function(patch, ev) {
+			this.$parent.save.call(this, patch, ev);
+		},
+
+		getConfig: function(ev) {
+			ev.preventDefault()
+
+			var p = client.message.create(
+				{ auth: this.$root.$.auth.data, },
+				{
+					'proto/tm': {
+						'type': 'command',
+						'command': 'get_config'
+					}
+				},
+				{
+					'network': this.params.network,
+					'device': this.params.device
+				}
+			)
+
+			this.$root.$.loader.await(p.$promise)
 		}
 	},
 
@@ -123,6 +163,7 @@ module.exports = {
 				this.$set('devicePatch[\'proto/tm\'].config.' + this.field.group + '.' + this.field.subkey, value)
 				return value
 			},
+
 			read: function(value, source ) {
 				return value ? value : ((this.$get(source) || {})[this.field.group] || {})[this.field.subkey] || undefined
 			}
