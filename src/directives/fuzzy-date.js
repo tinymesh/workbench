@@ -9,6 +9,8 @@ Vue.directive('wb-fuzzy-date', {
 			return undefined;
 		}
 
+		this.el.title = date.toUTCString()
+
 		this.el.innerText = day_diff === 0 && (
 				diff < 60 && "just now" ||
 				diff < 240 && "few minutes ago" ||
