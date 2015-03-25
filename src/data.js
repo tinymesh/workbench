@@ -6,12 +6,21 @@ var Vue = require('vue'),
 // Authentication storage and methods
 Vue.component('wb-auth', {
 	name: 'auth',
+
 	data: function() {
 		return {
 			data: client.auth.login({future: true}),
 			authenticated: false
 		};
 	},
+
+	ready: function() {
+		client.$config.set('onUnauthorized', function() {
+			this.$set('authenticated', false)
+			this.$root.$set('view', 'wb-landingpage')
+		}.bind(this))
+	},
+
 	methods: {
 		onAuth: function(auth, onUser, onUserErr) {
 			delete auth.$promise; // not serializable
@@ -29,6 +38,10 @@ Vue.component('wb-auth', {
 				this.$root.$broadcast('user:auth', user)
 				onUser && onUser(user)
 			}.bind(this), onUserErr);
+
+			setTimeout(function() {
+				this.$set('autenticated', false)
+			}, (parseInt(this.data.ttl) * 1000) - new Date().getTime())
 
 			if ('#/user/logout' === window.location.hash)
 				Finch.navigate('/');
