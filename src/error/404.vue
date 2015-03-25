@@ -1,3 +1,19 @@
+<style lang="css">
+/*
+ * 404 Not found
+ */
+.not-found {
+	color: white;
+	position: relative; }
+
+.not-found .not-found-screen { background-color: #2980b9; padding: 125px 0px 33px 0px; }
+.not-found .not-found-container { position: relative; width: 770px; margin: 0 auto 90px; }
+.not-found h1 { font-weight: bold; font-size: 4.5em; }
+.not-found a { font-weight: bold; color: #fff; text-decoration: underline; cursor: pointer; }
+
+</style>
+
+<template lang="html">
 <div class="not-found">
 	<div class="not-found-screen">
 		<div class="not-found-container">
@@ -23,3 +39,15 @@
 		</div>
 	</div>
 </div>
+</template>
+
+<script lang="js">
+module.exports = {
+	replace: true,
+	computed: {
+		history: function() {
+			return window.history
+		}
+	}
+}
+</script>
