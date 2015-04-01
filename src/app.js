@@ -59,6 +59,7 @@ app = new Vue({
 		'device': require('./device.vue').init(navigation),
 		'wb-blockloader': require('./util/blockloader.vue'),
 		'wb-navigation': navigation,
+		'not-found': require('./error/404.vue')
 	},
 
 	data: {
@@ -67,7 +68,8 @@ app = new Vue({
 			comp: undefined,
 			show: false,
 			dismissable: true
-		}
+		},
+		notFound: false
 	},
 
 	methods: {

@@ -34,10 +34,18 @@
 		</div>
 	</div>
 
-  <div v-component="{{$root.view}}" v-ref="view" id="main">
-		<div class="container-fluid">
-			<h1>Loading</h1>
-		</div>
+  <div
+		v-component="{{$root.view}}"
+		v-ref="view"
+		id="main"
+		class="container-fluid">
+	</div>
+
+  <div
+		v-if="notFound"
+		v-component="not-found"
+		class="not-found"
+		id="main">
 	</div>
 
 	<div v-component="wb-blockloader" v-ref="loader" class="blockloader"></div>

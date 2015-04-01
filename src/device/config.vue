@@ -116,7 +116,11 @@ var config = JSON.parse(require('!raw!./config/0.4.0.json'))
 var fieldDefs = JSON.parse(require('!raw!./config/0.4.0-names.json'))
 
 module.exports = {
-	data: function() {},
+	data: function() {
+		return {
+			hasConfig: false
+		}
+	},
 
 	methods: {
 		save: function(patch, ev) {

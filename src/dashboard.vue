@@ -106,7 +106,7 @@
 						correct permissions to access the network?
 					</p>
 				</div>
-				<div v-if="network" v-component="dashboard-{{params.tab}}"></div>
+				<div v-if="!notFound && network" v-component="dashboard-{{params.tab}}"></div>
 				<div v-if="!params.network" v-component="dashboard-setup-guide"></div>
 			</div>
 		</div>
@@ -201,6 +201,10 @@ module.exports = {
 	computed: {
 		params: function() {
 			return this.$root.$.data.params
+		},
+
+		notFound: function() {
+			return this.$root.notFound = undefined === this.$options.components['dashboard-' + this.params.tab]
 		},
 
 		network: function() {

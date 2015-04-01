@@ -76,7 +76,7 @@
 								<label class="col-xs-4 control-label">Hardware Revision</label>
 								<div class="col-xs-8">
 									<p class="form-control-static">
-										{{device['proto/tm'].config.device.hw_revision || "not available"}}
+										{{device['proto/tm'].hw || device['proto/tm'].config.device.hw_revision || "not available"}}
 									</p>
 								</div>
 						</div>
@@ -85,7 +85,7 @@
 							<label class="col-xs-4 control-label">Firmware Revision</label>
 							<div class="col-xs-8">
 								<p class="form-control-static">
-									{{device['proto/tm'].config.device.fw_revision || "not available"}}
+									{{device['proto/tm'].fw || device['proto/tm'].config.device.fw_revision || "not available"}}
 								</p>
 							</div>
 						</div>

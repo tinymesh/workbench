@@ -66,12 +66,9 @@
 		<div v-component="wb-notify" v-ref="notify" id="notify"></div>
 
 		<div class="container-fluid">
-			<div v-if="error" class="row">
-				<p class="lead text-center">
-					I can't find that device... Are you sure you put it the right address? If not reload the page!
-				</p>
-			</div>
-			<div v-if="device['proto/tm']" v-component="device-{{params.tab}}"> </div>
+			<div
+				v-if="!notFound && device['proto/tm']"
+				v-component="device-{{params.tab}}"> </div>
 		</div>
 </template>
 
@@ -107,21 +104,20 @@ module.exports = {
 		'device-query': require('./device/query.vue'),
 	},
 
-	compiled: function() {
+	ready: function() {
+		this.deviceNotFound = false
 		this.$root.$.data.networks.$promise.then(function() {
 			var p = client.device.get(
 				{auth: this.$root.$.auth.data},
 				this.device,
 				{
-					network: this.$root.$.data.params.network,
-					key: this.$root.$.data.params.device
+					network: this.params.network,
+					key: this.params.device
 				}
 			).$promise
 
-			this.$root.$.loader.await(p)
-
 			p.then(function(device) {
-				this.error = false
+				this.deviceNotFound = false
 				if ([] === device['proto/tm'] || Object.keys(device['proto/tm'] || {}).length === 0)
 					device['proto/tm'] = {
 						config: {
@@ -135,7 +131,7 @@ module.exports = {
 
 				this.$set('device', device)
 			}.bind(this), function(err) {
-				this.error = true
+				this.deviceNotFound = true
 				if (403 === err.status) {
 					this.$.notify.set('There seems to be an error with the resource, device could not be read', 'danger');
 				}
@@ -149,7 +145,7 @@ module.exports = {
 			device: { },
 			devicePatch: { },
 			devicePromise: undefined,
-			error: false
+			deviceNotFound: false
 		}
 	},
 
@@ -190,7 +186,11 @@ module.exports = {
 	computed: {
 		params: function() {
 			return this.$root.$.data.params
-		}
+		},
+
+		notFound: function() {
+			return this.$root.notFound = (this.deviceNotFound || undefined === this.$options.components['device-' + this.params.tab])
+		},
 	}
 };
 </script>

@@ -46,9 +46,10 @@ module.exports = {
 
 			this.promises.push(ref)
 
-			var clear = function() {
+			var clear = function(arg) {
 				this.promises = _.without(this.promises, ref)
 				this.setBodyState()
+				return arg
 			}.bind(this)
 
 			promise.then(clear, clear)
