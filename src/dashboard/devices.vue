@@ -213,7 +213,31 @@ module.exports = {
 
 		deviceAddress: {
 			get: function() {
-				return this.device.address;
+				if (!this.device.address)
+					return;
+
+				switch (this.addressType) {
+					case 'Decimal Address':
+						return [
+							this.device.address & 0xff,
+							(this.device.address >> 8)  & 0xff,
+							(this.device.address >> 16) & 0xff,
+							(this.device.address >> 24) & 0xff,
+						].join('.');
+						break;;
+
+					case 'HEX Address':
+						return [
+							(this.device.address & 0xff).toString(16),
+							((this.device.address >> 8)  & 0xff).toString(16),
+							((this.device.address >> 16) & 0xff).toString(16),
+							((this.device.address >> 24) & 0xff).toString(16),
+						].join(':');
+
+
+					default:
+						return this.device.address;
+				}
 			},
 			set: function(value) {
 				// convert ip like format into long
