@@ -105,7 +105,7 @@ module.exports = {
 	},
 
 	ready: function() {
-		this.deviceNotFound = false
+		this.deviceNotFound = undefined === this.params.device
 		this.$root.$.data.networks.$promise.then(function() {
 			var p = client.device.get(
 				{auth: this.$root.$.auth.data},
