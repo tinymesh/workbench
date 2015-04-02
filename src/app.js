@@ -8,7 +8,7 @@ var client = require('tinymesh-cloud-client'),
     Finch = (require('./vendor/finch')).Finch;
 
 
-client.$config.set('endpoint', 'http://http.cloud.tiny-mesh.com:8080');
+client.$config.set('endpoint', 'https://http.cloud.tiny-mesh.com/v1');
 //client.$config.set('endpoint', 'http://localhost:4000');
 
 pace.start({
