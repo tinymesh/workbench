@@ -17,7 +17,6 @@ git checkout master -- \
 	index.html \
 	build/dist.js \
 	node_modules/bootstrap/dist/css/bootstrap.css \
-	node_modules/bootstrap/dist/css/bootstrap.css.map \
 	node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.eot \
 	node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.svg \
 	node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf \
@@ -25,5 +24,5 @@ git checkout master -- \
 	node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2
 
 
-git commit -a -m $(head -c 4git show --oneline master | head -1)
+git commit -a -m $(git show --oneline master | head -1 | head -c 4)
 git push origin stage
