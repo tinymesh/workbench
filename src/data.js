@@ -97,7 +97,10 @@ Vue.component('wb-data', {
 	},
 	data: function() {
 		return {
-			params: {},
+			params: {
+				address_encoding: 'hex',
+				address_big_endian: false,
+			},
 
 			network: undefined,
 			networks: client.network.list({future: true}),

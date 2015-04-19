@@ -58,7 +58,7 @@
 							<label class="col-xs-4 control-label">UID</label>
 							<div class="col-xs-8">
 								<p class="form-control-static">
-									<span v-wb-address="device.address" wb-address-endian="little">00 : 00 : 00 : 00</span>
+									<span>{{device.address | address params.address_encoding params.address_big_endian}}</span>
 								</p>
 							</div>
 						</div>

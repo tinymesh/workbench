@@ -24,7 +24,7 @@
 					<label class="col-xs-4 control-label">Network ID</label>
 					<div class="col-xs-8">
 						<p class="form-control-static">
-							 {{network.key}} &ndash; <span class="mono" v-wb-address="network.address" wb-address-endian="big"></span>
+							 {{network.key}} &ndash; <span class="mono">{{network.address | address params.address_encoding true}}</span>
 						</p>
 					</div>
 				</div>
@@ -56,8 +56,9 @@
 			<ul v-if="channels.length > 0">
 				<li v-repeat="chan: channels">
 					<h5>
-						<b>Gateway:</b> <i>{{network.devicemap[chan.key].name || chan.key}} (uid: <span v-wb-address="network.devicemap[chan.key].address"></span>)</i>
+						<b>Gateway:</b> <i>{{network.devicemap[chan.key].name || chan.key}} (uid: <span>{{network.devicemap[chan.key].address | address params.address_encoding params.address_big_endian}}</span>)</i>
 						&ndash;
+
 						<span v-if="chan.active"  class="label label-success">Connected</span>
 						<span v-if="!chan.active" class="label label-danger">Disconnected</span>
 					</h5>

@@ -33,6 +33,21 @@
 					<b>Reverse?:</b> <code>`{{orderReverse}}`</code>
 				</p>
 			</div>
+
+			<div class="encoding">
+				<div class="page-header">
+					<h6>Address Encoding</h6>
+				</div>
+				<div class="select-list">
+					<ul>
+						<li v-on="click: params.address_encoding = 'hex'" v-class="active: 'hex' === params.address_encoding"><a>Hex Encoding</a></li>
+						<li v-on="click: params.address_encoding = 'binary'" v-class="active: 'binary' === params.address_encoding"><a>Binary Encoding</a></li>
+						<li v-on="click: params.address_encoding = 'decimal'" v-class="active: 'decimal' === params.address_encoding"><a>Decimal</a></li>
+					</ul>
+					<label><input v-model="params.address_big_endian" type="checkbox"> Big Endian?</label>
+				</div>
+
+			</div>
 		</div>
 
 		<div class="col-xs-9">
@@ -57,7 +72,7 @@
 					<tbody>
 						<tr v-repeat="dev: devicemap | orderBy orderBy orderReverse">
 							<td><a href="#/device/{{params.network}}/{{dev.key}}">{{dev.key}}</a<</td>
-							<td><span class="mono" v-wb-address="dev.address"></span></td>
+							<td><span class="mono">{{dev.address | address params.address_encoding params.address_big_endian}}</span></td>
 							<td><a href="#/device/{{params.network}}/{{dev.key}}">{{dev.name || "unnamed"}}</a<</td>
 							<td><a href="#/device/{{params.network}}/{{dev.key}}">{{dev.type}}</a<</td>
 							<td><a>N/A</a></td>
