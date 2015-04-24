@@ -20,7 +20,6 @@ pace.start({
 require('./data');
 require('./directives/spinner');
 require('./directives/modal');
-require('./directives/address');
 require('./directives/fuzzy-date');
 require('./landingpage');
 require('./user/login');
