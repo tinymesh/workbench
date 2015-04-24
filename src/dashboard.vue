@@ -49,6 +49,14 @@
 								</a>
 						</li>
 						<li
+							v-show="network"
+							v-class="active: 'permissions' === params.tab">
+								<a href="#/dashboard/{{params.network}}/permissions">
+								<span class="glyphicon glyphicon-lock">&nbsp;</span>
+									Permissions
+								</a>
+						</li>
+						<li
 							v-show="network && !network.haveConnected()"
 							v-class="active: 'setup-guide' === params.tab">
 							<a href="#/dashboard/{{params.network}}/setup-guide">
@@ -66,7 +74,7 @@
 		<div class="container-fluid">
 			<div
 				class="col-xs-3"
-				v-if="(params.tab === 'overview' || params.tab === 'setup-guide') && (!$root.$.data.initialSetup || skipSetupGuide)">
+				v-if="(params.tab === 'overview' || params.tab === 'permissions' || params.tab === 'setup-guide') && (!$root.$.data.initialSetup || skipSetupGuide)">
 				<div class="network-selector">
 					<div class="page-header">
 						<h6>Networks</h6>
@@ -167,6 +175,7 @@ module.exports = {
 	components: {
 		'dashboard-overview': require('./dashboard/overview.vue'),
 		'dashboard-devices': require('./dashboard/devices.vue'),
+		'dashboard-permissions': require('./dashboard/permissions.vue'),
 		'dashboard-setup-guide': require('./dashboard/setup-guide.vue')
 	},
 
