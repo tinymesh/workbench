@@ -27,7 +27,7 @@
 			</div>
 			<div class="col-xs-9">
 				<div v-if="!notFound && organization" v-component="organization-{{params.tab}}"></div>
-				<div v-if="!notFound && !params.organization" v-component="organization-landing"></div>
+				<div v-if="!notFound && !organization" v-component="organization-landing"></div>
 				<div v-if="notFound" v-component="organization-404"></div>
 			</div>
 		</div>
@@ -46,7 +46,7 @@ var
 var route = function(args) {
 	app.$set('view', 'organization');
 	app.$.data.$set('params.organization', args.org)
-	app.$.data.$set('params.tab', args.tab || "overview")
+	app.$.data.$set('params.tab', args.tab || (args.org ? "overview" : 'landing'))
 }
 
 module.exports = {
@@ -162,7 +162,7 @@ module.exports = {
 		},
 
 		notFound: function() {
-			return !this.tabFound || undefined === this.organization
+			return !this.tabFound || (this.params.organization && undefined === this.organization)
 		}
 	}
 }

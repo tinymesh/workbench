@@ -9,6 +9,7 @@
 }
 
 .landing .content > * { padding-bottom: 15px; }
+.landing { padding-top: 65px; }
 </style>
 
 <template lang="html">
@@ -32,7 +33,20 @@
 			</div>
 	</div>
 	<div class="container-fluid" v-if="$root.$.data.user.organizations !== []">
-		Select a organization
+			<div class="col-xs-2 text">
+				<span id="landing-icon" class="glyphicon glyphicon-file"></span>
+			</div>
+			<div class="col-xs-offset-1 col-xs-6 content">
+				<h2 id="landing-title">Edit your organizations</h2>
+				<p class="lead">
+					Organizations helps you manage your networks in a more
+					intuitive way when several people needs shared access.
+				</p>
+				<p>
+					Select a organization from the menu on the left side; happy editing:)
+				</p>
+
+			</div>
 	</div>
 </div>
 </template>
