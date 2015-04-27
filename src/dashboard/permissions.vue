@@ -33,7 +33,7 @@
 						class="list-group-item"
 						v-class="permitted: org.permitted, synced: org.synced"
 						v-repeat="org: access.organizations">
-							<a href="#">{{org.name}}</a>
+							<a href="#/organization/{{org.key}}">{{org.name}}</a>
 							<span v-show="!org.synced" class="muted-label">Sync required</span>
 
 							<button
