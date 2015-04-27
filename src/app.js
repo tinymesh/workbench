@@ -55,6 +55,7 @@ app = new Vue({
 
 	components: {
 		'dashboard': require('./dashboard.vue').init(navigation),
+		'organization': require('./organization.vue').init(navigation),
 		'device': require('./device.vue').init(navigation),
 		'wb-blockloader': require('./util/blockloader.vue'),
 		'wb-navigation': navigation,
