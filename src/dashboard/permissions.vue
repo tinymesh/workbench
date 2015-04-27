@@ -16,6 +16,13 @@
 .network-permissions .list-group-item.has-error {
 	padding-bottom: 35px;
 }
+
+.network-permissions .sliced:nth-last-child(3) > * {
+	opacity: 0.7;
+}
+.network-permissions .sliced:nth-last-child(2) > * {
+	opacity: 0.4;
+}
 </style>
 
 <template lang="html">
@@ -31,8 +38,8 @@
 				<ul class="list-group">
 					<li
 						class="list-group-item"
-						v-class="permitted: org.permitted, synced: org.synced"
-						v-repeat="org: access.organizations">
+						v-class="permitted: org.permitted, synced: org.synced, sliced: !fullOrgList"
+						v-repeat="org: access.organizations | viewMore 4 fullOrgList">
 							<a href="#/organization/{{org.key}}">{{org.name}}</a>
 							<span v-show="!org.synced" class="muted-label">Sync required</span>
 
@@ -44,6 +51,15 @@
 								v-on="click: revoke('organization', org)"
 								v-show="org.permitted"
 								class="pull-right btn btn-sm btn-danger">Revoke Access</button>
+					</li>
+					<li
+						class="list-group-item text-right">
+						<a v-show="fullOrgList" v-on="click: fullOrgList = !fullOrgList">
+							<span class="glyphicon glyphicon-chevron-up"></span> Show less
+						</a>
+						<a v-show="!fullOrgList" v-on="click: fullOrgList = !fullOrgList">
+							<span class="glyphicon glyphicon-chevron-down"></span> Show all
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -143,7 +159,8 @@ module.exports = {
 			newUserError: '',
 			networkPatch: {
 				parents: undefined
-			}
+			},
+			fullOrgList: false
 		}
 	},
 
