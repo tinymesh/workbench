@@ -76,26 +76,30 @@
 							class="form-inline"
 							v-on="submit: addUser(newUser)">
 
-							<div class="form-group col-xs-3">
-								<label for="addUserPerms" style="margin-top: 6px;">Add New User</label>
+							<div class="row">
+								<div class="form-group col-xs-3">
+									<label for="addUserPerms" style="margin-top: 6px;">Add User</label>
+								</div>
+								<div class="form-group col-xs-6" v-class="has-error: !!newUserError">
+									<input
+										v-model="newUser"
+										style="width: 100%;"
+										class="form-control"
+										id="addUserPerms" type="text"
+										placeholder="User email" />
+										<p v-show="newUserError" class="help-block">
+											&nbsp;
+											<span class="glyphicon glyphicon-remove"></span>&nbsp;
+											<span>{{newUserError}}</span>
+										</p>
+								</div>
+								<div class="form-group col-xs-2">
+									<button
+										v-on="click: addUser(newUser)"
+										type="submit"
+										class="btn btn-primary">Add User</button>
+								</div>
 							</div>
-							<div class="form-group col-xs-7" v-class="has-error: !!newUserError">
-								<input
-									v-model="newUser"
-									style="width: 100%;"
-									class="form-control"
-									id="addUserPerms" type="text"
-									placeholder="User email" />
-									<p v-show="newUserError" class="help-block">
-										&nbsp;
-										<span class="glyphicon glyphicon-remove"></span>&nbsp;
-										<span>{{newUserError}}</span>
-									</p>
-							</div>
-							<button
-								v-on="click: addUser(newUser)"
-								type="submit"
-								class="btn btn-primary">Add User</button>
 						</form>
 					</li>
 				</ul>
