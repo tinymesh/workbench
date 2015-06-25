@@ -57,6 +57,7 @@ app = new Vue({
 		'dashboard': require('./dashboard.vue').init(navigation),
 		'organization': require('./organization.vue').init(navigation),
 		'device': require('./device.vue').init(navigation),
+		'help': require('./help.vue').init(navigation),
 		'wb-blockloader': require('./util/blockloader.vue'),
 		'wb-navigation': navigation,
 		'not-found': require('./error/404.vue')
