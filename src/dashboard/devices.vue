@@ -50,7 +50,7 @@
 			</div>
 		</div>
 
-		<div class="col-xs-9">
+		<div class="col-xs-9" v-if="network.key">
 			<div class="page-header">
 				<h3>{{network.name || "Unnamed network — " + network.key}}</h3>
 			</div>
@@ -71,10 +71,10 @@
 					</thead>
 					<tbody>
 						<tr v-repeat="dev: devicemap | orderBy orderBy orderReverse">
-							<td><a href="#/device/{{params.network}}/{{dev.key}}">{{dev.key}}</a<</td>
+							<td><a v-link="/device/{{network.key}}/{{dev.key}}">{{dev.key}}</a<</td>
 							<td><span class="mono">{{dev.address | address params.address_encoding params.address_big_endian}}</span></td>
-							<td><a href="#/device/{{params.network}}/{{dev.key}}">{{dev.name || "unnamed"}}</a<</td>
-							<td><a href="#/device/{{params.network}}/{{dev.key}}">{{dev.type}}</a<</td>
+							<td><a v-link="/device/{{network.key}}/{{dev.key}}">{{dev.name || "unnamed"}}</a<</td>
+							<td><a v-link="/device/{{network.key}}/{{dev.key}}">{{dev.type}}</a<</td>
 							<td><a>N/A</a></td>
 		<!--
 							<td><a>Empty</a<</td>
@@ -204,7 +204,7 @@ module.exports = {
 		},
 
 		network: function() {
-			return this.$root.$.data.network
+			return this.$parent.network
 		},
 
 		// orderBy needs array love to be able to sort
@@ -318,7 +318,7 @@ module.exports = {
 			this.device = client.device.create(
 				{auth: this.$root.$.auth.data},
 				device,
-				{network: this.params.network});
+				{network: this.network.key});
 
 			this.device.$promise.then(function(device) {
 				this.$parent.$.notify.add('Device was successfully created', 'success')
@@ -327,7 +327,8 @@ module.exports = {
 				// Error on initial networks where devicemap is an array
 				// quick fix is to reload the page
 				if (_.isArray(this.network.devicemap)) {
-					window.location.reload();
+					//window.location.reload();
+					alert('reload may be required')
 				} else {
 					this.network.$get({auth: this.$root.$.auth.data});
 

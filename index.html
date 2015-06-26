@@ -77,17 +77,44 @@
 			</p>
 		</div>
 
-		<div id="app"></div>
+		<div id="app">
 
-		<footer>
-			<div class="container-fluid">
-				<div class="row">
-					<ul class="links muted">
-						<li>&copy; 2012-2015 <a href="https://tiny-mesh.com">Tiny Mesh AS</a></li>
-					</ul>
+			<div id="data" v-component="wb-data" v-ref="data"></div>
+			<div id="auth" v-component="wb-auth" v-ref="auth"></div>
+
+			<div id="navigation" v-component="wb-navigation" v-ref="navigation"></div>
+			<div v-component="wb-notify" v-ref="notify" id="notify"></div>
+
+			<div id="user" v-component="user" v-ref="user"></div>
+
+			<div v-component="wb-blockloader" v-ref="loader"></div>
+
+
+			<div
+				v-wb-modal="false !== modal.show && modal.comp"
+				id="modal">
+				<div class="popup">
+					 <!--<div class="content" v-component="{{modalComp}}"></div>-->
+					<div class="content">
+						<button type="button" class="close" v-on="click: modal.show = false"><span>&times;</span></button>
+						<div v-component="{{modal.comp}}"></div>
+					</div>
 				</div>
 			</div>
-		</footer>
+
+			<router-view id="main" class="main" v-transition="defaulttransition" transition-mode="out-in"></router-view>
+
+			<footer>
+				<div class="container-fluid">
+					<div class="row">
+						<ul class="links muted">
+							<li>&copy; 2012-2015 <a href="https://tiny-mesh.com">Tiny Mesh AS</a></li>
+						</ul>
+					</div>
+				</div>
+			</footer>
+		</div>
+
 	</body>
 	<script type="text/javascript" src="./build/dist.js"></script>
 </html>

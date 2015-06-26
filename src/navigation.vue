@@ -73,15 +73,15 @@
 		role="navigation">
 		 <div class="container-fluid">
 				<div class="navbar-header col-xs-2">
-					 <a href="./index.html" class="navbar-brand">Workbench</a>
+					 <a v-link="/" class="navbar-brand">Workbench</a>
 				</div>
 				<nav class="col-xs-10" role="navigation">
 					 <ul class="nav main navbar-nav">
 							<li
-								v-show="undefined === link.auth || link.auth === $root.$.auth.authenticated"
+								v-show="link.show($root)"
 								v-class="active: setAndCheckActive(link)"
 								v-repeat="link: links">
-									<a href="#{{link.href}}">
+									<a v-link="{{link.href}}">
 										<span v-if="link.icon" v-attr="class: link.icon">&nbsp;</span>
 										{{link.text}}
 									</a>
@@ -89,16 +89,11 @@
 					 </ul>
 					 <ul class="nav navbar-nav navbar-right">
 							<li v-if="$root.$.auth.authenticated">
-								<a href="#/user/logout">
+								<a v-link="/user/logout">
 									<span class="glyphicon glyphicon-off">&nbsp;</span>
 									Logout
 								</a>
 							</li>
-							<!--
-							<li><a href="#login">Login</a></li>
-							<li><a href="#register">Sign Up</a></li>
-							<li><a href="http://tiny-mesh.com">tiny-mesh.com</a></li>
-							-->
 					 </ul>
 				</nav>
 		 </div>
@@ -113,78 +108,74 @@ var
 	links = []
 
 module.exports = {
-	init: function() {
-		links.push({
-				text: 'Login',
-				href: '/',
-				auth: false,
-				active: ['/', '/dashboard', '/user/login', '/user/logout']
-		})
+		ready: function() {
+			window.addEventListener("hashchange", function(hash) {
+				this.hash = hash.newURL.replace(/[^#]*#/, '')
+			}.bind(this), false)
+		},
 
-		return this
-	},
+		data: function() {
+			_.each(this.$root.routes, function(v, k) {
+				if (v.navigation)
+					_.each(v.navigation, function(nav, href) {
+						nav.href = href
+						if (undefined === nav.show)
+							nav.show = function() { return false; }
+						links.push(nav)
+					})
+			})
 
-	ready: function() {
-		window.addEventListener("hashchange", function(hash) {
-			this.hash = hash.newURL.replace(/[^#]*#/, '')
-		}.bind(this), false)
-	},
+			return {
+				links: links,
+				active: undefined,
+				hash: window.location.hash.replace(/^#/, '')
+			}
+		},
 
-	proxy: function() {
-		return {links: links}
-	},
+		events: {
+			'user:auth': function(user) {
+					return true
+			},
+		},
 
-	data: function() {
-		return {
-			links: links,
-			active: undefined,
-			hash: window.location.hash.replace(/^#/, '')
+		methods: {
+			setAndCheckActive: function(link) {
+				if (!link.show(this.$root))
+					return false
+
+
+				var res = _.any(link.active || [], function(match) {
+					if (_.isRegExp(match))
+						return this.hash.match(match)
+					else
+						return match === this.hash
+				}.bind(this))
+
+				if (res)
+					this.active = link
+
+				return res;
+			},
+
+			// adds a link, if a link with similar .href exists it will be
+			// overwritten
+			add: function(link) {
+				if (!link.text)
+					throw new Error("navigation.add must be called with object containing a .text property")
+				if (!link.href)
+					throw new Error("navigation.add must be called with object containing a .href property")
+				if (!link.active)
+					throw new Error("navigation.add must be called with object containing a .active property")
+
+			 this.links.push(link)
+			},
+
+			clear: function() {
+				this.links = links;
+			},
+
+			remove: function() {
+			},
 		}
-	},
-
-	events: {
-		'user:auth': function(user) {
-				return true
-		},
-	},
-
-	methods: {
-		setAndCheckActive: function(link) {
-			if (undefined !== link.auth && link.auth !== this.$root.$.auth.authenticated)
-				return false
-
-			var res = _.any(link.active || [], function(match) {
-				if (_.isRegExp(match))
-					return this.hash.match(match)
-				else
-					return match === this.hash
-			}.bind(this))
-
-			if (res)
-				this.active = link
-
-			return res;
-		},
-
-		// adds a link, if a link with similar .href exists it will be
-		// overwritten
-		add: function(link) {
-			if (!link.text)
-				throw new Error("navigation.add must be called with object containing a .text property")
-			if (!link.href)
-				throw new Error("navigation.add must be called with object containing a .href property")
-			if (!link.active)
-				throw new Error("navigation.add must be called with object containing a .active property")
-
-			var p
-			if (p = _.findWhere(this.links, {href: link.href}))
-				console.log('found', p)
-
-			this.links.push(link)
-		},
-
-		remove: function() {
-		},
-	}
 }
 </script>

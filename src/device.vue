@@ -29,47 +29,44 @@
 </style>
 
 <template lang="html">
-		<div class="container-fluid">
-			<div class="row subbar">
-				<div class="col-xs-12">
-					<ul class="nav nav-pills">
-						<li class="head">
-							<a href="#/dashboard/{{params.network}}">
-								<span class="glyphicon glyphicon-chevron-left">&nbsp;</span>
-								Network &ndash; {{params.network}}
-							</a>
-						</li>
-						<li v-class="active: '' === params.tab || 'overview' === params.tab">
-							<a href="#/device/{{params.network}}/{{params.device}}">
-								<span class="glyphicon glyphicon-pencil">&nbsp;</span>
-								Overview
-							</a>
-						</li>
-						<li v-class="active: 'config' === params.tab">
-							<a href="#/device/{{params.network}}/{{params.device}}/config">
-								<span class="glyphicon glyphicon-cog">&nbsp;</span>
-								Configuration
-							</a>
-						</li>
-						<li v-class="active: 'query' === params.tab">
-							<a href="#/device/{{params.network}}/{{params.device}}/query">
-								<span class="glyphicon glyphicon-th-list">&nbsp;</span>
-								Query
-							</a>
-						</li>
-						<!--<li v-class="active: 'interact' === params.tab"><a href="#/device/{{params.network}}/{{params.device}}/interact">Console</a></li>-->
-					</ul>
-				</div>
+<div>
+	<div class="container-fluid">
+		<div class="row subbar">
+			<div class="col-xs-12">
+				<ul class="nav nav-pills">
+					<li class="head">
+						<a v-link="/dashboard/{{route.params.network}}">
+							<span class="glyphicon glyphicon-chevron-left">&nbsp;</span>
+								Network &ndash; {{route.params.network}}
+						</a>
+					</li>
+					<li v-class="active: 'overview' === tab">
+						<a v-link="/device/{{route.params.network}}/{{route.params.device}}">
+							<span class="glyphicon glyphicon-pencil">&nbsp;</span>
+							Overview
+						</a>
+					</li>
+					<li v-class="active: 'config' === tab">
+						<a v-link="/device/{{route.params.network}}/{{route.params.device}}/config">
+							<span class="glyphicon glyphicon-cog">&nbsp;</span>
+							Configuration
+						</a>
+					</li>
+					<li v-class="active: 'query' === tab">
+						<a v-link="/device/{{route.params.network}}/{{route.params.device}}/query">
+							<span class="glyphicon glyphicon-th-list">&nbsp;</span>
+							Query
+						</a>
+					</li>
+				</ul>
 			</div>
 		</div>
-
+	</div>
 		<div v-component="wb-notify" v-ref="notify" id="notify"></div>
 
-		<div class="container-fluid">
-			<div
-				v-if="!notFound && device['proto/tm']"
-				v-component="device-{{params.tab}}"> </div>
-		</div>
+		<router-view id="device" class="container-fluid sub-view" v-transition="defaulttransition" transition-mode="out-in"></router-view>
+</div>
+
 </template>
 
 <script lang="js">
@@ -77,79 +74,116 @@ var
 	client = require('tinymesh-cloud-client'),
 	_ = require('lodash'),
 	Vue = require('vue'),
-	Finch = (require('./vendor/finch')).Finch,
 	store = require('store')
-
-var route = function(args) {
-	app.$set('view', 'device');
-	app.$.data.$set('params.network', args.nid)
-	app.$.data.$set('params.device', args.device)
-	app.$.data.$set('params.tab', args.tab || "overview")
-
-	Finch.observe('action', function(action) {
-		app.$.data.$set('params.action', action)
-	})
-}
-
 module.exports = {
-	init: function() {
-		Finch.route('/device/:nid/:device', route)
-		Finch.route('/device/:nid/:device/:tab', route)
-		return this;
+	data: function() {
+		return {
+			tab: 'overview',
+			device: { },
+
+			devicePatch: {
+				name: '',
+				type: ''
+			},
+
+			msgs: [],
+
+			devicePromise: undefined,
+			stream: undefined,
+		}
 	},
 
 	components: {
 		'device-overview': require('./device/overview.vue'),
-		'device-config': require('./device/config.vue'),
+		'device-config': require('./device/config-simple.vue'),
 		'device-query': require('./device/query.vue'),
 	},
 
-	ready: function() {
-		this.deviceNotFound = undefined === this.params.device
-		this.$root.$.data.networks.$promise.then(function() {
-			var p = client.device.get(
+	created: function() {
+		app.$set('containercss', "has-subbar")
+	},
+
+	attached: function() {
+		var updateRouteState = function(newval, old) {
+			var parts = newval.split(/[/?]/)
+			this.tab = parts[4] || 'overview'
+		}.bind(this)
+
+		this.$watch('route.path', updateRouteState)
+
+		updateRouteState(this.route.path, undefined)
+
+		if (this.route.params.device) {
+			this.device = client.device.get(
 				{auth: this.$root.$.auth.data},
 				this.device,
 				{
-					network: this.params.network,
-					key: this.params.device
+					network: this.route.params.network,
+					key: this.route.params.device,
 				}
-			).$promise
+			)
 
-			p.then(function(device) {
-				this.deviceNotFound = false
-				if ([] === device['proto/tm'] || Object.keys(device['proto/tm'] || {}).length === 0)
-					device['proto/tm'] = {
-						config: {
-							device: {
-								part: '',
-								fw_revision: '',
-								hw_revision: '',
-							}
-						}
-					}
+			this.$root.$.loader.await(this.device.$promise)
+			this.device.$promise.catch(function(err) {
+				console.log('device err:', err)
+			})
+		}
 
-				this.$set('device', device)
-			}.bind(this), function(err) {
-				this.deviceNotFound = true
-				if (403 === err.status) {
-					this.$.notify.set('There seems to be an error with the resource, device could not be read', 'danger');
-				}
-			}.bind(this));
-
-		}.bind(this));
+		this.startStream()
 	},
 
-	data: function() {
-		return {
-			device: { },
-			devicePatch: { },
-			devicePromise: undefined,
-			deviceNotFound: false
-		}
+	detached: function() {
+		this.stream && this.stream.close()
 	},
 
 	methods: {
+		startStream: function() {
+			var stream = client.message.stream(
+				{
+					auth: this.$root.$.auth.data,
+					evhandlers: {
+						msg: function(msg) {
+							if (this.msgs.length >= 20) {
+								this.msgs.reverse()
+								this.msgs.length = 19
+								this.msgs.reverse()
+							}
+
+							this.$broadcast('data:msg:device', msg)
+
+							this.msgs.push(msg)
+						}.bind(this),
+						error: function(err) {
+								if (err) {
+									this.$broadcast('stream:close', this.stream)
+									if (EventSource.CONNECTING === err.target.readyState) {
+										this.$.notify.set('Device stream disconnected, trying to reconnect', 'info')
+									} else if (EventSource.CLOSED === err.target.readyState) {
+										this.$.notify.set('Device stream disconnected', 'warning')
+										this.stream = undefined
+									}
+								}
+							}.bind(this),
+
+							open: function(e) {
+								this.stream = stream
+								this.$broadcast('stream:open', stream)
+							}.bind(this)
+						}
+					},
+					null,
+					{
+						'network': this.route.params.network,
+						'device': this.route.params.device,
+						'date.from': 'NOW',
+						'data-encoding': 'hex',
+						'accept': 'application/json',
+						'query': 'raw>0', // only return actual messages
+						'stream': 'stream/' + this.route.params.network + '/' + this.route.params.device,
+					}
+				);
+		},
+
 		save: function(device, e) {
 			e.preventDefault();
 
@@ -182,15 +216,6 @@ module.exports = {
 				this.devicePromise = undefined
 			}.bind(this));
 		},
-	},
-	computed: {
-		params: function() {
-			return this.$root.$.data.params
-		},
-
-		notFound: function() {
-			return this.$root.notFound = (this.deviceNotFound || undefined === this.$options.components['device-' + this.params.tab])
-		},
 	}
-};
+}
 </script>

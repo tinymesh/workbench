@@ -161,8 +161,8 @@ module.exports = {
 					}
 				},
 				{
-					'network': this.params.network,
-					'device': this.params.device,
+					'network': this.route.params.network,
+					'device': this.route.params.device,
 					'data-encoding': 'ASCII' === this.serialFormat ? 'binary' : 'hex',
 				}
 			).$promise.then(

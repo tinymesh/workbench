@@ -5,9 +5,6 @@ Vue.filter('patcher', {
 		return value;
 	},
 	read: function(value, source) {
-		if (!value)
-			value = this.$get(source)
-
-		return value;
+		return value || source
 	}
 })

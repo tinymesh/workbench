@@ -1,4 +1,6 @@
-var _ = require('lodash'),
+var
+	Vue = require('vue'),
+	_ = require('lodash'),
     Spinner = require('../vendor/spin');
 
 var defaults = {

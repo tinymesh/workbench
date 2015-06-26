@@ -6,32 +6,28 @@
 
 <template lang="html">
 <div class="container-fluid">
-	<div class="col-md-3 aside">
-		<div class="packet-selector">
-			<div class="page-header">
-				<h6>Send Packet</h6>
-			</div>
-			<div class="select-list">
-				<ul role="menu">
-					<li v-repeat="cmd: commands" v-class="active: $key === command">
-						<a v-on="click: command = $key">{{cmd.name}}</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-md-9">
+	<div class="col-md-12">
 		<div class="container-fluid">
-			<div class="page-header">
+			<div class="page-header" v-if="commands[command]">
 				<h6>{{commands[command].name}}</h6>
 			</div>
 
 			<div class="row">
-				<div
-					class="col-md-7">
+				<div class="col-md-12" v-show="!commands[command]">
+					<p class="lead">
+						Sending command allows you to control GPIO pins, send
+						UART data, request the device status and much more.
+					</p>
+					<p>
+						To send a command select one of the commands from the
+						left menu, you will get a description of what each command
+						does and the option to fill in any arguments.
+					</p>
+				</div>
 
-					<p class="lead" v-show="'set_output' !== command && 'set_pwm' !== command">
+				<div class="col-md-7" v-if="commands[command]">
+					<p class="lead"
+					    v-show="'set_output' !== command && 'set_pwm' !== command && 'set_config' !== command">
 						<code>{{commands[command].name}}</code> does not take any additional parameters
 					</p>
 
@@ -46,6 +42,11 @@
 									Request device status
 								</button>
 							</p>
+							<div class="col-xs-8 alert alert-info">
+								This device does not have any GPIOs configured
+								You can configure one in the
+								<a v-link="/device/{{route.params.network}}/{{route.params.device}}/config">configuration view</a>
+							</div>
 						</div>
 
 						<div v-if="gpios.length > 0" class="gpio-overview container-fluid">
@@ -90,10 +91,10 @@
 							</div>
 
 							<div v-show="!supportsOutputs">
-								<div class="alert alert-info">
-									This device does not have any output GPIO's
-									configured. You can add them through the
-									<a href="#/device/{{params.network}}/{{params.device}}/configuration">configuration view</a>
+								<div class="col-xs-8 alert alert-info">
+									This device does not have any GPIO's
+									configured for output. You can add them through the
+									<a v-link="/device/{{route.params.network}}/{{route.params.device}}/config">configuration view</a>
 								</div>
 							</div>
 						</div>
@@ -120,11 +121,76 @@
 						</div>
 
 						<div v-show="!supportsPWM">
-							<div class="alert alert-info">
+							<div class="col-xs-8 alert alert-info">
 								This device does not have a GPIO configured for PWM.
 								You add one in the
 								<a href="#/device/{{params.network}}/{{params.device}}/configuration">configuration view</a>
 							</div>
+						</div>
+					</div>
+
+					<div v-show="'set_config' === command" class="container-fluid">
+						<div class="row">
+							<div v-show="_.isEmpty(configPatch)" class="config-patch">
+								<p class="mute">
+									No changes to configuration, you can set parameters
+									in the input field below.
+								</p>
+							</div>
+
+							<ul v-show="!_.isEmpty(configPatch)" class="config-patch">
+								<li v-repeat="val: configPatch">
+									<a v-on="click: removeConfig($key, $event)">
+										<code>
+										<span class="key">{{$key}}</span>
+										<span> := </span>
+										<span class="value">{{val}}</span>
+										</code>
+										<span>&times;</span>
+									</a>
+								</li>
+							</ul>
+
+							<form class="form">
+								<div class="row">
+									<div class="form-group col-xs-4">
+										<label for="set_config-input">Parameter</label>
+										<input
+											v-model="configKeyInput"
+											type="text"
+											class="form-control"
+											id="set_config-input"
+											placeholder="Config Parameter"/>
+
+										<ul class="filtersOutput" v-show="configKeyInput && cfgInputFilterOutput && cfgInputFilterOutput[0].key !== configKeyInput">
+											<li v-repeat="item: cfgInputFilterOutput">
+												<a
+													v-on="click: this.configKeyInput = item.key"
+													v-html="item | highlight configKeyInput"></a>
+											</li>
+										</ul>
+									</div>
+									<div class="form-group col-xs-3">
+										<label for="set_config-value">Value</label>
+										<input
+											v-model="configValInput"
+											type="text"
+											class="form-control"
+											id="set_config-value"
+											placeholder="Value ..."/>
+									</div>
+									<div class="col-xs-2" style="margin-top: 27px;">
+										<button
+											v-on="click: addConfig(configKeyInput, configValInput, $event),
+											      submit: addConfig(configKeyInput, configValInput, $event)"
+											type="button"
+											class="btn btn-sm btn-primary">Set</button>
+									</div>
+								</div>
+								<div v-if="configError" class="col-xs-8 alert alert-danger">
+									<b>Error:</b> {{configError}}
+								</div>
+							</form>
 						</div>
 					</div>
 
@@ -145,10 +211,11 @@
 							</span>
 						</div>
 					</div>
+
 				</div>
 				<div
 					class="col-md-4 col-md-offset-1"
-					v-show="commands[command].comment">
+					v-if="commands[command] && commands[command].comment">
 
 					<p class="mute" v-html="commands[command].comment"></p>
 				</div>
@@ -156,48 +223,61 @@
 		</div>
 	</div>
 </div>
-
-<div style="display:none">
-	<div class="btn-group">
-		<button type="submit" class="btn btn-default dropdown-control">
-			Packet Type - <b>({{commands[command].name}})</b>
-		</button>
-
-		<button type="submit" class="btn btn-default dropdown-control">
-			<span class="caret">&nbsp;</span>
-		</button>
-
-		<ul class="dropdown-menu" role="menu">
-			<li v-repeat="cmd: commands" v-class="active: $key === command">
-				<a v-on="click: command = $key">{{cmd.name}}</a>
-			</li>
-		</ul>
-
-		<label class="btn btn-default">
-			<input v-model="useAck" type="checkbox"> Request acknowledge
-		</label>
-
-
-		<button type="submit" class="btn btn-primary">
-			<span class="glyphicon glyphicon-ok"></span>
-			Send Packet
-		</button>
-	</div>
-</div>
 </template>
+
 <script lang="js">
 var
 	client = require('tinymesh-cloud-client')
 
+var config = JSON.parse(require('!raw!../config/0.4.0.json'))
+var fieldDefs = JSON.parse(require('!raw!../config/0.4.0-names.json'))
+
+var cfgparams = _.reduce(config, function(acc, group, key) {
+	_.each(group, function(val) {
+		val.name = fieldDefs[val.key].name;
+		fieldDefs[val.key].pos = acc.length
+		acc.push(val);
+	})
+
+	return acc
+}, [])
+
+var cfghints = _.map(cfgparams, function(item) {
+	return {
+		key: item.key,
+		text: item.name + " (" + item.key + ")"
+	}
+})
+
+var autocomplete = function(input, hints) {
+	if (!input)
+		return []
+
+	var reg = new RegExp(input.split('').join('\\w*').replace(/\W/, ""), 'i');
+	return hints.filter(function(v) {
+		if (v.text.match(reg)) {
+			return v;
+		}
+	});
+}
+
 module.exports = {
 	data: function() {
 		return {
-			command: 'get_status',
-
 			useAck: true,
 			pwmOutput: 100,
-			outputs: {}
+			outputs: {},
+
+			configPatch: {},
+			configError: '',
+			configKeyInput: '',
+			configValInput: ''
 		}
+	},
+
+	// allows us to fix child menu in parent
+	created: function() {
+		this.$parent.packets = this.commands
 	},
 
 	ready: function() {
@@ -207,6 +287,47 @@ module.exports = {
 	},
 
 	methods: {
+		addConfig: function(key, val, ev) {
+			ev.preventDefault()
+
+			this.configError = ''
+
+			if (!fieldDefs[key]) {
+				this.configError = "no such field: '" +  key + "'"
+			} else if (undefined === val || '' === val) {
+				this.configError = "you need to input a value"
+			} else if (true === cfgparams[fieldDefs[key].pos].ro) {
+				this.configError = "read-only parameter"
+			} else {
+				undefined === this.configPatch[key] ?  this.configPatch.$add(key, val) :  (this.configPatch[key] = val)
+				this.configKeyInput = ''
+				this.configValInput = ''
+			}
+		},
+
+		getConfig: function(ev) {
+			ev.preventDefault()
+
+			client.message.create(
+				{ auth: this.$root.$.auth.data, },
+				{
+					'proto/tm': {
+						'type': 'command',
+						'command': 'get_config'
+					}
+				},
+				{
+					'network': this.route.params.network,
+					'device': this.route.params.device
+				}
+			)
+		},
+
+		removeConfig: function(key, ev) {
+			ev.preventDefault()
+			this.configPatch.$delete(key)
+		},
+
 		sendPacket: function(ev) {
 			ev.preventDefault()
 
@@ -223,6 +344,14 @@ module.exports = {
 				case 'set_output':
 					proto.gpio = this.outputs
 					break
+
+				case 'set_config':
+					var cfg = {}
+					_.each(this.configPatch, function(v, k) {
+						_.set(cfg, k.split(/\./), parseInt(v) || v)
+					})
+
+					proto.config = cfg
 			}
 
 			client.message.create(
@@ -231,8 +360,8 @@ module.exports = {
 					'proto/tm': proto
 				},
 				{
-					'network': this.params.network,
-					'device': this.params.device
+					'network': this.route.params.network,
+					'device': this.route.params.device
 				}
 			)
 		},
@@ -240,16 +369,48 @@ module.exports = {
 
 	filters: {
 		gpioChange: function(val, index) {
-			index = this.$get(index)
-
 			if (undefined === val)
 				return 'No Changes'
 
 			return val ? 'Enable' : 'Disable'
+		},
+
+		highlight: {
+			read: function(input, match) {
+				if (!input.text)
+					return ""
+
+				return input.text.replace(new RegExp("(" + this.$get(match) + ")"), '<span class="highlight">$1</span>')
+			}
 		}
 	},
 
 	computed: {
+		_: function() {
+			return _
+		},
+
+		command: function() {
+			return this.route.query.command
+		},
+
+		device: function() {
+			return this.$parent.device
+		},
+
+		params: function() {
+			return this.$root.$.data.params
+		},
+
+		cfgInputFilterOutput: function() {
+			var res = autocomplete(this.configKeyInput, cfghints).slice(0, 10)
+
+			if ([] == _.where(res, {key: this.configKeyInput}) && this.configKeyInput)
+				res.unshift([{key: this.configKeyInput, text: this.configKeyInput}])
+
+			return res
+		},
+
 		gpios: function() {
 			if (!this.device['proto/tm'] || !this.device['proto/tm'].config)
 				return []
@@ -392,9 +553,13 @@ module.exports = {
 			//		name: 'Serial'
 			//	},
 
-			//	'set_config':      {
-			//		name: 'Set Config'
-			//	}
+				'set_config':      {
+					name: 'Set Config',
+					comment: "The <code>`command/set_config`</code> sends a \
+					          configuration command to the node. See \
+					          <a href=\"#/help/device-configuration\">Device Configuration options</a> \
+										for all possible options"
+				}
 			}
 		}
 	}

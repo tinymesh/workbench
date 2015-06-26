@@ -21,45 +21,47 @@
 <template lang="html">
 <div>
 		<div class="container-fluid">
-			<div class="row subbar" v-if="!params.network || network">
+			<div class="row subbar">
 				<div class="col-xs-12">
 					<ul class="nav nav-pills">
 						<li
+							v-show="network.key"
 							class="head">
-							<a href="#/dashboard">
+							<a v-link="/dashboard">
+								<span class="glyphicon glyphicon-list">&nbsp;</span>
+								Dashboard
+							</a>
+						</li>
+
+						<li
+							v-show="!network.key"
+							class="head">
+							<a v-link="/dashboard">
 								<span class="glyphicon glyphicon-edit">&nbsp;</span>
 								Create Network
 							</a>
 						</li>
 
 						<li
-							v-show="network"
-							v-class="active: '' === params.tab || 'overview' === params.tab">
-								<a href="#/dashboard/{{params.network}}/overview">
+							v-show="network.key"
+							v-class="active: 'overview' === tab">
+								<a v-link="/dashboard/{{network.key}}/overview">
 								<span class="glyphicon glyphicon-pencil">&nbsp;</span>
 								Overview
 								</a>
 						</li>
 						<li
-							v-show="network"
-							v-class="active: 'devices' === params.tab">
-								<a href="#/dashboard/{{params.network}}/devices">
+							v-show="network.key"
+							v-class="active: 'devices' === tab">
+								<a v-link="/dashboard/{{network.key}}/devices">
 								<span class="glyphicon glyphicon-th-list">&nbsp;</span>
 									Devices
 								</a>
 						</li>
 						<li
-							v-show="network"
-							v-class="active: 'permissions' === params.tab">
-								<a href="#/dashboard/{{params.network}}/permissions">
-								<span class="glyphicon glyphicon-lock">&nbsp;</span>
-									Permissions
-								</a>
-						</li>
-						<li
-							v-show="network && !network.haveConnected()"
-							v-class="active: 'setup-guide' === params.tab">
-							<a href="#/dashboard/{{params.network}}/setup-guide">
+							v-show="network.key"
+							v-class="active: 'setup' === tab">
+							<a v-link="/dashboard/{{network.key}}/setup">
 								<span class="glyphicon glyphicon-wrench">&nbsp;</span>
 								Setup Guide
 							</a>
@@ -71,53 +73,13 @@
 
 		<div v-component="wb-notify" v-ref="notify" id="notify"></div>
 
-		<div class="container-fluid">
-			<div
-				class="col-xs-3"
-				v-if="(params.tab === 'overview' || params.tab === 'permissions' || params.tab === 'setup-guide') && (!$root.$.data.initialSetup || skipSetupGuide)">
-				<div class="network-selector">
-					<div class="page-header">
-						<h6>Networks</h6>
-					</div>
-					<div class="select-list" id="networks-list">
-						<ul v-if="networks">
-							<li v-repeat="netGroup: networkGroups" class="parent" v-class="active: net && net.key === params.network">
-								<span>{{netGroup.name}}</span>
-								<ul v-if="networks">
-									<li v-repeat="net: netGroup.items" v-class="active: net.key === params.network">
-										<a href="#/dashboard/{{net.key}}">{{net.name || 'Unnamed Network'}} ({{net.key}})</a>
-									</li>
-								</ul>
-							</li>
-							<li v-class="active: undefined == params.network" class="create-network">
-								<a href="#/dashboard"><b>+</b> Create new network</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div v-class="
-				col-xs-9: !$root.$.data.initialSetup || skipSetupGuide,
-				col-xs-12: $root.$.data.initialSetup || !skipSetupGuide
-			">
-				<div v-if="params.network && !network" class="row">
-					<div class="page-header">
-						<h3>Where's my network?</h3>
-					</div>
-
-					<p class="lead">
-						I tried to lookup the network id you provided but i don't
-						know where it is.
-					</p>
-					<p>
-						Are you sure the network exists and that you have the
-						correct permissions to access the network?
-					</p>
-				</div>
-				<div v-if="!notFound && network" v-component="dashboard-{{params.tab}}"></div>
-				<div v-if="!params.network" v-component="dashboard-setup-guide"></div>
-			</div>
+		<div class="cache-meta" v-if="networks.$cachekey">
+			Cached until {{networks.$cachettl}}
+			<a v-on="click: $root.purgecache(networks)">force reload</a>
 		</div>
+
+		<router-view id="dashboard" class="container-fluid sub-view" v-transition="defaulttransition" transition-mode="out-in"></router-view>
+
 </div>
 </template>
 
@@ -126,64 +88,55 @@ var
 	client = require('tinymesh-cloud-client'),
 	_ = require('lodash'),
 	Vue = require('vue'),
-	Finch = (require('./vendor/finch')).Finch,
 	store = require('store')
 
-var route = function(args) {
-	app.$set('view', 'dashboard');
-	app.$.data.$set('params.network', args.nid)
-	app.$.data.$set('params.tab', args.tab || "overview")
-
-	app.$.data.networks.$promise
-		.then(function(networks) {
-			var network;
-			if (!args.nid && app.$.data.initialSetup) {
-				if (network = networks[0]) {
-					app.$.data.$set('params.network', networks[0].key)
-					Finch.navigate('/dashboard/' + networks[0].key)
-				}
-			} else if (args.nid) {
-				network = _.find(networks, {key: app.$.data.params.network})
-				app.$.data.$set('network', network)
-				app.$broadcast('data:network', network)
-			}
-
-			if (network.key && !args.tab && !network.haveConnected())
-				app.$.data.$set('params.tab', 'setup-guide')
-		})
-}
-
 module.exports = {
-	init: function(navigation) {
-		Finch.route('/dashboard/:nid', route)
-		Finch.route('/dashboard/:nid/:tab', route)
-
-		navigation.methods.add.call(navigation.proxy(), {
-			text: 'Dashboard',
-			href: '/dashboard',
-			auth: true,
-			active: [/^\/$/, /^\/dashboard(\/|$)/, /^\/device(\/|$)/],
-			icon: 'glyphicon glyphicon-dashboard',
-			appendClasses: ['has-subbar']
-		})
-
-		return this;
+	data: function() {
+		return {
+			tab: 'landing',
+			network: {},
+			networkPatch: { },
+			networkPromise: undefined,
+		}
 	},
 
-	route: route,
+	created: function() {
+		app.$set('containercss', "has-subbar")
+	},
+
+	attached: function() {
+		var updateRouteState = function(newval, old) {
+			//if (!this.route.params.network)
+			//	this.network = {}
+
+			var parts = newval.split(/[/?]/)
+			if (parts[2])
+				this.tab = parts[3] || 'overview'
+			else
+				this.tab = 'landing'
+		}.bind(this)
+
+		this.$watch('route.path', updateRouteState)
+
+		updateRouteState(this.route.path, undefined)
+
+		if (this.route.params.network) {
+			this.network = client.network.get(
+				{auth: this.$root.$.auth.data},
+				this.network,
+				{key: this.route.params.network}
+			)
+
+			this.$root.$.loader.await(this.network.$promise)
+		}
+	},
 
 	components: {
+		'dashboard-landing': require('./dashboard/landing.vue'),
 		'dashboard-overview': require('./dashboard/overview.vue'),
 		'dashboard-devices': require('./dashboard/devices.vue'),
 		'dashboard-permissions': require('./dashboard/permissions.vue'),
 		'dashboard-setup-guide': require('./dashboard/setup-guide.vue')
-	},
-
-	data: function() {
-		return {
-			networkPatch: { },
-			networkPromise: undefined,
-		}
 	},
 
 	methods: {
@@ -208,47 +161,9 @@ module.exports = {
 	},
 
 	computed: {
-		params: function() {
-			return this.$root.$.data.params
-		},
-
-		notFound: function() {
-			return this.$root.notFound = undefined === this.$options.components['dashboard-' + this.params.tab]
-		},
-
-		network: function() {
-			return this.$root.$.data.network
-		},
-
 		networks: function() {
 			return this.$root.$.data.networks
-		},
-
-		networkGroups: function() {
-			if (!this.networks || !this.$root.$.data.user.email)
-				return [];
-
-			var user = this.$root.$.data.user;
-			var groups = _.groupBy(this.networks, function(net) {
-				var forUser = _.any(net.parents, function(v) {
-					return 'user/' + user.email === v
-				});
-
-				if (forUser)
-					return 'user/' + user.email
-
-				return _.filter(net.parents, function(v) {
-					return v.match(/^organization\//)
-				})[0];
-			})
-
-			return _.map(groups, function(networks, k) {
-				return {
-					name: k,
-					items: networks
-				}
-			}).sort().reverse();
-		},
+		}
 	}
 }
 </script>

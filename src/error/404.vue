@@ -43,7 +43,6 @@
 
 <script lang="js">
 module.exports = {
-	replace: true,
 	computed: {
 		history: function() {
 			return window.history

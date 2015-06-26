@@ -2,7 +2,7 @@
 </style>
 
 <template lang="html">
-<div>
+<div class="organization">
 		<div v-component="wb-notify" v-ref="notify" id="notify"></div>
 
 		<div class="container-fluid">
@@ -40,14 +40,13 @@ var
 	client = require('tinymesh-cloud-client'),
 	_ = require('lodash'),
 	Vue = require('vue'),
-	Finch = (require('./vendor/finch')).Finch,
 	store = require('store')
 
-var route = function(args) {
-	app.$set('view', 'organization');
-	app.$.data.$set('params.organization', args.org)
-	app.$.data.$set('params.tab', args.tab || (args.org ? "overview" : 'landing'))
-}
+//var route = function(args) {
+//	app.$set('view', 'organization');
+//	app.$.data.$set('params.organization', args.org)
+//	app.$.data.$set('params.tab', args.tab || (args.org ? "overview" : 'landing'))
+//}
 
 module.exports = {
 	data: function() {
@@ -58,23 +57,23 @@ module.exports = {
 		}
 	},
 
-	init: function(navigation) {
-		Finch.route('/organization', route)
-		Finch.route('/organization/:org', route)
-		Finch.route('/organization/:org/:tab', route)
+//	init: function(navigation) {
+	//	Finch.route('/organization', route)
+	//	Finch.route('/organization/:org', route)
+	//	Finch.route('/organization/:org/:tab', route)
 
-		navigation.methods.add.call(navigation.proxy(), {
-			text: 'Organizations',
-			href: '/organization',
-			auth: true,
-			active: [/^\/$/, /^\/organization(\/|$)/],
-			icon: 'glyphicon glyphicon-home',
-		})
+	//	navigation.methods.add.call(navigation.proxy(), {
+	//		text: 'Organizations',
+	//		href: '/organization',
+	//		auth: true,
+	//		active: [/^\/$/, /^\/organization(\/|$)/],
+	//		icon: 'glyphicon glyphicon-home',
+	//	})
 
-		return this;
-	},
+	//	return this;
+	//},
 
-	route: route,
+	//route: route,
 
 	components: {
 		'organization-landing': require('./organization/landing.vue'),

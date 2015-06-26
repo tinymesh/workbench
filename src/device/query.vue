@@ -291,8 +291,8 @@ module.exports = {
 				{auth: this.$root.$.auth.data},
 				null,
 				{
-					'network': this.params.network,
-					'device': this.params.device,
+					'network': this.route.params.network,
+					'device': this.route.params.device,
 					'date.from': this.query.range.from,
 					'date.to': this.query.range.to,
 					'data-encoding': 'binary'
@@ -336,13 +336,13 @@ module.exports = {
 				},
 				null,
 				{
-					'network': this.params.network,
-					'device': this.params.device,
+					'network': this.route.params.network,
+					'device': this.route.params.device,
 					'date.from': this.query.range.from,
 					'data-encoding': 'binary',
 					'accept': 'application/json',
 					'query': 'raw>0', // only return actual messages
-					'stream': 'stream/' + this.params.network + '/' + this.params.device,
+					'stream': 'stream/' + this.route.params.network + '/' + this.route.params.device,
 				}
 			);
 		},

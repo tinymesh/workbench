@@ -33,7 +33,6 @@ var
 	client = require('tinymesh-cloud-client'),
 	_ = require('lodash'),
 	Vue = require('vue'),
-	Finch = (require('./vendor/finch')).Finch,
 	store = require('store')
 
 var route = function(args) {
@@ -42,11 +41,11 @@ var route = function(args) {
 }
 
 module.exports = {
-	init: function() {
-		Finch.route('/help', route)
-		Finch.route('/help/:topic', route)
-		return this;
-	},
+//	init: function() {
+//		Finch.route('/help', route)
+//		Finch.route('/help/:topic', route)
+//		return this;
+//	},
 
 	components: {
 		'help-device-configuration': require('./help/device-configuration.vue')

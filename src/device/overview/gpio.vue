@@ -88,18 +88,18 @@ svg {
 
 					<div v-if="gpios.length > 0" class="gpio-overview container-fluid">
 						<div
-							class="gpio col-md-5 col-md-offset-{{$index % 2}}"
+							class="gpio col-md-5 col-md-offset-{{0 === $index % 2 ?  0 : 2}}"
 							v-repeat="gpio: gpios">
 							<div class="">
-								<div class="title col-xs-2">GPIO {{$index}}</div>
+								<div class="title col-xs-3">GPIO {{$index}}</div>
 
-								<div class="value col-xs-10">
+								<div class="value col-xs-9">
 									<span
 										v-if="0 === gpio.config || 4 === gpio.config"
-										class="type col-xs-5">Digital Output</span>
+										class="type col-xs-6">Digital Output</span>
 									<div
 										v-if="0 === gpio.config || 4 === gpio.config"
-										class="digital-output col-xs-5">
+										class="digital-output col-xs-6">
 										<button
 											v-on="click: setOutput($index, 1, $event)"
 											class="btn btn-sm btn-success">
@@ -114,10 +114,10 @@ svg {
 
 									<span
 										v-if="1 === gpio.config"
-										class="type col-xs-5">Digital Input</span>
+										class="type col-xs-6">Digital Input</span>
 									<div
 										v-if="1 === gpio.config"
-										class="output digital-input col-xs-5">
+										class="output digital-input col-xs-6">
 										<span
 											v-show="msgs.length > 0 && 1 === msgs[msgs.length - 1]['proto/tm'].dio['gpio_' + $index]"
 											class="label label-success">On
@@ -136,10 +136,10 @@ svg {
 
 									<span
 										v-if="2 === gpio.config"
-										class="type col-xs-5">Analogue Input</span>
+										class="type col-xs-6">Analogue Input</span>
 									<div
 										v-if="2 === gpio.config"
-										class="output analogue-input col-xs-5">
+										class="output analogue-input col-xs-6">
 
 										<span
 											v-if="msgs.length === 0"
@@ -156,10 +156,10 @@ svg {
 
 									<span
 										v-if="3 === gpio.config"
-										class="type col-xs-5">PWM Output</span>
+										class="type col-xs-6">PWM Output</span>
 									<div
 										v-if="3 === gpio.config"
-										class="output pwm-output col-xs-5">
+										class="output pwm-output col-xs-6">
 										<div class="col-xs-9">
 											<input
 												id="pwmoutput"
@@ -180,7 +180,8 @@ svg {
 							</div>
 						</div>
 					</div>
-					<div class="action text-right">
+					<br >
+					<div class="action text-right col-xs-12 ">
 						<button
 							v-on="click: getStatus"
 							type="submit"
@@ -313,6 +314,14 @@ module.exports = {
 	},
 
 	computed: {
+		device: function() {
+			return this.$parent.device
+		},
+
+		msgs: function() {
+			return this.$parent.msgs
+		},
+
 		gpios: function() {
 			if (!this.device['proto/tm'] || !this.device['proto/tm'].config)
 				return []
@@ -350,8 +359,8 @@ module.exports = {
 					}
 				},
 				{
-					'network': this.params.network,
-					'device': this.params.device
+					'network': this.route.params.network,
+					'device': this.route.params.device
 				}
 			)
 		},
@@ -378,8 +387,8 @@ module.exports = {
 					}
 				},
 				{
-					'network': this.params.network,
-					'device': this.params.device
+					'network': this.route.params.network,
+					'device': this.route.params.device
 				}
 			)
 		},
@@ -396,8 +405,8 @@ module.exports = {
 					}
 				},
 				{
-					'network': this.params.network,
-					'device': this.params.device
+					'network': this.route.params.network,
+					'device': this.route.params.device
 				}
 			)
 		},
@@ -414,8 +423,8 @@ module.exports = {
 					}
 				},
 				{
-					'network': this.params.network,
-					'device': this.params.device
+					'network': this.route.params.network,
+					'device': this.route.params.device
 				}
 			)
 		},

@@ -1,15 +1,15 @@
 <style lang="css">
-#landing-icon {
+.organization #landing-icon {
 	font-size: 15em;
 	color: #eaeaea;
 	margin-top: 20px;
 }
-#landing-title {
+.organization #landing-title {
 	color: #777;
 }
 
-.landing .content > * { padding-bottom: 15px; }
-.landing { padding-top: 65px; }
+.organization .landing .content > * { padding-bottom: 15px; }
+.organization .landing { padding-top: 65px; }
 </style>
 
 <template lang="html">

@@ -23,13 +23,14 @@
 .network-permissions .sliced:nth-last-child(2) > * {
 	opacity: 0.4;
 }
+.network-permissions .sliced:nth-child(1) > *,
+.network-permissions .sliced:nth-child(2) > * {
+	opacity: 1;
+}
 </style>
 
 <template lang="html">
 	<div class="row network-permissions">
-		<div class="page-header">
-			<h3>{{network.name || "Unnamed network — " + network.key}}</h3>
-		</div>
 		<div class="col-xs-6 overview">
 			<div>
 				<div class="page-header">
@@ -39,7 +40,7 @@
 					<li
 						class="list-group-item"
 						v-class="permitted: org.permitted, synced: org.synced, sliced: !fullOrgList"
-						v-repeat="org: access.organizations | viewMore 4 fullOrgList">
+						v-repeat="org: access.organizations">
 							<a href="#/organization/{{org.key}}">{{org.name}}</a>
 							<span v-show="!org.synced" class="muted-label">Sync required</span>
 
@@ -53,6 +54,7 @@
 								class="pull-right btn btn-sm btn-danger">Revoke Access</button>
 					</li>
 					<li
+						v-if="access.organizations > 4"
 						class="list-group-item text-right">
 						<a v-show="fullOrgList" v-on="click: fullOrgList = !fullOrgList">
 							<span class="glyphicon glyphicon-chevron-up"></span> Show less
@@ -172,6 +174,7 @@ module.exports = {
 			if (_.contains(this.networkPatch.parents, type + '/' + ent.key))
 				return
 
+			console.log(this.networkPatch.parents)
 			this.networkPatch.parents.push(type + '/' + ent.key)
 			this.networkPatch.parents = this.networkPatch.parents
 		},
@@ -201,16 +204,12 @@ module.exports = {
 	},
 
 	computed: {
-		params: function() {
-			return this.$root.$.data.params
-		},
-
 		user: function() {
 			return this.$root.$.data.user
 		},
 
 		network: function() {
-			return this.$root.$.data.network || {}
+			return this.$parent.network || {}
 		},
 
 		networkPromise: function() {

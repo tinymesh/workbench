@@ -2,13 +2,13 @@ var
 	Vue = require('vue'),
 	_ = require('lodash')
 
-Vue.filter('address', {
+module.exports = {
+	name: 'address',
 	write: function(value, prevVal) {
 		console.log('write/address', value)
 		return value;
 	},
 	read: function(value, encoding, bigEndian) {
-		bigEndian = this.$get(bigEndian) || false
 		var toEndian = function (list) {
 			if (bigEndian)
 				return list.reverse()
@@ -18,7 +18,7 @@ Vue.filter('address', {
 
 		value = parseInt(value)
 
-		switch (this.$get(encoding) || 'hex') {
+		switch (encoding || 'hex') {
 			case 'binary':
 				return toEndian([
 					 value & 0xff,
@@ -45,5 +45,4 @@ Vue.filter('address', {
 
 		return value
 	}
-})
-
+}

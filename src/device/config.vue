@@ -65,7 +65,7 @@
 								<div v-if="!field.enum">
 									<label for="input-{{field.group}}-{{field.subkey}}" class="control-label">{{field.name || $key}}</label>
 									<input
-										v-model="devicePatch['proto/tm'].config[field.group][field.subkey] | configPatch deviceConfig"
+										v-model="configPatch[field.group][field.subkey] | configPatch deviceConfig"
 										type="text"
 										id="input-{{group.key}}-{{field.subkey}}"
 										class="form-control"

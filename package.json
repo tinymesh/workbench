@@ -18,7 +18,8 @@
     "pace": "git://github.com/HubSpot/pace#master",
     "promise": ">= 3.2.0",
     "store": "*",
-    "vue": "git://github.com/yyx990803/vue#0.11.8",
+    "vue": "git://github.com/yyx990803/vue#0.12.4",
+    "vue-router": "git://github.com/vuejs/vue-router#master",
     "zxcvbn2": "*",
     "moment-timezone": "*",
     "d3": "*"
@@ -29,6 +30,7 @@
     "json-loader": "^0.5.1",
     "raw-loader": "*",
     "vue-loader": "*",
-    "webpack": "^1.4.4"
+    "webpack": "^1.4.4",
+    "image-webpack-loader": "^1.6.1"
   }
 }
