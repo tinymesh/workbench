@@ -114,21 +114,23 @@ module.exports = {
 				this.tab = parts[3] || 'overview'
 			else
 				this.tab = 'landing'
+
+			if (this.route.params.network) {
+				this.network = client.network.get(
+					{auth: this.$root.$.auth.data},
+					this.network,
+					{key: this.route.params.network}
+				)
+
+				this.$root.$.loader.await(this.network.$promise)
+			} else {
+				this.network = {}
+			}
 		}.bind(this)
 
 		this.$watch('route.path', updateRouteState)
 
 		updateRouteState(this.route.path, undefined)
-
-		if (this.route.params.network) {
-			this.network = client.network.get(
-				{auth: this.$root.$.auth.data},
-				this.network,
-				{key: this.route.params.network}
-			)
-
-			this.$root.$.loader.await(this.network.$promise)
-		}
 	},
 
 	components: {
