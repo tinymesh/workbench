@@ -145,10 +145,13 @@ module.exports = {
 		save: function(network, e) {
 			e.preventDefault();
 
-			var qopts = { key: this.params.network };
+			var qopts = { key: this.route.params.network };
 
 			// this.device.$promise not available, use returned promise
-			this.networkPromise = this.$root.$.data.network.$update({auth: this.$root.$.auth.data}, network, qopts).$promise
+			this.networkPromise = this.network.$update(
+				{auth: this.$root.$.auth.data},
+				network,
+				qopts).$promise
 			this.networkPromise.then(function(network) {
 				this.$.notify.set('Network was successfully updated', 'success')
 
