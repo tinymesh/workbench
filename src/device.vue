@@ -81,10 +81,7 @@ module.exports = {
 			tab: 'overview',
 			device: { },
 
-			devicePatch: {
-				name: '',
-				type: ''
-			},
+			devicePatch: {},
 
 			msgs: [],
 
@@ -188,12 +185,16 @@ module.exports = {
 			e.preventDefault();
 
 			var qopts = {
-				network: this.params.network,
-				key: this.params.device
+				network: this.route.params.network,
+				key: this.route.params.device
 			};
 
 			// this.device.$promise not available, use returned promise
-			this.devicePromise = this.device.$update({auth: this.$root.$.auth.data}, device, qopts).$promise
+			this.devicePromise = this.device.$update(
+				{auth: this.$root.$.auth.data},
+				device,
+				qopts).$promise
+
 			this.devicePromise.then(function(device) {
 				this.$.notify.set('Device was successfully updated', 'success')
 

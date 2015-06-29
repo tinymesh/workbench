@@ -6,7 +6,7 @@
 								<label class="col-xs-4 control-label">Device Name</label>
 								<div class="col-xs-8">
 									<input
-												v-model="devicePatch.name | patcher device.name"
+												v-model="devicePatch | patcher 'name' devicePatch device"
 												type="text"
 												class="form-control"
 												id="network-name"
@@ -28,7 +28,7 @@
 								<label class="col-xs-4 control-label">Device Type</label>
 								<div class="col-xs-8">
 									<select
-										v-model="devicePatch.type"
+										v-model="devicePatch | patcher 'type' devicePatch device"
 										options="availableDeviceTypes"
 										id="device-type"
 										name="device-type"
@@ -94,15 +94,11 @@
 					<div>
 						<div class="col-sm-offset-2 col-sm-4">
 							<button
-								v-on="click: save(devicePatch, $event)"
-								v-attr="disabled: $parent.devicePromise"
+								v-on="click: $parent.save(devicePatch, $event)"
 								v-class="'btn-spinner': $parent.devicePromise"
 								class="btn btn-success pull-right">
 
-								<span v-wb-spinner="$parent.devicePromise"></span>
-
-								<span v-if="$parent.devicePromise">Saving changes</span>
-								<span v-if="!$parent.devicePromise">Save changes</span>
+								<span>Save changes</span>
 							</button>
 						</div>
 					</div>

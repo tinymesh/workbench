@@ -49,7 +49,9 @@
 			<ul class="nav">
 				<li v-class="active: !route.query.section || 'general' == route.query.section"><a v-link="/device/{{route.params.network}}/{{route.params.device}}/overview?section=general">General</a></li>
 				<li v-class="active: 'serial' == route.query.section"><a v-link="/device/{{route.params.network}}/{{route.params.device}}/overview?section=serial">UART Communication</a></li>
+<!--
 				<li v-class="active: 'gpio' == route.query.section"><a v-link="/device/{{route.params.network}}/{{route.params.device}}/overview?section=gpio">GPIO state</a></li>
+-->
 				<li v-class="active: 'packets' == route.query.section">
 					<a v-link="/device/{{route.params.network}}/{{route.params.device}}/overview?section=packets">Send Command</a>
 
