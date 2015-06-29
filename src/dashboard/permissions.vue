@@ -45,11 +45,11 @@
 							<span v-show="!org.synced" class="muted-label">Sync required</span>
 
 							<button
-								v-on="click: grant('organization', org)"
+								v-on="click: grant('organization', org, $event)"
 								v-show="!org.permitted"
 								class="pull-right btn btn-sm btn-success">Grant Access</button>
 							<button
-								v-on="click: revoke('organization', org)"
+								v-on="click: revoke('organization', org, $event)"
 								v-show="org.permitted"
 								class="pull-right btn btn-sm btn-danger">Revoke Access</button>
 					</li>
@@ -81,18 +81,18 @@
 							<span v-show="!user.synced" class="muted-label">Sync required</span>
 
 							<button
-								v-on="click: grant('user', user)"
+								v-on="click: grant('user', user, $event)"
 								v-show="!user.permitted"
 								class="pull-right btn btn-sm btn-success">Grant Access</button>
 							<button
-								v-on="click: revoke('user', user)"
+								v-on="click: revoke('user', user, $event)"
 								v-show="user.permitted"
 								class="pull-right btn btn-sm btn-danger">Revoke Access</button>
 					</li>
 					<li class="list-group-item" v-class="has-error: !!newUserError">
 						<form
 							class="form-inline"
-							v-on="submit: addUser(newUser)">
+							v-on="submit: addUser(newUser, $event)">
 
 							<div class="row">
 								<div class="form-group col-xs-3">
@@ -113,7 +113,7 @@
 								</div>
 								<div class="form-group col-xs-2">
 									<button
-										v-on="click: addUser(newUser)"
+										v-on="click: addUser(newUser, $event)"
 										type="submit"
 										class="btn btn-primary">Add User</button>
 								</div>
@@ -132,7 +132,7 @@
 									Reset
 								</button>
 								<button
-										v-on="click: $parent.save(networkPatch, $event)"
+										v-on="click: save(networkPatch, $event)"
 										type="button"
 										class="btn btn-primary">
 									Save
@@ -154,22 +154,23 @@
 </template>
 
 <script type="js">
+var _ = require('lodash')
+
 module.exports = {
 	data: function() {
 		return {
 			newUser: '',
 			newUserError: '',
-			networkPatch: {
-				parents: undefined
-			},
 			fullOrgList: false
 		}
 	},
 
 	methods: {
-		grant: function(type, ent) {
+		grant: function(type, ent, ev) {
+			ev && ev.preventDefault()
+
 			if (!this.networkPatch.parents)
-				this.networkPatch.parents = _.clone(this.network.parents)
+				this.networkPatch.$add('parents', _.clone(this.network.parents))
 
 			if (_.contains(this.networkPatch.parents, type + '/' + ent.key))
 				return
@@ -178,16 +179,21 @@ module.exports = {
 			this.networkPatch.parents = this.networkPatch.parents
 		},
 
-		revoke: function(type, ent) {
+		revoke: function(type, ent, ev) {
+			ev.preventDefault()
+
 			if (!this.networkPatch.parents)
-				this.networkPatch.parents = _.clone(this.network.parents)
+				this.networkPatch.$add('parents', _.clone(this.network.parents))
+
 
 			this.networkPatch.parents = _.without(
 				this.networkPatch.parents,
 				type + '/' + ent.key)
 		},
 
-		addUser: function(email) {
+		addUser: function(email, ev) {
+			ev && ev.preventDefault()
+
 			if (!email.match(/[a-z0-9_.-]+@[a-z0-9_.-]+/))
 				this.newUserError = "invalid email address"
 			else {
@@ -208,11 +214,20 @@ module.exports = {
 		},
 
 		network: function() {
-			return this.$parent.network || {}
+			return this.$parent.network
 		},
+
+		networkPatch: function() {
+			return this.$parent.networkPatch
+		},
+
 
 		networkPromise: function() {
 			return this.$parent.networkPromise
+		},
+
+		save: function() {
+			return this.$parent.$parent.save
 		},
 
 		access: function() {

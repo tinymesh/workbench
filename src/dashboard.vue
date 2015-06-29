@@ -152,16 +152,21 @@ module.exports = {
 				{auth: this.$root.$.auth.data},
 				network,
 				qopts).$promise
+
 			this.networkPromise.then(function(network) {
 				this.$.notify.set('Network was successfully updated', 'success')
 
 				this.$root.$.data.$set('network', network);
 				this.networkPromise = undefined
+				this.networkPatch = {}
+				this.network = network
 			}.bind(this), function(err) {
 				var msg = err.text || err.message;
 				this.$.notify.set('Failed to update network: ' + msg, 'danger')
 				this.networkPromise = undefined
 			}.bind(this));
+
+			this.$root.$.loader.await(this.networkPromise)
 		}
 	},
 
