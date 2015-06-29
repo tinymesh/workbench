@@ -31,11 +31,6 @@ var router = new Router({
 var routes = require('./routes.js')
 router.map(routes)
 
-routego = function(path) {
-	console.log('route-> ' + path)
-	router.go(path, {history: true})
-}
-
 Vue.config.debug = true;
 app = Vue.extend({
 	el: function() { return '#app' },
@@ -85,6 +80,7 @@ app = Vue.extend({
 				function(user) {
 					// add redirect
 					router.redirect({'/': '/dashboard'})
+					return user
 				},
 				function(resp) {
 					if (401 === resp.status) {
@@ -94,15 +90,6 @@ app = Vue.extend({
 				}
 			)
 		}
-
-		// setup error handling
-		//handler = this.$.jserror
-		//window.onerror = function(msg, url, line) {
-		//	if (handler)
-		//		return handler.handle(msg, url, line)
-
-		//	return false
-		//}
 	},
 
 	methods: {

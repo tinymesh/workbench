@@ -21,6 +21,9 @@ module.exports = {
 	methods: {
 		onAuth: function(auth, onUser, onUserErr) {
 			delete auth.$promise; // not serializable
+			var router = this.route._router
+
+			router.redirect({'/': '/dashboard'})
 
 			store.set('prevAuth?', true);
 			store.set('auth', auth);
@@ -29,7 +32,6 @@ module.exports = {
 			this.$set('data', auth);
 			this.$set('authenticated', true);
 
-			console.log('fulfil')
 			this.$root.$.data.networks.$fulfil({auth: auth});
 			this.$root.$.loader.await(this.$root.$.data.networks.$promise)
 
@@ -40,14 +42,14 @@ module.exports = {
 			this.$root.$.data.user = client.user.get({auth: auth});
 			this.$root.$.data.user.$promise.then(function(user) {
 
-			if (window.location.hash.match(/^#!\/?$/) ||
-			    window.location.hash.match(/^#!\/user\/login/) ||
-			    window.location.hash.match(/^#!\/user\/logout/)) {
-				console.log('auth: force redirect' + window.location.hash + ' -> /dashboard')
-				routego(window.location.hash || '#!/dashboard')
+			if (window.location.hash.match(/^#!?\/?$/) ||
+			    window.location.hash.match(/^#!?\/user\/login/) ||
+			    window.location.hash.match(/^#!?\/user\/logout/)) {
+				console.log('auth: force redirect: ' + window.location.hash + ' -> /dashboard')
+				router.go(('/').replace(/^#!?/, ''))
 			} else {
-				console.log('auth: force reload of: ' + window.location.hash)
-				routego(window.location.hash || '#!/')
+				console.log('auth: force reload of: ' + (window.location.hash || '#!/'))
+				router.go((window.location.hash || '/').replace(/^#!?/, ''))
 			}
 
 
