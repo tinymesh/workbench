@@ -36,7 +36,7 @@
 						<li
 							v-show="!network.key"
 							class="head">
-							<a v-link="/dashboard">
+							<a v-link="/dashboard?create=true">
 								<span class="glyphicon glyphicon-edit">&nbsp;</span>
 								Create Network
 							</a>
@@ -94,7 +94,7 @@ module.exports = {
 	data: function() {
 		return {
 			tab: 'landing',
-			network: {},
+			network: client.network.get({future: true}),
 			networkPatch: { },
 			networkPromise: undefined,
 		}

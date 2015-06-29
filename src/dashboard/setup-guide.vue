@@ -693,16 +693,13 @@ module.exports = {
 
 	computed: {
 		network: function() {
-			return this.$root.$.data.network
+			return this.$parent.network
 		},
 
 		networkPatch: function() {
 			return this.$parent.networkPatch
 		},
 
-		networkPromise: function() {
-			return this.$parent.networkPromise
-		},
 		networkPromise: function() {
 			return this.$parent.networkPromise
 		},

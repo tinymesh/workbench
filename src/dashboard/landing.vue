@@ -1,7 +1,59 @@
 <template>
 	<div class="container-fluid">
-		<div class="row">
-			<aside v-show="networks.length > 0" class="col-xs-3">
+		<div class="row" v-if="!route.query.create && 0 === allnetworks.length">
+			You have no networks
+		</div>
+
+		<div class="col-md-10 col-md-offset-2">
+			<div v-if="'true' === route.query.create" v-component="dashboard-setup-guide"></div>
+		</div>
+
+		<div class="row" v-if="!route.query.create && allnetworks.length > 0">
+			<aside class="col-xs-3">
+				<div class="state-filter">
+					<div class="page-header">
+						<h6>Connectivity</h6>
+					</div>
+
+					<div class="select-list" id="connstate-list">
+						<ul>
+							<li v-repeat="filter.connstate"
+									v-class="active: filter.connstate[$key]">
+								<a v-on="click: filter.connstate[$key] = !filter.connstate[$key]">{{states[$key]}}</a>
+							</li>
+				</div>
+
+<!--
+				<div class="device-filter">
+					<div class="page-header">
+						<h6>Device Types</h6>
+					</div>
+
+					<div class="select-list" id="device-list">
+						<ul>
+							<li v-repeat="filter.types">
+								<a v-on="click: filter.types[$key] = !filter.types[$key]}}">{{$key}}</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="ownership-filter">
+					<div class="page-header">
+						<h6>Owned by</h6>
+					</div>
+
+					<div class="select-list" id="entity-list">
+						<ul>
+							<li v-repeat="filter.ownership">
+								<a v-on="click: filter.ownership[$key] = !filter.ownership[$key]}}">{{$key}}</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+-->
+
 			</aside>
 
 			<div v-show="networks.length > 0" class="col-xs-9">
@@ -58,6 +110,13 @@
 					</div>
 			 </div>
 			</div>
+			<div v-show="0 === networks.length" class="col-xs-9">
+				<br >
+				<div class="alert alert-info">
+					No networks matched your filtering
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -65,6 +124,48 @@
 var _ = require('lodash')
 
 module.exports = {
+	data: function() {
+		return {
+			filter: {
+				ownership: {},
+				types: {},
+				connstate: {
+					'connected': false,
+					'partial-connected': false,
+					'disconnected': false,
+					'no-gateways': false,
+				},
+			},
+			states: {
+				'connected': "All gateways connected",
+				'partial-connected': "Some gateways connected",
+				'disconnected': "Disconnected",
+				'no-gateways': "No gateways",
+			}
+		}
+	},
+
+//	// don't need this now
+//	attached: function() {
+//		var ctx = this
+//
+//		this.allnetworks.$promise.then(function(networks) {
+//			_.each(networks, function(net) {
+//				// populate ownership
+//				_.each(net.parents, function(v) {
+//					if (undefined === ctx.filter.ownership[v])
+//						ctx.filter.ownership.$add(v, -1)
+//				})
+//
+//				// populate types
+//				_.each(net.types, function(v, k) {
+//					if (undefined === ctx.filter.types[k])
+//						ctx.filter.types.$add(k, -1)
+//				})
+//			})
+//		})
+//	},
+
 	methods: {
 		netconnectivity: function(network) {
 			var chans = _.size(network.channels)
@@ -98,8 +199,29 @@ module.exports = {
 	},
 
 	computed: {
-		networks: function() {
+		allnetworks: function() {
 			return this.$root.$.data.networks
+		},
+
+		networks: function() {
+			var ctx = this
+
+			var filterconns = _.any(this.filter.connstate, function(v) { return v; })
+
+			var connmap = {
+				"-2": 'no-gateways',
+				"-1": 'disconnected',
+				 "0": 'partial-connected',
+				 "1": 'connected',
+			}
+
+			return _.filter(this.allnetworks, function(network) {
+				if (!filterconns)
+					return true
+
+				var connstate = ctx.netconnectivity(network)
+				return true === ctx.filter.connstate[connmap[connstate.state || -2]]
+			})
 		},
 	}
 }
