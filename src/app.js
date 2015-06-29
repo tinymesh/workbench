@@ -24,8 +24,7 @@ pace.start({
 Vue.use(Router)
 var router = new Router({
 	history: true,
-	hashbang: true,
-	root: window.location.pathname
+	hashbang: true
 })
 
 var routes = require('./routes.js')

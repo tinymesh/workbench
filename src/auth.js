@@ -23,8 +23,6 @@ module.exports = {
 			delete auth.$promise; // not serializable
 			var router = this.route._router
 
-			router.redirect({'/': '/dashboard'})
-
 			store.set('prevAuth?', true);
 			store.set('auth', auth);
 
@@ -42,14 +40,15 @@ module.exports = {
 			this.$root.$.data.user = client.user.get({auth: auth});
 			this.$root.$.data.user.$promise.then(function(user) {
 
-			if (window.location.hash.match(/^#!?\/?$/) ||
+			if (!window.location.hash ||
+			    window.location.hash.match(/^#!?\/?$/) ||
 			    window.location.hash.match(/^#!?\/user\/login/) ||
 			    window.location.hash.match(/^#!?\/user\/logout/)) {
-				console.log('auth: force redirect: ' + window.location.hash + ' -> /dashboard')
-				router.go(('/').replace(/^#!?/, ''))
+				console.log('auth: force redirect: ' + window.location.hash + ' -> #!/dashboard')
+				router.go('#!/dashboard')
 			} else {
-				console.log('auth: force reload of: ' + (window.location.hash || '#!/'))
-				router.go((window.location.hash || '/').replace(/^#!?/, ''))
+				console.log('auth: force reload of: ' + (window.location.hash))
+				router.go('#!' + (window.location.hash || '#!/').replace(/^#!?/, ''))
 			}
 
 
