@@ -44,6 +44,11 @@ page-header {
 							<div class="box-title">
 									<h4>Login</h4>
 							</div>
+							<div class="col-xs-12" v-if="'unauthorized' == route.query.reason">
+								<div class="alert alert-info">
+									Your session has expired, please log in again.
+								</div>
+							</div>
 							<div class="col-xs-12"  v-component="user-login"></div>
 							<div class="col-xs-12 inline-info">
 								You have been signed out of your session.

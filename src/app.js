@@ -106,16 +106,6 @@ app = Vue.extend({
 
 			elem.className = classes.join(' ')
 		},
-
-		purgecache: function(resource) {
-			console.log(resource)
-			if (!resource.$cachekey)
-				return
-
-			console.log('cache: purge key: ' + key.$cachekey)
-			store.remove(key)
-
-		}
 	},
 
 	computed: {

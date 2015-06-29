@@ -99,7 +99,6 @@ module.exports = {
 
 			if (_.filter(this.errors, function(v) { return v !== undefined; }).length > 0 )
 				return
-			console.log('no errors!')
 
 			var v = this;
 			this.$root.$.auth.data = client.auth.login({}, {email: email, password: password});

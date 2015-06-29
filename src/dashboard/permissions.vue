@@ -174,7 +174,6 @@ module.exports = {
 			if (_.contains(this.networkPatch.parents, type + '/' + ent.key))
 				return
 
-			console.log(this.networkPatch.parents)
 			this.networkPatch.parents.push(type + '/' + ent.key)
 			this.networkPatch.parents = this.networkPatch.parents
 		},

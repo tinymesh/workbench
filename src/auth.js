@@ -14,7 +14,9 @@ module.exports = {
 
 	ready: function() {
 		client.$config.set('onUnauthorized', function() {
+			console.log('auth: authorization invalidated')
 			this.$set('authenticated', false)
+			this.route._router.go('/user/logout?reason=unauthorized')
 		}.bind(this))
 	},
 
@@ -42,8 +44,7 @@ module.exports = {
 
 			if (!window.location.hash ||
 			    window.location.hash.match(/^#!?\/?$/) ||
-			    window.location.hash.match(/^#!?\/user\/login/) ||
-			    window.location.hash.match(/^#!?\/user\/logout/)) {
+			    window.location.hash.match(/^#!?\/user\/login/)) {
 				console.log('auth: force redirect: ' + window.location.hash + ' -> #!/dashboard')
 				router.go('#!/dashboard')
 			} else {
