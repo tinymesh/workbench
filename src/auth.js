@@ -64,13 +64,13 @@ module.exports = {
 				this.$set('authenticated', val);
 			}.bind(this)
 
-			ttl = parseInt(this.data.ttl) * 1000
-			if (new Date(ttl).getTime() < new Date().getTime()) {
-				alert("Server time is greater than you localtime, check your settings.")
-			}
-			setTimeout(function() {
-				setauth(false)
-			}, (ttl - new Date().getTime()))
+			//ttl = parseInt(this.data.ttl) * 1000
+			//if (new Date(ttl).getTime() < new Date().getTime()) {
+			//	alert("Server time is greater than you localtime, check your settings.")
+			//}
+			//setTimeout(function() {
+			//	setauth(false)
+			//}, (ttl - new Date().getTime()))
 		}
 	}
 }
