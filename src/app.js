@@ -77,8 +77,6 @@ app = Vue.extend({
 			this.$.auth.onAuth(
 				auth,
 				function(user) {
-					// add redirect
-					router.redirect({'/': '/dashboard'})
 					return user
 				},
 				function(resp) {

@@ -25,6 +25,9 @@ module.exports = {
 			delete auth.$promise; // not serializable
 			var router = this.route._router
 
+			// add redirect
+			router.redirect({'/': '/dashboard'})
+
 			store.set('prevAuth?', true);
 			store.set('auth', auth);
 
