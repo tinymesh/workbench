@@ -1,0 +1,91 @@
+html, body {
+	height: 100%;
+	position: relative;
+}
+
+body {
+	background: whitesmoke;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.row.footer {
+	margin-top: 5rem;
+	text-align: center;
+}
+
+body.theme-blue {
+	$background: #2980b9;
+	$foreground: white;
+	$link-color: white;
+	$link-weight: normal;
+
+	background: $background;
+	color: $foreground;
+
+	.muted a {
+		font-weight: normal;
+	}
+
+	a {
+		color: $link-color;
+		font-weight: $link-weight;
+	}
+
+	.btn.btn-default {
+		color: #555;
+	}
+}
+
+.branding {
+	&.top.left {
+		position: absolute;
+		top: 1rem;
+		left: 1.5rem;
+	}
+}
+
+
+.box {
+	background: #fff;
+	border-radius: 2px;
+	box-shadow: 0 6px 6px rgba(0,0,0,.3);
+	color: #aaa;
+
+	a {
+		color: #337ab7 !important;
+	}
+
+	.box-title {
+		padding: 7px 15px 3px;
+		padding: 0.7rem 1.5rem 0.3rem;
+		background: #eee;
+		border-bottom: 1px solid #ddd;
+		color: #777;
+	}
+
+	.box-notify .alert {
+		border-radius: none;
+		border-top: none;
+		border-left: none;
+		border-right: none;
+	}
+
+	.box-content {
+		padding: 3rem 1.5rem 2rem;
+	}
+
+	.box-info {
+		padding: 1rem 1.5rem;
+		background: #c9d5e0;
+		border-top: 1px solid #b8c4cf;
+		color: #666;
+	}
+}
+
+.landing {
+	padding-top: 20rem;
+
+	.copy .lead {
+		font-size: 3rem;
+	}
+}
