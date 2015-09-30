@@ -28,7 +28,7 @@
 				text-align: center:
 			}
 
-			.body.blockloader-init .loader {
+			body.blockloader-init .loader {
 				position: absolute;
 				width: 60px;
 				height: 60px;
@@ -37,13 +37,13 @@
 				margin: -30px 0 0 -30px;
 			}
 
-			.body.blockloader-init .enter {
+			.loader .enter {
 				top: 0px;
 				opacity: 1;
 			}
 
-			.body.blockloader-init .square {
-				background: #333;
+			.loader .square {
+				background: #ddd;
 				width: 15px;
 				height: 15px;
 				float: left;
@@ -56,59 +56,63 @@
 				animation: enter 6s infinite;
 			}
 
-			.body.blockloader-init .square:nth-child(1) {
+			body.blockloader-init .loader .square {
+				background: #333;
+			}
+
+			.loader .square:nth-child(1) {
 				-webkit-animation-delay: 1.8s;
 				-moz-animation-delay: 1.8s;
 				animation-delay: 1.8s;
 			}
 
-			.body.blockloader-init .square:nth-child(2) {
+			.loader .square:nth-child(2) {
 				-webkit-animation-delay: 2.1s;
 				-moz-animation-delay: 2.1s;
 				animation-delay: 2.1s;
 			}
 
-			.body.blockloader-init .square:nth-child(3) {
+			.loader .square:nth-child(3) {
 				-webkit-animation-delay: 2.4s;
 				-moz-animation-delay: 2.4s;
 				animation-delay: 2.4s;
 			}
 
-			.body.blockloader-init .square:nth-child(4) {
+			.loader .square:nth-child(4) {
 				-webkit-animation-delay: 0.9s;
 				-moz-animation-delay: 0.9s;
 				animation-delay: 0.9s;
 			}
 
-			.body.blockloader-init .square:nth-child(5) {
+			.loader .square:nth-child(5) {
 				-webkit-animation-delay: 1.2s;
 				-moz-animation-delay: 1.2s;
 				animation-delay: 1.2s;
 			}
 
-			.body.blockloader-init .square:nth-child(6) {
+			.loader .square:nth-child(6) {
 				-webkit-animation-delay: 1.5s;
 				-moz-animation-delay: 1.5s;
 				animation-delay: 1.5s;
 			}
 
-			.body.blockloader-init .square:nth-child(8) {
+			.loader .square:nth-child(8) {
 				-webkit-animation-delay: 0.3s;
 				-moz-animation-delay: 0.3s;
 				animation-delay: 0.3s;
 			}
 
-			.body.blockloader-init .square:nth-child(9) {
+			.loader .square:nth-child(9) {
 				-webkit-animation-delay: 0.6s;
 				-moz-animation-delay: 0.6s;
 				animation-delay: 0.6s;
 			}
 
-			.body.blockloader-init .clear {
+			.loader .clear {
 			clear: both;
 			}
 
-			.body.blockloader-init .last {
+			.loader .last {
 				margin-right: 0;
 			}
 
@@ -192,7 +196,9 @@
 			</p>
 		</div>
 
+
 		<div id="react"></div>
+
 	</body>
 	<script type="text/javascript" src="./dist/bundle.js"></script>
 </html>

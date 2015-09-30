@@ -9,7 +9,7 @@ import {Button, Input} from 'react-bootstrap'
 import {Link} from 'react-router'
 import {LinkContainer} from 'react-router-bootstrap'
 
-import {Box} from '../UI.jsx'
+import {Box} from '../ui'
 let branding = require('../../public/images/workbench-neg.png')
 
 import {AuthStore, AuthService} from '../Auth'

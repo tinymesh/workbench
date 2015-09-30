@@ -5,7 +5,7 @@ import {PageHeader, Glyphicon} from 'react-bootstrap'
 
 import BodyClass from 'react-body-classname'
 
-import {TaggedItem} from '../UI.jsx'
+import {TaggedItem} from '../ui'
 
 import {Navigation} from './Navigation.jsx'
 
