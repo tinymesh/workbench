@@ -12,9 +12,8 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {Box} from '../UI.jsx'
 let branding = require('../../public/images/workbench-neg.png')
 
-import AuthService from '../services/Auth.jsx'
-import AuthStore from '../stores/Auth.jsx'
-import AppDispatcher from '../dispatchers/App.jsx'
+import {AuthStore, AuthService} from '../Auth'
+import AppDispatcher from '../App.jsx'
 
 export class Landing extends React.Component {
   constructor(props) {
@@ -25,30 +24,19 @@ export class Landing extends React.Component {
       password: '',
       notification: undefined
     }
-
-    console.log(this)
-    this._onAuthChange = () => console.log('authentication updated')
-  }
-
-  componentWillMount() {
-    AuthStore.addChangeListener(this._onAuthChange)
-  }
-
-  componentWillUnmount() {
-    AuthStore.removeChangeListener(this._onAuthChange)
   }
 
   login() {
     var username = this.state.user, password = this.state.password
-    console.log({username, password})
-    Auth.login(this.state.user, this.state.password)
+
+    AuthService.login(this.state.user, this.state.password)
       .catch((err) => {
-        console.log(err)
+        let msg = (err.data.error ? err.data.error : JSON.stringify(err.data))
 
         this.setState({
           notification: {
             style: 'danger',
-            message: "Error logging in: " + JSON.stringify(err)
+            message: "Error logging in: " + msg
           }
         })
       })
