@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router'
 import {Glyphicon} from 'react-bootstrap'
 
-import {AuthService} from '../Auth'
+import {AuthService, AuthConstants} from '../Auth'
 
 export class Navigation extends React.Component {
   constructor(props) {
@@ -41,14 +41,14 @@ export class Navigation extends React.Component {
         })}
 
         <li className="suffix pull-right">
-          <Link to="/" onClick={AuthService.logout}>
+          <a onClick={() => AuthService.logout(AuthConstants.LogoutReasons.sessionExpire)}>
             <Glyphicon glyph="off">&nbsp;</Glyphicon>
             Logout
-          </Link>
+          </a>
         </li>
 
         <li className="suffix pull-right">
-          <Link to="/">
+          <Link to="/user">
             <Glyphicon glyph="envelope">&nbsp;</Glyphicon>
             User Account
           </Link>

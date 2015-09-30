@@ -3,11 +3,11 @@ import Router from 'react-router'
 import {Route, RouteHandler, IndexRoute} from 'react-router'
 
 import {About} from './components/About.jsx'
+import {User} from './components/User.jsx'
 import {Dashboard} from './components/Dashboard.jsx'
 import {Landing} from './components/Landing.jsx'
 import {NotFound} from './components/NotFound.jsx'
 
-import RouterService from './services/Router.js'
 import {AuthStore, AuthActions, AuthConstants} from './Auth'
 import AppDispatcher from './AppDispatcher'
 
@@ -33,7 +33,7 @@ export default class App extends React.Component {
           break
 
         case AuthConstants.Actions.logout:
-          this.props.history.pushState(null, '/');
+          this.props.history.pushState(null, '/?logout=' + action.reason);
           break
 
         default:
@@ -79,6 +79,13 @@ React.render((
       <Route path="operations"      component={ NotFound }  glyph="scale"     linkText="Operations" />
       <Route path="getting-started" component={ NotFound }  glyph="flash"     linkText="Getting Started" />
       <Route path="help"            component={ NotFound }  glyph="education" linkText="Help & Support" />
+
+      <Route
+        path="user"
+        component={ User }
+        onEnter={ redirectIfUnauthenticated }
+        indexRoute={User.childRoutes[0]}
+        childRoutes={User.childRoutes} />
 
       <Route path="about" component={ About } />
 

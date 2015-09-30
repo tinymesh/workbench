@@ -4,7 +4,7 @@ import Mixin from 'react-mixin'
 import BodyClass from 'react-body-classname'
 
 import {Grid, Row, Col} from 'react-bootstrap'
-import {Button, Input} from 'react-bootstrap'
+import {Button, Input, Alert} from 'react-bootstrap'
 
 import {Link} from 'react-router'
 import {LinkContainer} from 'react-router-bootstrap'
@@ -12,7 +12,7 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {Box} from '../ui'
 let branding = require('../../public/images/workbench-neg.png')
 
-import {AuthStore, AuthService} from '../Auth'
+import {AuthStore, AuthService, AuthConstants} from '../Auth'
 import AppDispatcher from '../App.jsx'
 
 export class Landing extends React.Component {
@@ -60,6 +60,21 @@ export class Landing extends React.Component {
 
 
     let register = "true" === this.props.location.query.register
+
+    let logoutReason
+
+    switch (this.props.location.query.logout) {
+      case 'undefined':
+      case AuthConstants.LogoutReasons.user:
+        logoutReason = "You have been logged out"; break;
+
+      case AuthConstants.LogoutReasons.sessionExpire:
+        logoutReason = "Your have been logged out because of inactivity"; break;
+
+      default:
+        break;
+    }
+
     return (
       <BodyClass className="theme-blue">
         <div>
@@ -69,6 +84,10 @@ export class Landing extends React.Component {
           </a>
         </div>
         <Grid className="landing">
+          {logoutReason && <Row>
+            <Alert bsStyle="info">{logoutReason}</Alert>
+          </Row>}
+
           <Row>
 
             <Col xs={12} sm={4} md={6} className="copy text-center">
