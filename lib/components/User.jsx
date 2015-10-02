@@ -10,6 +10,8 @@ import {Login} from './User/Login.jsx'
 import {Logout} from './User/Logout.jsx'
 import {Register} from './User/Register.jsx'
 import {Account} from './User/Account.jsx'
+import {Tokens} from './User/Tokens.jsx'
+import {Sessions} from './User/Sessions.jsx'
 import {NotFound} from './NotFound.jsx'
 
 export class User extends React.Component {
@@ -61,6 +63,16 @@ User.childRoutes = [
     path: 'account',
     component: Account,
     childRoutes: Account.childRoutes
+  },
+  {
+    path: 'auth/tokens',
+    component: Tokens,
+    childRoutes: Tokens.childRoutes
+  },
+  {
+    path: 'auth/sessions',
+    component: Sessions,
+    childRoutes: Sessions.childRoutes
   },
   {
     path: '*',

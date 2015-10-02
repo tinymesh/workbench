@@ -265,3 +265,34 @@ body.full-height #react > div {
 	margin: 0 -15px;
 	border-radius: 0;
 }
+
+
+.tokens {
+	.list-group-item {
+		.btn-sm {
+			margin-top: -5px;
+		}
+	}
+
+	.token > .item {
+		display: inline-block;
+		margin-right: 2rem;
+	}
+}
+
+.dummy-block {
+	background: #eee;
+	font-family: monospace;
+}
+
+/**
+ *  modal styles
+ */
+.modal-error .modal-header   { background-color: #d2322d; }
+.modal-wait .modal-header    { background-color: #428bca; }
+.modal-notify .modal-header  { background-color: #eeeeee; }
+.modal-confirm .modal-header { background-color: #333333; }
+
+.modal-error   .modal-header span, .modal-error   .modal-header h4,
+.modal-wait    .modal-header span, .modal-wait    .modal-header h4,
+.modal-confirm .modal-header span, .modal-confirm .modal-header h4 { color: #ffffff; }
