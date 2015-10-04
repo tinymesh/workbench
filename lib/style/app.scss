@@ -140,14 +140,25 @@ body.full-height #react > div {
 	box-shadow: inset -10px 0px 20px -10px #1a1a1a;
 	padding: 0px;
 
+	h4 {
+		margin: 5rem 10px 1rem;
+		padding: 0 5px 5px;
+		border-bottom: 1px solid #444;
+	}
+
 	.nav {
 		li a {
+			color: #ccc;
+
+			&:hover {
+				background: #2b3540;
+			}
 		}
 
 		li.active a {
 			background: $sidebar-bg-highlight;
-			border-left: 3px solid $sidebar-color-highlight;
-			margin-left: 1px;
+			border-left: 3px solid #2980b9;
+			margin-left: 2px;
 			color: $sidebar-color-highlight;
 			font-weight: bold;
 		}
