@@ -31,7 +31,13 @@ export class Landing extends React.Component {
 
     AuthService.login(this.state.user, this.state.password)
       .catch((err) => {
-        let msg = (err.data.error ? err.data.error : JSON.stringify(err.data))
+        let msg
+        if (_.isError(err)) {
+          console.log("caught error", err.message)
+          console.log(err.stack)
+          msg = err.message
+        } else
+          err = resp.data.error || JSON.stringify(resp.data)
 
         this.setState({
           notification: {
