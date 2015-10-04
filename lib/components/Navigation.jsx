@@ -39,7 +39,7 @@ export class Navigation extends React.Component {
           return route.linkText
             ? <li key={k} className={active ? "active" : null}>
                 <Link
-                  to={route.path}
+                  to={'/' +route.path}
                   className={(!expanded && active) || route.hide ? 'hide' : ''}>
 
                   {route.glyph && <Glyphicon glyph={route.glyph}>&nbsp;</Glyphicon>}
@@ -56,7 +56,7 @@ export class Navigation extends React.Component {
                       acc.crumbs.push(<li key={index}>
                         <Link to={acc.path + '/' + item.path || ''}>
                           {item.glyph && <Glyphicon glyph={item.glyph}>&nbsp;</Glyphicon>}
-                          {item.component.linkText || item.component.name}
+                          {item.linkText || item.component.name}
                         </Link>
                       </li>)
 
