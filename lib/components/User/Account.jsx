@@ -1,6 +1,6 @@
 import React from 'react'
 import Mixin from 'react-mixin'
-import LensedStateMixin from 'react-lensed-state'
+import {LensedStateDefaultMixin} from '../../mixin'
 
 import {PageHeader, Grid, Row, Col} from 'react-bootstrap'
 import {Input, Button, ButtonToolbar, Alert} from 'react-bootstrap'
@@ -137,8 +137,7 @@ export class Account extends React.Component {
               <Col xs={12} sm={6}>
                 <Input
                   type="text"
-                  defaultValue={this.state.user.name}
-                  valueLink={this.linkState('patch.name')}
+                  valueLink={this.linkState('patch.name', this.state.user.name)}
                   bsStyle={this.nameValidationState()[0]}
                   help={this.nameValidationState()[1] || ' '}
                   label="Name"
@@ -149,8 +148,7 @@ export class Account extends React.Component {
               <Col xs={12} sm={6}>
                 <Input
                   type="tel"
-                  defaultValue={this.state.user.phone}
-                  valueLink={this.linkState('patch.phone')}
+                  valueLink={this.linkState('patch.name', this.state.user.phone)}
                   bsStyle={this.phoneValidationState()[0]}
                   help={this.phoneValidationState()[1] || ' '}
                   label="Phone Number"
@@ -201,7 +199,7 @@ export class Account extends React.Component {
   }
 }
 
-Mixin(Account.prototype, LensedStateMixin)
+Mixin(Account.prototype, LensedStateDefaultMixin)
 
 // email
 // password
