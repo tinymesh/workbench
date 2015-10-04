@@ -160,6 +160,18 @@ body.full-height #react > div {
 	margin: 0;
 	background: $navigation-bg;
 	border-bottom: 1px solid $navigation-border;
+	height: 60px;
+
+	.breadcrumb {
+		background: transparent;
+		margin: 0;
+		padding: 0;
+		display: inline;
+
+		> li a { font-weight: normal; }
+		> li:first-child a { font-weight: bold }
+		> li + li:before { content: ' / '; }
+	}
 
 	&.unexpanded > li {
 		display: none;
@@ -168,8 +180,9 @@ body.full-height #react > div {
 	}
 
 	> li {
+		float: left;
 		display: inline-block;
-		padding: 20px 35px;
+		padding: 20px 15px;
 
 		&.prefix {
 			padding-right: 0;

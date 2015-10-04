@@ -83,6 +83,9 @@ React.render((
       <Route
         path="user"
         component={ User }
+        linkText="User Account"
+        glyph="user"
+        hide={true}
         onEnter={ redirectIfUnauthenticated }
         indexRoute={User.childRoutes[0]}
         childRoutes={User.childRoutes} />

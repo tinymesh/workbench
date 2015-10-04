@@ -1,8 +1,11 @@
 import React from 'react'
 import {Link} from 'react-router'
 import {Glyphicon} from 'react-bootstrap'
+import {Router} from 'react-router'
 
 import {AuthService, AuthConstants} from '../Auth'
+
+import _ from 'lodash'
 
 export class Navigation extends React.Component {
   constructor(props) {
@@ -18,9 +21,12 @@ export class Navigation extends React.Component {
   }
 
   render() {
-    let lastRoute = this.props.routes[this.props.routes.length - 1]
+    let
+      rootRoute = this.props.routes[1],
+      expanded = this.state.expanded
 
     return (
+    <div>
       <ul className={"navigation " + (this.state.expanded ? 'expanded' : 'unexpanded')}>
         <li className="prefix">
           <a onClick={this.toggleMenu.bind(this)} title="Expand">
@@ -28,14 +34,39 @@ export class Navigation extends React.Component {
           </a>
         </li>
         {this.props.routes[0].childRoutes.map( (route, k) => {
-          let active = route.path === lastRoute.path
+          let active = route.path === rootRoute.path
 
           return route.linkText
             ? <li key={k} className={active ? "active" : null}>
-                <Link to={route.path}>
+                <Link
+                  to={route.path}
+                  className={(!expanded && active) || route.hide ? 'hide' : ''}>
+
                   {route.glyph && <Glyphicon glyph={route.glyph}>&nbsp;</Glyphicon>}
                   {route.linkText}
                 </Link>
+
+                {!this.state.expanded && active && <ol className="breadcrumb">
+                  {_.reduce(
+                    this.props.routes.slice(1),
+                    (acc, item, index) => {
+                      if (!item.path || item.path === '/')
+                        return acc
+
+                      acc.crumbs.push(<li key={index}>
+                        <Link to={acc.path + '/' + item.path || ''}>
+                          {item.glyph && <Glyphicon glyph={item.glyph}>&nbsp;</Glyphicon>}
+                          {item.component.linkText || item.component.name}
+                        </Link>
+                      </li>)
+
+                      acc.path += '/' + (item.path || '')
+
+                      return acc
+                    },
+                    {crumbs: [], path: ''}).crumbs}
+                </ol>}
+
               </li>
             : null
         })}
@@ -54,6 +85,7 @@ export class Navigation extends React.Component {
           </Link>
         </li>
       </ul>
+    </div >
     )
   }
 }
