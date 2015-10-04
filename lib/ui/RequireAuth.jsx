@@ -1,5 +1,4 @@
 import React from 'react'
-import Mixin from 'react-mixin'
 
 import {Link} from 'react-router'
 import {Grid, Row, Col, Button, Alert} from 'react-bootstrap'
@@ -13,36 +12,8 @@ import {LensedStateDefaultMixin} from '../mixin'
 
 let branding = require('../../public/images/workbench-neg.png')
 
-export class RequireAuth extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      user: '',
-      password: '',
-      notification: undefined
-    }
-  }
-
-  componentDidMount() {
-    // refresh on user:(login,logout)
-    this._token = AppDispatcher.register( (action) => {
-      switch (action.actionType) {
-        case AuthConstants.Actions.login:
-          this.forceUpdate()
-          break
-
-        default:
-          break
-      }
-    })
-  }
-
-  componentwillUnmount() {
-    AppDispatcher.unregister(this._token)
-  }
-
-  login() {
+const shared = {
+  login: function() {
     var username = this.state.user, password = this.state.password
 
     AuthService.login(this.state.user, this.state.password)
@@ -62,10 +33,11 @@ export class RequireAuth extends React.Component {
           }
         })
       })
-  }
-  render() {
+  },
+
+  render: function() {
     if (AuthStore.isAuthenticated)
-      return (<RequireAuth.Component {...this.props} />)
+      return (<this.component {...this.props} />)
 
 
     let info = (<Box.Info>
@@ -107,7 +79,7 @@ export class RequireAuth extends React.Component {
 
                   <Box.Content>
 
-                    <form onSubmit={this.login.bind(this)}>
+                    <form onSubmit={this.login}>
                       <div className="form-group">
                         <label htmlFor="login-email">Email Address</label>
                         <div className="input-group">
@@ -139,7 +111,7 @@ export class RequireAuth extends React.Component {
                       <div className="text-right">
                         <Button
                           bsStyle="success"
-                          onClick={this.login.bind(this)}>
+                          onClick={this.login}>
                           Sign in
                         </Button>
                       </div>
@@ -166,13 +138,46 @@ export class RequireAuth extends React.Component {
   }
 }
 
-Mixin(RequireAuth.prototype, LensedStateDefaultMixin)
+let authJail = (Component) =>
+  React.createClass({
+    mixins: [LensedStateDefaultMixin],
+    component: Component,
 
-RequireAuth.jail = (Component) => {
+    getInitialState: function() {
+      return {
+        user: '',
+        password: '',
+        notification: undefined
+      }
+    },
+
+    login: shared.login,
+    render: shared.render,
+
+    componentDidMount: function() {
+      // refresh on user:(login,logout)
+      this._token = AppDispatcher.register( (action) => {
+        switch (action.actionType) {
+          case AuthConstants.Actions.login:
+            this.forceUpdate()
+            break
+
+          default:
+            break
+        }
+      })
+    },
+
+    componentwillUnmount: function() {
+      AppDispatcher.unregister(this._token)
+    }
+  })
+
+let factory = (Component) => {
   if (AuthStore.haveAuthentication())
     return Component
 
-  // silly way of doing things...
-  RequireAuth.Component = Component
-  return RequireAuth
+  return authJail(Component)
 }
+
+export {factory as RequireAuth}

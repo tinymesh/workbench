@@ -56,7 +56,7 @@ React.render((
       <IndexRoute component={ Landing } />
 
       <Route path="dashboard"
-        component={ RequireAuth.jail(Dashboard) }
+        component={ RequireAuth(Dashboard) }
         indexRoute={Dashboard.childRoutes[0]}
         childRoutes={Dashboard.childRoutes}
         glyph="home"
@@ -70,7 +70,7 @@ React.render((
 
       <Route
         path="user"
-        component={ RequireAuth.jail(User) }
+        component={ RequireAuth(User) }
         linkText="User Account"
         glyph="user"
         hide={true}
