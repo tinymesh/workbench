@@ -2,11 +2,8 @@ import React from 'react'
 import Router from 'react-router'
 import {Route, RouteHandler, IndexRoute} from 'react-router'
 
-import {About} from './components/About.jsx'
-import {User} from './components/User.jsx'
-import {Dashboard} from './components/Dashboard.jsx'
-import {Landing} from './components/Landing.jsx'
-import {NotFound} from './components/NotFound.jsx'
+import {About, User, Dashboard, Landing, NotFound} from './components'
+import {RequireAuth} from './ui'
 
 import {AuthStore, AuthService, AuthConstants} from './Auth'
 import AppDispatcher from './AppDispatcher'
