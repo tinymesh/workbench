@@ -17,6 +17,7 @@ if (auth)
   AuthService.validate(JSON.parse(auth))
 
 
+let haveAuthentication = false // this is outside of flux dispatcher
 export default class App extends React.Component {
   componentDidMount() {
     var body = document.getElementsByTagName('body')[0]
@@ -25,8 +26,8 @@ export default class App extends React.Component {
     // refresh on user:(login,logout)
     AppDispatcher.register( (action) => {
       switch (action.actionType) {
-        case AuthConstants.Actions.login:
-          this.props.history.pushState(null, '/dashboard');
+        case AuthConstants.Actions.logout:
+          haveAuthentication = true
           break
 
         case AuthConstants.Actions.logout:
@@ -48,28 +49,18 @@ export default class App extends React.Component {
   }
 }
 
-let redirectIfAuthenticated = (nextState, replaceState)  => {
-  if (AuthStore.haveAuthentication())
-    replaceState(null, '/dashboard')
-}
-
-let redirectIfUnauthenticated = (nextState, replaceState)  => {
-  if (!AuthStore.haveAuthentication())
-    replaceState(null, '/')
-}
-
 React.render((
   <Router>
     <Route path="/" component={ App }>
 
-      <IndexRoute component={ Landing } onEnter={redirectIfAuthenticated} />
+      <IndexRoute component={ Landing } />
 
       <Route path="dashboard"
-              component={ Dashboard }
-              onEnter={ redirectIfUnauthenticated }
-              childRoutes={Dashboard.childRoutes}
-              glyph="home"
-              linkText="Dashboard" />
+        component={ RequireAuth.jail(Dashboard) }
+        indexRoute={Dashboard.childRoutes[0]}
+        childRoutes={Dashboard.childRoutes}
+        glyph="home"
+        linkText="Dashboard" />
 
       <Route path="organizations"   component={ NotFound }  glyph="user"      linkText="Organizations" />
       <Route path="applications"    component={ NotFound }  glyph="book"      linkText="Applications" />
@@ -79,11 +70,10 @@ React.render((
 
       <Route
         path="user"
-        component={ User }
+        component={ RequireAuth.jail(User) }
         linkText="User Account"
         glyph="user"
         hide={true}
-        onEnter={ redirectIfUnauthenticated }
         indexRoute={User.childRoutes[0]}
         childRoutes={User.childRoutes} />
 

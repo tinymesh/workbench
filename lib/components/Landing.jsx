@@ -13,7 +13,7 @@ import {Box} from '../ui'
 let branding = require('../../public/images/workbench-neg.png')
 
 import {AuthStore, AuthService, AuthConstants} from '../Auth'
-import AppDispatcher from '../App.jsx'
+import AppDispatcher from '../AppDispatcher'
 
 export class Landing extends React.Component {
   constructor(props) {
@@ -48,6 +48,24 @@ export class Landing extends React.Component {
       })
 
     this.setState({notification: undefined})
+  }
+
+  componentDidMount() {
+    // refresh on user:login
+    this._token = AppDispatcher.register( (action) => {
+      switch (action.actionType) {
+        case AuthConstants.Actions.login:
+          this.props.history.pushState(null, '/dashboard')
+          break
+
+        default:
+          break
+      }
+    })
+  }
+
+  componentwillUnmount() {
+    AppDispatcher.unregister(this._token)
   }
 
   render() {
