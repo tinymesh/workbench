@@ -3,9 +3,9 @@ import React from 'react'
 export class Network extends React.Component {
   render() {
     return (
-      <Grid fluid={true}>
+      <div>
         <h1>Network</h1>
-      </Grid>
+      </div>
     )
   }
 }

@@ -14,6 +14,7 @@ export class Navigation extends React.Component {
     this.state = {
       expanded: false
     }
+
   }
 
   toggleMenu() {
