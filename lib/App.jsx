@@ -8,7 +8,7 @@ import {Dashboard} from './components/Dashboard.jsx'
 import {Landing} from './components/Landing.jsx'
 import {NotFound} from './components/NotFound.jsx'
 
-import {AuthStore, AuthActions, AuthConstants} from './Auth'
+import {AuthStore, AuthService, AuthConstants} from './Auth'
 import AppDispatcher from './AppDispatcher'
 
 import './style/app.scss'
@@ -17,7 +17,7 @@ import _ from 'lodash'
 
 let auth = localStorage.getItem('auth')
 if (auth)
-  AuthActions.login(JSON.parse(auth))
+  AuthService.validate(JSON.parse(auth))
 
 
 export default class App extends React.Component {
