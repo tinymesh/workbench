@@ -155,6 +155,12 @@ let authJail = (Component) =>
     render: shared.render,
 
     componentDidMount: function() {
+      // possible race condition where auth may have been returned before
+      // `componentWillMount` manged to register the hook
+      this.forceUpdate()
+    },
+
+    componentWillMount: function() {
       // refresh on user:(login,logout)
       this._token = AppDispatcher.register( (action) => {
         switch (action.actionType) {
@@ -168,16 +174,10 @@ let authJail = (Component) =>
       })
     },
 
-    componentwillUnmount: function() {
+    componentWillUnmount: function() {
       AppDispatcher.unregister(this._token)
     }
   })
 
-let factory = (Component) => {
-  if (AuthStore.haveAuthentication())
-    return Component
 
-  return authJail(Component)
-}
-
-export {factory as RequireAuth}
+export {authJail as RequireAuth}
