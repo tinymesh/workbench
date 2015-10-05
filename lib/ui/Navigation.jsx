@@ -24,7 +24,13 @@ export class Navigation extends React.Component {
   render() {
     let
       rootRoute = this.props.routes[1],
-      expanded = this.state.expanded
+      expanded = this.state.expanded,
+      mapRoute = (path) => {
+        let params = this.props.params
+        path = _.isArray(path) ? path.join('/') : path
+        return ('/' + _.trim(path, '/'))
+                .replace(/\/:([a-zA-Z0-9_-]*)/g, (match, k) => '/' + params[k])
+      }
 
     return (
     <div>
@@ -40,7 +46,7 @@ export class Navigation extends React.Component {
           return route.linkText
             ? <li key={k} className={active ? "active" : null}>
                 <Link
-                  to={'/' +route.path}
+                  to={mapRoute(route.path)}
                   className={(!expanded && active) || route.hide ? 'hide' : ''}>
 
                   {route.glyph && <Glyphicon glyph={route.glyph}>&nbsp;</Glyphicon>}
@@ -55,7 +61,7 @@ export class Navigation extends React.Component {
                         return acc
 
                       acc.crumbs.push(<li key={index}>
-                        <Link to={acc.path + '/' + item.path || ''}>
+                        <Link to={mapRoute([acc.path , item.path || ''])}>
                           {item.glyph && <Glyphicon glyph={item.glyph}>&nbsp;</Glyphicon>}
                           {item.linkText || item.component.name}
                         </Link>

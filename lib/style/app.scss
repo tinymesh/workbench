@@ -173,6 +173,11 @@ body.full-height #react > div {
 	border-bottom: 1px solid $navigation-border;
 	height: 60px;
 
+	&.bare {
+		background: inherit;
+		border-bottom: none;
+	}
+
 	.breadcrumb {
 		background: transparent;
 		margin: 0;
@@ -199,7 +204,7 @@ body.full-height #react > div {
 			padding-right: 0;
 		}
 
-		&.active {
+		&.active, a.active {
 			font-weight: bold;
 		}
 

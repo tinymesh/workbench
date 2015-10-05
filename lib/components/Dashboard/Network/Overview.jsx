@@ -1,10 +1,10 @@
 import React from 'react'
 
-export class Network extends React.Component {
+export class Overview extends React.Component {
   render() {
     return (
       <div>
-        <h1>Network</h1>
+        <h1>Overview</h1>
       </div>
     )
   }
