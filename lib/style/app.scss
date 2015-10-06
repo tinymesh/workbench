@@ -44,6 +44,41 @@ a {
 	cursor: pointer;
 }
 
+.row.section {
+	margin-bottom: 55px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #ddd;
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	&.main {
+		border-top: 1px solid #ddd;
+		padding-top: 20px;
+		background: white;
+
+		.meta {
+			color: #999;
+
+			.item {
+				font-style: italic;
+			}
+		}
+	}
+}
+
+.row.static {
+   position: fixed;
+	z-index: 99;
+
+	&.bottom {
+    bottom: 0;
+    width: 100%;
+    padding: 15px;
+	}
+}
+
 .row.footer {
 	margin-top: 5rem;
 	text-align: center;
@@ -133,12 +168,20 @@ body.full-height #react > div {
 }
 
 .sidebar {
+	position: relative;
 	background: $sidebar-bg;
 	color: $sidebar-color;
 	height: 100%;
 	border-right: 1px solid #111;
 	box-shadow: inset -10px 0px 20px -10px #1a1a1a;
 	padding: 0px;
+
+	/** large screens gets obnoxiously large collapsed sidebars **/
+	&.collapsed {
+		@media (min-width: 1200px) {
+			width: 4%
+		}
+	}
 
 	h4 {
 		margin: 5rem 10px 1rem;
@@ -157,10 +200,37 @@ body.full-height #react > div {
 
 		li.active a {
 			background: $sidebar-bg-highlight;
-			border-left: 3px solid #2980b9;
+			border-left: 3px solid #3990c9;
 			margin-left: 2px;
 			color: $sidebar-color-highlight;
 			font-weight: bold;
+		}
+	}
+
+	.expand-btn {
+		display: inline-block;
+		height: 100%;
+		width: 100%;
+		text-align: center;
+		font-size: 2.5rem;
+		color: #91959B;
+
+		& > .padding {
+			height: 49.5%;
+			display: block;
+		}
+
+		&:hover {
+			background: #2b3540;
+		}
+	}
+}
+
+.main {
+	/** large screens gets obnoxiously large collapsed sidebars **/
+	&.expand {
+		@media (min-width: 1200px) {
+			width: 96%;
 		}
 	}
 }
@@ -325,3 +395,27 @@ body.full-height #react > div {
 .modal-error   .modal-header span, .modal-error   .modal-header h4,
 .modal-wait    .modal-header span, .modal-wait    .modal-header h4,
 .modal-confirm .modal-header span, .modal-confirm .modal-header h4 { color: #ffffff; }
+
+
+/*Form Wizard*/
+.progress { background-color: #eee; }
+.bs-wizard {margin-top: 40px;}
+
+.bs-wizard {border-bottom: solid 1px #e0e0e0; padding: 0 0 10px 0;}
+.bs-wizard > .bs-wizard-step {padding: 0; position: relative;}
+.bs-wizard > .bs-wizard-step + .bs-wizard-step {}
+.bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; font-size: 16px; margin-bottom: 5px;}
+.bs-wizard > .bs-wizard-step .bs-wizard-info {color: #999; font-size: 14px;}
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot {position: absolute; width: 30px; height: 30px; display: block; background: #fbe8aa; top: 45px; left: 50%; margin-top: -15px; margin-left: -15px; border-radius: 50%;} 
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot:after {content: ' '; width: 14px; height: 14px; background: #fbbd19; border-radius: 50px; position: absolute; top: 8px; left: 8px; } 
+.bs-wizard > .bs-wizard-step > .progress {position: relative; border-radius: 0px; height: 8px; box-shadow: none; margin: 20px 0;}
+.bs-wizard > .bs-wizard-step > .progress > .progress-bar {width:0px; box-shadow: none; background: #fbe8aa;}
+.bs-wizard > .bs-wizard-step.complete > .progress > .progress-bar {width:100%;}
+.bs-wizard > .bs-wizard-step.active > .progress > .progress-bar {width:50%;}
+.bs-wizard > .bs-wizard-step:first-child.active > .progress > .progress-bar {width:0%;}
+.bs-wizard > .bs-wizard-step:last-child.active > .progress > .progress-bar {width: 100%;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot {background-color: #ddd;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot:after { background-color: #ccc; }
+.bs-wizard > .bs-wizard-step:first-child  > .progress {left: 50%; width: 50%;}
+.bs-wizard > .bs-wizard-step:last-child  > .progress {width: 50%;}
+.bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot{ pointer-events: none; }

@@ -41,8 +41,6 @@
 var ReactLink = require('react/lib/ReactLink'),
     ReactStateSetters = require('react/lib/ReactStateSetters');
 
-var lens = require('data.lens');
-
 /**
  * A simple mixin around ReactLink.forState().
  */
@@ -59,21 +57,15 @@ var LensedStateDefaultMixin = {
      * @return {ReactLink} ReactLink instance linking to the state.
      */
     linkState : function(key, defaultValue) {
-
-        // TODO: Retrive state from another lens or method
-        var state = this.state;
-
-        var lensed = lens(key);
         var setter = function(state) {
             return function(value) {
-                return lensed.set(value, state);
+                return _.set(state, key, value)
             }
         };
 
-        var value = lensed.get(state)
         return new ReactLink(
-            undefined === value ? defaultValue : value,
-            ReactStateSetters.createStateSetter(this, setter(state))
+            _.get(this.state, key, defaultValue),
+            ReactStateSetters.createStateSetter(this, setter(this.state))
         );
     }
 };
