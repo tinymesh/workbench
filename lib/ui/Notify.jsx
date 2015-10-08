@@ -41,6 +41,10 @@ export class NotifyStore extends EventEmitter {
     this.emitChange()
   }
 
+  get length() {
+    return this._notifications.length
+  }
+
   remove(ref) {
     this._notifications = _.filter(this.notifications, (note) => ref !== note.ref)
     this.emitChange()
@@ -62,7 +66,11 @@ export class NotifyStore extends EventEmitter {
     if (prev.length > 0)
       return prev.ref
 
-    notifications.push({message: message, style: style, ref: ref})
+    notifications.push({
+      message: message,
+      style: style,
+      ref: ref
+    })
 
     this._notifications = notifications
     this.emitChange()
@@ -97,7 +105,7 @@ export class Notify extends React.Component {
       <div>
         {this.props.store.notifications.map( (note) =>
           <Alert key={note.ref} bsStyle={note.style}>
-            {note.message}
+            {_.isFunction(note.message) ? note.message() : note.message}
           </Alert>
         )}
       </div>
