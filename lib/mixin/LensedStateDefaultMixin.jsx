@@ -56,9 +56,12 @@ var LensedStateDefaultMixin = {
      *
      * @return {ReactLink} ReactLink instance linking to the state.
      */
-    linkState : function(key, defaultValue) {
+    linkState : function(key, defaultValue, map) {
         var setter = function(state) {
             return function(value) {
+                if (map)
+                  value = map(value)
+
                 return _.set(state, key, value)
             }
         };
