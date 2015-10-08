@@ -40,9 +40,7 @@ export class AddressEncoder extends React.Component {
       (addr >> 0)  & 255
     ]
 
-    return ('big' === endian ? parts : _.reverse(parts)).map(
-      (n) => ("0" + n.toString(16)).slice(-2)
-    ).join('.')
+    return ('big' === endian ? parts : _.reverse(parts)).join('.')
   }
 
   static encodeDec(addr, endian) {
