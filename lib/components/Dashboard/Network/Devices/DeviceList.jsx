@@ -88,8 +88,6 @@ export class DeviceList extends React.Component {
       "dec": "Decimal"
     }
 
-    console.log(AddressEncoder)
-
     return (
       <div>
         {this._notify.length > 0 && <Row className="notifications section">
