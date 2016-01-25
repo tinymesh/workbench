@@ -13,7 +13,9 @@ import {LensedStateDefaultMixin} from '../mixin'
 let branding = require('../../public/images/workbench-neg.png')
 
 const shared = {
-  login: function() {
+  login: function(ev) {
+    ev.preventDefault()
+
     var username = this.state.user, password = this.state.password
 
     AuthService.login(this.state.user, this.state.password)
@@ -79,7 +81,7 @@ const shared = {
 
                   <Box.Content>
 
-                    <form onSubmit={this.login}>
+                    <form onSubmit={this.login.bind}>
                       <div className="form-group">
                         <label htmlFor="login-email">Email Address</label>
                         <div className="input-group">
@@ -111,7 +113,8 @@ const shared = {
                       <div className="text-right">
                         <Button
                           bsStyle="success"
-                          onClick={this.login}>
+                          onClick={this.login}
+                          onSubmit={this.login}>
                           Sign in
                         </Button>
                       </div>
