@@ -84,11 +84,14 @@ export class Overview extends React.Component {
   updateNetwork(ev) {
     NetworkService.update(this.props.network.key, this.state.patch)
       .then(
-        (resp) => this._notify.add(
-          <span> <Glyphicon glyph="ok" /> Network was updated!  </span>,
-          'success',
-          {expire: 7500}
-        ))
+        (resp) => {
+          this.setState({patch: {}})
+          this._notify.add(
+            <span> <Glyphicon glyph="ok" /> Network was updated!  </span>,
+            'success',
+            {expire: 7500}
+          )
+        })
       .catch(
         (resp) => {
           let msg

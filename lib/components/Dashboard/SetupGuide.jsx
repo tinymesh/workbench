@@ -1,7 +1,6 @@
 import React from 'react'
 import Mixin from 'react-mixin'
 import _ from 'lodash'
-import Q from 'q'
 
 import {Grid, Row, Col} from 'react-bootstrap'
 import {Input, Glyphicon, Button, Alert} from 'react-bootstrap'
@@ -30,27 +29,27 @@ export class SetupGuideCreateNetwork extends React.Component {
   }
 
   createNetwork(ev) {
-    var defered = Q.defer()
-
-    if (this.state.patch.name)
-      defered.resolve(this.state.patch)
-    else
-      this.setState({
-        confirm:
-          <div>
-            <p>
-              You are creating a network without a name.
-            </p>
-            <p>
-              To distinguish
-              different networks you can name it. The name can be anything
-              but should identify the Network <em>(ie 'Tiny Mesh Office - Norway')</em>.
-            </p>
-          </div>,
-        confirmPromise: defered
-      })
-
-    defered.promise.then((patch) => NetworkService.create(patch))
+//    var defered = Q.defer()
+//
+//    if (this.state.patch.name)
+//      defered.resolve(this.state.patch)
+//    else
+//      this.setState({
+//        confirm:
+//          <div>
+//            <p>
+//              You are creating a network without a name.
+//            </p>
+//            <p>
+//              To distinguish
+//              different networks you can name it. The name can be anything
+//              but should identify the Network <em>(ie 'Tiny Mesh Office - Norway')</em>.
+//            </p>
+//          </div>,
+//        confirmPromise: defered
+//      })
+//
+//    defered.promise.then((patch) => NetworkService.create(patch))
   }
 
   addGateway(ev) {
