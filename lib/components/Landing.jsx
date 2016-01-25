@@ -12,6 +12,7 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {Box} from '../ui'
 let branding = require('../../public/images/workbench-neg.png')
 
+import {UserService} from '../User'
 import {AuthStore, AuthService, AuthConstants} from '../Auth'
 import AppDispatcher from '../AppDispatcher'
 
@@ -20,34 +21,106 @@ export class Landing extends React.Component {
     super(props)
 
     this.state = {
-      user: '',
-      password: '',
+    login: {
+        user: '',
+        password: '',
+      },
+    register: {
+        email: '',
+        password: '',
+        confirm_password: '',
+        name: '',
+      },
       notification: undefined
     }
   }
 
-  login() {
-    var username = this.state.user, password = this.state.password
+  login(ev) {
+    ev.preventDefault()
 
-    AuthService.login(this.state.user, this.state.password)
-      .catch((err) => {
-        let msg
-        if (_.isError(err)) {
+    var username = this.state['login.user'], password = this.state['login.password']
+
+    AuthService.login(username, password)
+      .catch((resp) => {
+        let msg = "an unknown error occured"
+
+        if (_.isError(resp)) {
           console.log("caught error", err.message)
           console.log(err.stack)
           msg = err.message
-        } else
-          err = resp.data.error || JSON.stringify(resp.data)
+        } else {
+          msg = resp.data.error || JSON.stringify(resp.data)
+        }
 
         this.setState({
-          notification: {
+          'notification': {
             style: 'danger',
             message: "Error logging in: " + msg
-          }
+          },
+          'login.password': ''
         })
       })
 
-    this.setState({notification: undefined})
+    this.setState({notification: undefined, 'login.password': ''})
+  }
+
+  register(ev) {
+    ev.preventDefault()
+
+    var
+      username = this.state['register.email'],
+      passwordA = this.state['register.password'],
+      passwordB = this.state['register.confirm-password']
+
+
+    if (!username) {
+      this.setState({'notification': {style: 'warning', message: "We need a email address to register you"}});
+      return
+    }
+
+    if (!passwordA) {
+      this.setState({'notification': {style: 'warning', message: "You really should use a password "}});
+      return
+    }
+
+    if (!passwordB) {
+      this.setState({'notification': {style: 'warning', message: "Seems like you forgot to confirm your password"}});
+      return
+    }
+
+    if (passwordA != passwordB) {
+      this.setState({'notification': {style: 'warning', message: "The passwords did not match, try again!"}});
+      return
+    }
+
+    UserService.register(username, passwordA)
+      .then( (resp) => AuthService.login(username, passwordA) )
+      .catch((resp) => {
+        let msg = "an unknown error occured"
+
+        if (_.isError(resp)) {
+          console.log("caught error", err.message)
+          console.log(err.stack)
+          msg = err.message
+        } else {
+          msg = resp.data.error || JSON.stringify(resp.data)
+        }
+
+        this.setState({
+          'notification': {
+            style: 'danger',
+            message: "Error creating new user: " + msg
+          },
+          'register.password': '',
+          'register.confirm-password': ''
+        })
+      })
+
+    this.setState({
+      'notification': undefined,
+      'register.password': '',
+      'register.confirm-password': '',
+    })
   }
 
   componentDidMount() {
@@ -71,14 +144,14 @@ export class Landing extends React.Component {
   render() {
     let info = (<Box.Info>
                   <p>
-								    You are using a beta product, it may not work as
-								    expected at all times but by giving us feedback we
-								    improve it over time!
+                    You are using a beta product, it may not work as
+                    expected at all times but by giving us feedback we
+                    improve it over time!
                   </p>
 
-								  <p>
+                  <p>
                     <em>By logging in to the <strong>Tinymesh Cloud™</strong> you agree to
-								    our terms of service.</em>
+                    our terms of service.</em>
                   </p>
                 </Box.Info>)
 
@@ -146,7 +219,7 @@ export class Landing extends React.Component {
 
                 <Box.Content>
 
-                <form>
+                <form onSubmit={this.login.bind(this)}>
                   <div className="form-group">
                     <label htmlFor="login-email">Email address</label>
                     <div className="input-group">
@@ -156,7 +229,7 @@ export class Landing extends React.Component {
                         className="form-control"
                         name="login-email"
                         id="login-email"
-                        valueLink={this.linkState('user')}
+                        valueLink={this.linkState('login.user')}
                         placeholder="email@address" />
                     </div>
                   </div>
@@ -170,7 +243,7 @@ export class Landing extends React.Component {
                         className="form-control"
                         name="login-password"
                         id="login-password"
-                        valueLink={this.linkState('password')}
+                        valueLink={this.linkState('login.password')}
                         placeholder="********" />
                     </div>
                   </div>
@@ -178,6 +251,8 @@ export class Landing extends React.Component {
                   <div className="text-right">
                     <Button
                       bsStyle="success"
+                      type="submit"
+                      onSubmit={this.login.bind(this)}
                       onClick={this.login.bind(this)}>
                       Sign in
                     </Button>
@@ -191,8 +266,69 @@ export class Landing extends React.Component {
 
               <Box show={register}>
                 <Box.Title>Create a new account</Box.Title>
+
+                {this.state.notification &&
+                  <Box.Notify style={this.state.notification.style}>
+                    {this.state.notification.message}
+                  </Box.Notify>}
+
                 <Box.Content>
 
+                  <form onSubmit={this.login.bind(this)}>
+                    <div className="form-group">
+                      <label htmlFor="register-email">Email address</label>
+                      <div className="input-group">
+                        <span className="input-group-addon" id="at-addon">@</span>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="register-email"
+                          id="register-email"
+                          valueLink={this.linkState('register.email')}
+                          placeholder="email@address.com" />
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="register-password">Password</label>
+
+                      <div className="input-group">
+                        <span className="input-group-addon" id="at-addon">***</span>
+                        <input
+                          type="password"
+                          className="form-control"
+                          name="register-password"
+                          id="register-password"
+                          valueLink={this.linkState('register.password')}
+                          placeholder="********" />
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="register-confirm-password">Confirm Password</label>
+
+                      <div className="input-group">
+                        <span className="input-group-addon" id="at-addon">***</span>
+                        <input
+                          type="password"
+                          className="form-control"
+                          name="register-confirm-password"
+                          id="register-confirm-password"
+                          valueLink={this.linkState('register.confirm-password')}
+                          placeholder="********" />
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <Button
+                        bsStyle="success"
+                        type="submit"
+                        onSubmit={this.register.bind(this)}
+                        onClick={this.register.bind(this)}>
+                        Register
+                      </Button>
+                    </div>
+                  </form>
                   <Link to="/" query={{register: false}}>Already have an account? Sign in</Link>
                 </Box.Content>
                 {info}
@@ -203,8 +339,8 @@ export class Landing extends React.Component {
           <Row className="footer">
             <Col xs={12}>
               <span className="links muted">
-							  © 2012-2015 <a href="https://tiny-mesh.com">Tiny Mesh AS</a>
-						  </span>
+                © 2012-2015 <a href="https://tiny-mesh.com">Tiny Mesh AS</a>
+              </span>
             </Col>
           </Row>
         </Grid>
