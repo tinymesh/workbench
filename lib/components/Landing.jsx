@@ -124,6 +124,9 @@ export class Landing extends React.Component {
   }
 
   componentDidMount() {
+    if (AuthStore.isAuthenticated)
+      this.props.history.pushState(null, '/dashboard')
+
     // refresh on user:login
     this._token = AppDispatcher.register( (action) => {
       switch (action.actionType) {
