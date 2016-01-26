@@ -31,7 +31,10 @@ export class SetupGuideCreateNetwork extends React.Component {
       newGWAddr: null,
 
       confirm: null,
-      confirmPromise: null
+      confirmPromise: null,
+      confirmStyle: null,
+      confirmIcon: null,
+      confirmTitle: null,
     }
   }
 
@@ -68,7 +71,10 @@ export class SetupGuideCreateNetwork extends React.Component {
   clearConfirm() {
     this.setState({
       confirm: null,
-      confirmPromise: null
+      confirmStyle: null,
+      confirmIcon: null,
+      confirmPromise: null,
+      confirmTitle: null
     })
   }
 
@@ -98,7 +104,21 @@ export class SetupGuideCreateNetwork extends React.Component {
       return DeviceService.create(this.props.network.key, gw)
     })
 
-   return Q.all(ps).then(() => NetworkService.fetch(this.props.network.key))
+   return Q.all(ps)
+     .then(() => NetworkService.fetch(this.props.network.key))
+     .catch(() => {
+      this.setState({
+        confirmIcon: 'warning-sign',
+        confirmStyle: 'error',
+        confirmTitle: 'Failed to create gateway(s)',
+        confirm:
+          <div>
+            <p>
+              An error occured when creating the gateways. Please try again later or contact support
+            </p>
+          </div>
+      })
+	  })
   }
 
   render() {
@@ -109,14 +129,14 @@ export class SetupGuideCreateNetwork extends React.Component {
           style={{borderRight: '1px solid #eee', paddingRight: '6%'}}>
 
           <Modal
-            className="modal-confirm"
+            className={"modal-" + this.state.confirmStyle || 'confirm'}
             show={!!this.state.confirm}
             onHide={this.clearConfirm.bind(this)}>
 
             <Modal.Header>
               <Modal.Title>
-                <Glyphicon glyph="ok">&nbsp;</Glyphicon>
-                Confirm
+                <Glyphicon glyph={this.state.confirmIcon || "ok"}>&nbsp;</Glyphicon>
+                {this.state.confirmTitle || "Confirm"}
               </Modal.Title>
             </Modal.Header>
 
@@ -124,7 +144,7 @@ export class SetupGuideCreateNetwork extends React.Component {
 
             <Modal.Footer>
               <Button onClick={this.clearConfirm.bind(this)} bsStyle="link">Close</Button>
-              <Button onClick={this.resolveConfirm.bind(this)} bsStyle="primary">Okey, got it!</Button>
+              {this.state.confirmPromise && <Button onClick={this.resolveConfirm.bind(this)} bsStyle="primary">Okey, got it!</Button>}
             </Modal.Footer>
           </Modal>
 
