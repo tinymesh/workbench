@@ -23,12 +23,10 @@ export class SetupGuideCreateNetwork extends React.Component {
     super()
 
     this.state = {
-      gateways: [],
-
       patch: {},
 
-      newGWName: null,
-      newGWAddr: null,
+      'gw.name': null,
+      'gw.address': null,
 
       confirm: null,
       confirmPromise: null,
@@ -61,7 +59,7 @@ export class SetupGuideCreateNetwork extends React.Component {
 
    defered.promise
      .then( (patch) =>
-		  NetworkService.create(patch)
+        NetworkService.create(patch)
           .then( (net) => this.props.history.pushState(null, '/dashboard/network/' + net.key) )
           .catch( (err) => {
             if (err.stack)
@@ -100,47 +98,32 @@ export class SetupGuideCreateNetwork extends React.Component {
     })
   }
 
-  addGateway(ev) {
+  addGateway(ev, name, address) {
     ev.preventDefault()
 
-    this.setState((prevState) => {
-      prevState.gateways.push({name: this.state.newGWName, address: this.state.newGWAddr})
-      return {gateways: prevState.gateways}
-    })
-  }
+    address = parseInt(address)
+    name = name || ""
+    let gw = {name, address}
+    DeviceService.create(this.props.network.key, gw)
+     .catch((err) => {
+       if (err.stack)
+         console.log('ERROR', err, err.stack)
 
-  removeGateway(ev, idx) {
-    ev.preventDefault()
-
-    this.setState((prevState) => {
-      prevState.gateways.splice(idx, 1)
-      return {gateways: prevState.gateways}
-    })
-  }
-
-  saveGateways(ev) {
-    ev.preventDefault()
-
-   let ps = _.map(this.state.gateways, (gw) => {
-      gw.address = parseInt(gw.address)
-      return DeviceService.create(this.props.network.key, gw)
-    })
-
-   return Q.all(ps)
-     .then(() => NetworkService.fetch(this.props.network.key))
-     .catch(() => {
-      this.setState({
-        confirmIcon: 'warning-sign',
-        confirmStyle: 'error',
-        confirmTitle: 'Failed to create gateway(s)',
-        confirm:
-          <div>
-            <p>
-              An error occured when creating the gateways. Please try again later or contact support
-            </p>
-          </div>
-      })
-	  })
+         this.setState({
+           confirmIcon: 'warning-sign',
+           confirmStyle: 'error',
+           confirmTitle: 'Failed to create gateway(s)',
+           confirm:
+             <div>
+               <p>
+                 An error occured when creating the gateways. Please try again later or contact support
+               </p>
+             <p>
+               <code>Error: {err.data ? JSON.stringify(err.data) : err.toString()}</code>
+             </p>
+             </div>
+         })
+       })
   }
 
   render() {
@@ -233,59 +216,25 @@ export class SetupGuideCreateNetwork extends React.Component {
             <Col xs={5}>
               <Input
                 type="text"
-                valueLink={this.linkState('newGWAddr')}
+                valueLink={this.linkState('gw.address')}
                 label="Gateway Address"
-                help="The UID of the address"
+                help="The UID of the gw (set to `0` to autoconfigure)"
                 placeholder="0.0.0.0" />
             </Col>
             <Col xs={5}>
               <Input
                 type="text"
-                valueLink={this.linkState('newGWName')}
+                valueLink={this.linkState('gw.name')}
                 label="Gateway Name"
                 help={<span>A name for the new Gateway <em>(optional)</em></span>}
                 placeholder="My Gateway ..." />
             </Col>
             <Col xs={1}>
               <label style={{display: 'block'}}>&nbsp;</label>
-              <Button onClick={(ev) => this.addGateway(ev)}>Add</Button>
-            </Col>
-            <Col xs={1}>
-              <label style={{display: 'block'}}>&nbsp;</label>
-              <Button
-               onClick={(ev) => this.saveGateways(ev)}>
-                Continue
-              </Button>
+              <Button onClick={(ev) => this.addGateway(ev, this.state['gw.name'], this.state['gw.address']) }>Create</Button>
             </Col>
           </Row>
 
-          {this.state.gateways.length > 0 &&
-           <Row>
-           <Col xs={10}>
-            <hr />
-            <ListGroup>
-              {this.state.gateways.map((gw, idx) =>
-                <ListGroupItem key={idx}>
-                  <span className="name">{gw.name || "Unnamed Gateway"}</span>
-                  &nbsp;&ndash;&nbsp;
-                  <span className="addr">(<em>Address: {gw.address}</em>)</span>
-
-                  <Button
-                    onClick={(ev) => this.removeGateway(ev, idx)}
-                    className="pull-right"
-                    style={{marginTop: '-5px'}}
-                    bsSize="small"
-                    bsStyle="danger">
-
-                    <Glyphicon glyph="remove">&nbsp;</Glyphicon>
-                    Remove
-                  </Button>
-                </ListGroupItem>
-              )}
-            </ListGroup>
-           </Col>
-           </Row>
-          }
 
         </Col>
       </Row>
@@ -396,7 +345,7 @@ export class SetupGuide extends React.Component {
       {
         text: "Connect to the Cloud",
         component: SetupGuideConnect,
-        active: activeNet && _.size(activeNet.channels) == 0
+        active: activeNet && _.size(activeNet.devices) && _.size(activeNet.channels) == 0
       },
     ]
   }
