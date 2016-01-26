@@ -59,7 +59,29 @@ export class SetupGuideCreateNetwork extends React.Component {
         confirmPromise: defered
       })
 
-   defered.promise.then((patch) => NetworkService.create(patch))
+   defered.promise
+     .then( (patch) =>
+		  NetworkService.create(patch)
+          .then( (net) => this.props.history.pushState(null, '/dashboard/network/' + net.key) )
+          .catch( (err) => {
+            if (err.stack)
+              console.log('ERROR', err, err.stack)
+
+            this.setState({
+              confirmIcon: 'warning-sign',
+              confirmStyle: 'error',
+              confirmTitle: 'Failed to create network',
+              confirm:
+                <div>
+                  <p>
+                    An error occured when creating the network. Please try again later or contact support
+                  </p>
+                  <p>
+                    <code>Error: {err.data ? JSON.stringify(err.data) : err.toString()}</code>
+                  </p>
+                </div>
+            })
+          }))
   }
 
   resolveConfirm() {
