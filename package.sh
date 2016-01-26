@@ -1,6 +1,6 @@
 #!/bin/bash
 
-date=$(TZ=UTC git show --pretty=%cI | head -1)
+date=$(TZ=UTC git show --pretty=%cI | head -1 | sed 's/:/-/g;s/+.*$//')
 rev=$(git describe --always --tags)
 target=$(basename $PWD)-$date-$rev
 
