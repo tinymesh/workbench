@@ -15,7 +15,7 @@ import {ListGroup, ListGroupItem} from 'react-bootstrap'
 import {Modal} from 'react-bootstrap'
 
 import {LensedStateDefaultMixin} from '../../mixin'
-import {NetworkStore, NetworkService} from '../../Networks'
+import {NetworkStore, NetworkService} from '../../stores/Network'
 import {DeviceService} from '../../stores/Device'
 
 export class SetupGuideCreateNetwork extends React.Component {

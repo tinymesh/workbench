@@ -11,7 +11,7 @@ import {FormattedRelative, FormattedDate} from 'react-intl'
 
 import {AddressEncoder, Loading, Notify} from '../../../ui'
 import {AuthStore} from '../../../Auth'
-import {NetworkStore, NetworkService} from '../../../Networks'
+import {NetworkStore, NetworkService} from '../../../stores/Network'
 
 export class Overview extends React.Component {
   constructor() {
