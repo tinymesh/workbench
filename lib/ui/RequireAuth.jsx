@@ -167,6 +167,7 @@ let authJail = (Component) =>
       // refresh on user:(login,logout)
       this._token = AppDispatcher.register( (action) => {
         switch (action.actionType) {
+          case AuthConstants.Actions.logout:
           case AuthConstants.Actions.login:
             this.forceUpdate()
             break
