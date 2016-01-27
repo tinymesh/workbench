@@ -57,6 +57,9 @@ export class Navigation extends React.Component {
                   {_.reduce(
                     this.props.routes.slice(1),
                     (acc, item, index) => {
+                      if (!item.component)
+                         console.log("WARN: Navigation item " + item.path + " does not have valid component")
+
                       if (!item.path || item.path === '/')
                         return acc
 

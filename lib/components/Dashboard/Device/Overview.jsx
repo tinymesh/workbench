@@ -1,6 +1,6 @@
 import React from 'react'
 import Mixin from 'react-mixin'
-import {LensedStateDefaultMixin} from '../../../../mixin'
+import {LensedStateDefaultMixin} from '../../../mixin'
 
 import {LinkContainer} from 'react-router-bootstrap'
 import {Row, Col, PageHeader} from 'react-bootstrap'
@@ -8,33 +8,29 @@ import {Nav, NavItem} from 'react-bootstrap'
 import {Glyphicon, Label, Input, FormControls, Button} from 'react-bootstrap'
 import {FormattedRelative, FormattedDate} from 'react-intl'
 
-import {LinkUtil} from '../../../../util'
-import {DeviceService} from '../../../../stores'
-import {AddressEncoder, Loading, Notify} from '../../../../ui'
+import {LinkUtil} from '../../../util'
+import {DeviceService} from '../../../stores'
+import {AddressEncoder, Loading, Notify} from '../../../ui'
 
-export class Device extends React.Component {
+export class Overview extends React.Component {
   constructor() {
     super()
 
     this._notify = null
-    this._mounted = false
     this.state = {
       patch: {},
     }
   }
 
   componentWillMount() {
-    this._mounted = true
     this._notify = new Notify.Store()
   }
 
   componentWillUnmount() {
-    this._mounted = false
     this._notify = null
   }
 
   updateDevice(ev) {
-    console.log(this.props.params)
     DeviceService.update(this.props.params.nid, this.props.params.device, this.state.patch)
       .then(
         (resp) => {
@@ -72,7 +68,7 @@ export class Device extends React.Component {
       network = this.props.network
 
     return (
-      <Loading loading={!device}>
+      <Loading loading={!network || !device}>
         {device && <form onSubmit={this.updateDevice.bind(this)}>
           <Notify store={this._notify} />
 
@@ -204,4 +200,4 @@ export class Device extends React.Component {
   }
 }
 
-Mixin(Device.prototype, LensedStateDefaultMixin)
+Mixin(Overview.prototype, LensedStateDefaultMixin)

@@ -128,7 +128,7 @@ export class DeviceList extends React.Component {
                 <tbody>
                   {sortFilterAndMap(this.state.devices, (device, idx) =>
                     <tr key={idx}>
-                      <td><Link to={LinkUtil.path(this, device.key)}>{device.key}</Link></td>
+                      <td><Link to={LinkUtil.path(this, '../device/:network/:key', device)}>{device.key}</Link></td>
                       <td>{AddressEncoder.encode(device.address)}</td>
                       <td>{device.name || "Unnamed device"}</td>
                       <td>{stateLink({'filter.type': device.type}, device.type, true)}</td>
