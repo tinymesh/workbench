@@ -5,25 +5,25 @@ import _ from 'lodash'
 import {Terminal} from '../../../ui'
 
 let usage = `
-  usage: "string" | [ 1 10 100 255 ] | < 00 1a ff >, type help for more info
+usage: "string" | [ 1 10 100 255 ] | < 00 1a ff >, type help for more info
 `
 
 let help = `
-  Online terminal emulator
+Online terminal emulator
 
-  This terminal enables you to communicate with the serial port of a
-  Tinymesh device. Each payload will be packed as a Tinymesh packet and
-  sent to the device. The terminal supports the following formats:
+This terminal enables you to communicate with the serial port of a
+Tinymesh device. Each payload will be packed as a Tinymesh packet and
+sent to the device. The terminal supports the following formats:
 
-   1. "quoted string" - sends an ascii string
-   2. [0, 1, 2, 3, 4] - sends a byte array each item is a decimal
-   3. <01 ab cd ff>   - sends a byte array each item is a hex number
-   4. "trigger" <0a>  - combine any of the above
+ 1. "quoted string" - sends an ascii string
+ 2. [0, 1, 2, 3, 4] - sends a byte array each item is a decimal
+ 3. <01 ab cd ff>   - sends a byte array each item is a hex number
+ 4. "trigger" <0a>  - combine any of the above
 
-  Commands:
-    - help          - shows this text
-    - usage         - shows usage
-    - send \`data\`   - send data to device
+Commands:
+  - help          - shows this text
+  - usage         - shows usage
+  - send \`data\`   - send data to device
 
 `
 
@@ -85,10 +85,10 @@ let parseData = function(input, pos, acc) {
 
    pos = pos || 0
 
+   acc = acc || new Buffer("")
+
    if (!input)
      return acc
-
-   acc = acc || new Buffer("")
 
    let input2 = _.trimLeft(input)
    pos += input.length - input2.length // preserve spaces for pos
@@ -98,6 +98,7 @@ let parseData = function(input, pos, acc) {
 
    parts = rest.split(pairs[head])
    pos += parts[0].length + 1
+
    if (undefined === parts[1])
      return {error: "expected a `" + pairs[head] + "`", pos: pos + 1}
 
@@ -111,7 +112,6 @@ let parseData = function(input, pos, acc) {
 }
 
 let shipData = function(res) {
-   console.log('ship', res)
    return res
 }
 
@@ -148,24 +148,25 @@ let
       if (!pairs[head] && !commands[command[0]]) {
         p = _.map(pairs, (t) => "`" + t + "`").join(', ')
         return {error: "expected a command OR one of " + p + '. Got `' + head + '`', pos: trimmed}
-      } else if (commands[command]) {
+      } else if (commands[command[0]]) {
+        trimmed += command[0].length + 1
         return commands[command[0]](command.slice(1), trimmed)
       } else {
-        console.log(input2, trimmed)
         return commands["send"](input2, trimmed)
       }
    }
 
 let formatter = function(line) {
    if (line.error) {
-      let buf = "#> Error: " + line.error
+      let buf = "! Error: " + line.error
       if (line.pos) {
         buf += " (char: " + line.pos + ")"
       }
 
       return buf
    }
-   return line
+
+   return Buffer.isBuffer(line) ? line.toString() : line
 }
 
 

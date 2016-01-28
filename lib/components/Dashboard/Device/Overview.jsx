@@ -10,7 +10,9 @@ import {FormattedRelative, FormattedDate} from 'react-intl'
 
 import {LinkUtil} from '../../../util'
 import {DeviceService} from '../../../stores'
-import {AddressEncoder, Loading, Notify} from '../../../ui'
+import {AddressEncoder, Loading, Notify, Terminal} from '../../../ui'
+
+import {SerialConsole} from './SerialConsole.jsx'
 
 export class Overview extends React.Component {
   constructor() {
@@ -31,7 +33,7 @@ export class Overview extends React.Component {
   }
 
   updateDevice(ev) {
-    DeviceService.update(this.props.params.nid, this.props.params.device, this.state.patch)
+    DeviceService.update(this.props.params.nid, this.props.params.key, this.state.patch)
       .then(
         (resp) => {
           this.setState({patch: {}})
@@ -69,7 +71,9 @@ export class Overview extends React.Component {
 
     return (
       <Loading loading={!network || !device}>
-        {device && <form onSubmit={this.updateDevice.bind(this)}>
+        {(network && device) &&
+          <div>
+          <form onSubmit={this.updateDevice.bind(this)}>
           <Notify store={this._notify} />
 
           <Row className="overview section main">
@@ -147,54 +151,20 @@ export class Overview extends React.Component {
               </FormControls.Static>
             </Col>
           </Row>
-
-          <Row className="section sub">
-            <Col xs={12}>
-              <Nav bsStyle="pills" activeKey={1} onSelect={this.handleSelect}>
-                <NavItem eventKey={1}>Serial Console</NavItem>
-                <NavItem eventKey={2}>GPIO's</NavItem>
-                <NavItem eventKey={3}>Send Packet</NavItem>
-                <LinkContainer to={LinkUtil.path(this, '/dashboard/query')} query={{network: network.key, devices: [device.key]}}>
-                  <NavItem eventKey={4}>Query</NavItem>
-                </LinkContainer>
-              </Nav>
-            </Col>
-
-
-            <Col xs={12}>
-
-              <ul className="timeline">
-                <li>
-                  Badge
-                  Header
-                  Datetime
-                  What
-                  Meta + Actions
-                </li>
-
-                <li>
-                  Badge
-                  Header
-                  Datetime
-                  What
-                  Meta + Actions
-                </li>
-              </ul>
-            </Col>
-
-          </Row>
-
           <Row
             style={{background: 'white', borderTop: '1px solid #ccc'}}
             className={"static bottom " + (0 === _.size(patch) ? 'collapse' : '')}
             >
             <Col xs={12}>
-              <Button type="submit" bsStyle="primary">Update network</Button>
+              <Button type="submit" bsStyle="primary">Update device</Button>
               <Button type="reset" bsStyle="link">Reset</Button>
             </Col>
 
           </Row>
-        </form> || "Loading device"}
+        </form>
+        </div> || "Loading device"}
+
+
       </Loading>
     )
   }

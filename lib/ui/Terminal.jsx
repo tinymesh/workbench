@@ -85,7 +85,10 @@ export class Terminal extends React.Component {
         return oldStateLink(value)
       }.bind(this)
 
-      let output = _.flatten(_.map(this.state.body, (line) => formatter(line).split(/\n/)))
+      let output = _.flatten(
+        _.map(this.state.body,
+         (line) => formatter(line)
+                     .split(/\n/).map((x) => (x[0] == '>' ? x : "  " + x))))
 
       if (this.props.height) {
         let padding = Array(Math.max(0, this.props.height - output.length))
