@@ -419,3 +419,61 @@ body.full-height #react > div {
 .bs-wizard > .bs-wizard-step:first-child  > .progress {left: 50%; width: 50%;}
 .bs-wizard > .bs-wizard-step:last-child  > .progress {width: 50%;}
 .bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot{ pointer-events: none; }
+
+
+
+
+
+
+
+
+
+
+.terminal {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+
+  .input-line {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: horizontal;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: horizontal;
+    box-align: stretch;
+    clear: both;
+  }
+  .input-line > div:nth-child(2) {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+  }
+  .prompt {
+    white-space: nowrap;
+    color: black;
+    font-weight: bold;
+    margin-right: 7px;
+    display: -webkit-box;
+    -webkit-box-pack: center;
+    -webkit-box-orient: vertical;
+    display: -moz-box;
+    -moz-box-pack: center;
+    -moz-box-orient: vertical;
+    display: box;
+    box-pack: center;
+    box-orient: vertical;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+  .cmdline {
+    outline: none;
+    background-color: transparent;
+    margin: 0;
+    width: 100%;
+    font: inherit;
+    border: none;
+    color: inherit;
+  }
+}
