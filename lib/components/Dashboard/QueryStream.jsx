@@ -25,10 +25,20 @@ export class QueryStream extends EventEmitter {
     if (opts['date.to'])
       url += '&date.to=' + (opts['date.to'] || "")
 
+    let handleReqErr = function(req) {
+      let data = req.responseText
+
+      try {
+         data = JSON.parse(data)
+      } catch (e) { }
+
+      this.emit('error', data, req)
+
+    }.bind(this)
 
     this._req = jsonpipe.flow(url, {
       'success': (data) => this.emit('data', data),
-      'error': (err) => this.emit('error', err),
+      'error': () => handleReqErr(this._req),
       'complete': (status) => this.emit('complete', status),
       'method': 'GET',
       'withCredentials': false,

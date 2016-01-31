@@ -1,10 +1,10 @@
 import React from 'react'
-import ReactDOM from 'react-dom';
 import Mixin from 'react-mixin'
 import {LensedStateDefaultMixin} from '../../mixin'
 import _ from 'lodash'
 
 import {QueryStream} from './QueryStream.jsx'
+import {QueryStore} from './QueryStore.jsx'
 
 import {Row, Col} from 'react-bootstrap'
 import {Input, Button, Label, Glyphicon} from 'react-bootstrap'
@@ -12,23 +12,8 @@ import {Input, Button, Label, Glyphicon} from 'react-bootstrap'
 import {Table, Column, Cell} from 'fixed-data-table'
 
 import Spinner from 'react-spinkit'
-import Typeahead from 'react-typeahead-component'
 import {AddressEncoder, Loading, Notify} from '../../ui'
-
-class TypeaheadOption extends React.Component {
-   render() {
-      let split = this.props.data.split(this.props.inputValue)
-      if (1 === split.length)
-         return (<span>{this.props.data}</span>)
-      else {
-         let
-            head = split[0],
-            center = this.props.inputValue,
-            tail = split.slice(1).join(center)
-         return (<span>{head}<b>{center}</b>{tail}</span>)
-      }
-   }
-}
+import {Autocomplete, AutocompleteOptionsStore} from '../../ui'
 
 var findPath = function(obj, path) {
   path = path || ""
@@ -38,6 +23,8 @@ var findPath = function(obj, path) {
       : acc.concat( (path + "." + k).replace(/^./, ''))
   }, [])
 }
+
+let autocompleteOptions = new AutocompleteOptionsStore()
 
 export class Query extends React.Component {
    constructor(props) {
@@ -49,14 +36,29 @@ export class Query extends React.Component {
          'date-to': "",
          'continuous': false,
          'query': "",
-         'results': [],
 
          querystream: null,
+         queryStore: new QueryStore(),
          columnWidths: {},
          cols: ['datetime', 'proto/tm.type', 'proto/tm.detail'],
 
          addColValue: "",
-         colValues: []
+         sorting: ["datetime", false],
+         boundingRect: {
+           height: 100,
+           width:  250,
+           top:    null,
+           bottom: null,
+           left:   null,
+           right:  null
+         },
+         parentRect: {
+           height: 100,
+           top:    null,
+           bottom: null,
+           left:   null,
+           right:  null
+         }
       }
 
       this._onColumnResizeEndCallback = this._onColumnResizeEndCallback.bind(this)
@@ -75,11 +77,34 @@ export class Query extends React.Component {
          resources = resources.concat([["network", this.props.network]])
 
       this.setState({resources: resources})
+
+      this.state.queryStore.addChangeListener( this._queryStoreChangeHandler = () => {
+         this.forceUpdate()
+      })
+   }
+
+   componentDidMount() {
+      this.updateRectState()
+      window.addEventListener('resize', this._listener = () => this.updateRectState());
    }
 
    componentWillUnmount() {
       this._mounted = false
       this._notify = null
+      window.removeEventListener('resize', this._listener)
+      this.state.queryStore.removeChangeListener( this._queryStoreChangeHandler )
+   }
+
+   updateRectState() {
+      let {autosize} = this.refs
+
+      this.setState({
+         boundingRect: autosize.getDOMNode()
+                               .getBoundingClientRect(),
+         parentRect: autosize.getDOMNode()
+                             .parentNode
+                             .getBoundingClientRect()
+      })
    }
 
    componentWillReceiveProps(nextProps) {
@@ -104,7 +129,8 @@ export class Query extends React.Component {
    }
 
    runQuery() {
-      console.log("run query")
+      this._notify.clear
+
       if (1 != this.state.resources.length) {
          alert("Query must contain exactly one resource. Got " + this.state.resources.length);
       }
@@ -125,6 +151,8 @@ export class Query extends React.Component {
             return
       }
 
+      this.state.queryStore.clear()
+
       let res = new QueryStream({
          'date.from':  this.state['date-from'],
          'date.to':    this.state['date-to'],
@@ -134,23 +162,27 @@ export class Query extends React.Component {
       })
 
       res.on('error',     (err) => {
-         console.log('error', err)
          if (!err && this.state.querystream)
             this.state.querystream && this.state.querystream.close()
+
+         this._notify.add(
+            <span><Glyphicon glyph="warning-sign" /> Query failed: {err.error || err.message}</span>,
+            'danger'
+         )
       })
-      res.on('complete',  () => {console.log('completed'); this.setState({querystream: null})})
+      res.on('complete',  () => this.setState({querystream: null}))
       res.on('data',      (data) => {
          // skip initial return
          if (data.meta || 'ping' === data)
             return
 
-         this.setState({
-            results: _.sortByOrder(this.state.results.concat([data]), ['datetime'], ['desc']),
-            colValues: _(this.state.colValues.concat(findPath(data))).unique().sortBy().value()
-         })
+          // add to col value autocomplete
+         autocompleteOptions.add.apply(autocompleteOptions, findPath(data))
+
+         this.state.queryStore.add(data)
       })
 
-     this.setState({querystream: res, results: []})
+     this.setState({querystream: res})
    }
 
   _onColumnResizeEndCallback(newColumnWidth, columnKey) {
@@ -163,17 +195,18 @@ export class Query extends React.Component {
   }
 
    render() {
-      let rows  = this.state.results
+      let {boundingRect, parentRect} = this.state
       let {cols, columnWidths, addColValue, colValues} = this.state
+      let {queryStore} = this.state
 
-      let filteredColValues = _(colValues)
-         .filter( (val) => (_.any(cols, (m) => val === m) ? false : null !== val.match(addColValue)))
-         .take(10)
-         .value()
+
+      let sizeWithPadding = Math.max(
+         queryStore.length,
+         Math.floor(parentRect.height / 25))
 
       return (
          <Row className="query">
-            <Col xs={3} md={2} className="aside">
+            <Col xs={4} md={3} className="aside">
                <div className="datasource-select">
                   {_.map(this.state.resources, (resource, idx) => {
                      switch (resource[0]) {
@@ -183,6 +216,8 @@ export class Query extends React.Component {
                            return <span key={idx} className="btn btn-disabled btn-sm btn-default">device/{resource[1].network}/{resource[1].key}</span>
                      }
                   })}
+
+                  <hr />
                </div>
                <div className="datetime-select">
                   <Input
@@ -204,16 +239,19 @@ export class Query extends React.Component {
                      valueLink={this.linkState('query')}
                      label="Query"
                      placeholder="nil !== proto/tm" />
+
+                  <hr />
                </div>
 
                <div className="pick-cols">
-                  <Typeahead
-                     inputValue={this.state.addColValue}
-                     onChange={(ev) => this.handleColValueChange(ev)}
-                     onOptionClick={(ev, opt) => this.handleColValueClick(ev, opt)}
-                     placeholder="Add column"
-                     options={filteredColValues}
-                     optionTemplate={TypeaheadOption} />
+                  <div className="form-group">
+                     <label>Pick columns</label>
+               	   <Autocomplete
+						   	placeholder="Add column"
+						   	store={autocompleteOptions}
+						   	filter={(option) => -1 === cols.lastIndexOf(option)}
+						   	onSelect={(ev, option) => this.addCol(option)} />
+                  </div>
                </div>
 
                <div className="run-query">
@@ -243,13 +281,15 @@ export class Query extends React.Component {
                </div>
 
             </Col>
-            <Col xs={9} md={10} className="query">
+            <Col xs={8} md={9} className="query" ref="autosize">
+               <Notify store={this._notify} />
+
                <Table
                  rowHeight={25}
-                 rowsCount={rows.length}
-                 headerHeight={25}
-                 width={1200}
-                 maxHeight={500}
+                 rowsCount={sizeWithPadding}
+                 headerHeight={35}
+                 width={boundingRect.width - 25}
+                 height={parentRect.height}
                  onColumnResizeEndCallback={this._onColumnResizeEndCallback}
                  isColumnResizing={false}
                  {...this.props}>
@@ -257,17 +297,18 @@ export class Query extends React.Component {
                   {_.map(cols, (col, idx) => {
                      let path = col.split('.')
 
-                     let cell = ({rowIndex, ...props}) => {
+                     let cell = ({columnKey, rowIndex, ...props}) => {
                         return (
                         <Cell {...props}>
-                           {_.get(rows[rowIndex], path)}
+                           {_.get(queryStore.at(rowIndex), columnKey)}
                         </Cell>
                         )
                      }
 
                      let header = <Cell>
-                        {col} <a onClick={() => this.removeCol(col)} className="pull-right">x</a>
+                        <a onClick={() => this.sortCol(col)}>{col}</a> <a onClick={() => this.removeCol(col)} className="pull-right">x</a>
                      </Cell>
+
                      return <Column
                         columnKey={col}
                         key={idx}
@@ -277,26 +318,42 @@ export class Query extends React.Component {
                         isResizable={true}
                         header={header} cell={cell} />
                   })}
-
                </Table>
+
+               <p className="text-right">
+                  Rows: <span>{ queryStore.length }</span>
+               </p>
             </Col>
          </Row>
       )
    }
 
-   handleColValueChange(ev) {
-      this.setState({addColValue: ev.target.value})
-   }
-
-   handleColValueClick(ev, option) {
+   addCol(col) {
       this.setState({
-         cols: _.uniq(this.state.cols.concat([option])),
-         addColValue: ""
+         cols: _.uniq(this.state.cols.concat([col])),
       })
    }
 
    removeCol(col) {
-      this.setState({cols: _.without(this.state.cols, col)})
+      let
+         newcols = _.without(this.state.cols, col),
+         patch = {cols: newcols}
+
+      // reset sorting if we are removing the column
+      if (this.state.sorting[0] === col)
+         patch.sorting = [newcols[0] || "datetime", false]
+
+      this.setState(patch)
+   }
+
+   sortCol(col) {
+      let order = false
+
+      if (col === this.state.sorting[0])
+         order = !this.state.sorting[1]
+
+      this.state.queryStore.sort([col], [order])
+      this.setState({sorting: [col, order]})
    }
 }
 

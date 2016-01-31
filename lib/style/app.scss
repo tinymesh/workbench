@@ -494,3 +494,44 @@ body.full-height #react > div {
 	}
 }
 
+
+
+.react-typeahead-input {
+   display: block;
+   width: 100%;
+   height: 34px;
+   padding: 6px 12px;
+   font-size: 14px;
+   line-height: 1.42857;
+   color: #555555;
+   background-color: #fff;
+   background-image: none;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+   -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+   -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+.react-typeahead-options {
+   padding: 0;
+
+   li {
+      list-style: none;
+      padding: 7px 20px 7px;
+      border-bottom: 1px solid #eee;
+
+      &:hover {
+         background: $highlight-color;
+
+         .head, .tail, .highlight { color: #fff; font-weight: bold; }
+         cursor: pointer;
+      }
+
+      .head { color: #555; }
+      .tail { color: #999; }
+      .highlight { color: #555; font-weight: bold; }
+   }
+}
