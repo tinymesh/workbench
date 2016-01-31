@@ -104,6 +104,7 @@ export class SetupGuideCreateNetwork extends React.Component {
     address = parseInt(address)
     name = name || ""
     let gw = {name, address}
+    gw.type = 'gateway'
     DeviceService.create(this.props.network.key, gw)
      .catch((err) => {
        if (err.stack)
