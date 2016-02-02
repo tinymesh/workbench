@@ -331,6 +331,7 @@ export class NotFoundErr extends React.Component {
 
 export class SetupGuide extends React.Component {
   steps(networks, activeNet) {
+    let forceSetup = this.props.location.query.setup
     return [
       {
         text: "Register an account",
@@ -340,7 +341,7 @@ export class SetupGuide extends React.Component {
       {
         text: "Create your first Network",
         component: SetupGuideCreateNetwork,
-        active: (networks && networks.length == 0) || (activeNet && _.size(activeNet.devices) == 0),
+        active: forceSetup || (networks && networks.length == 0) || (activeNet && _.size(activeNet.devices) == 0),
         done: (activeNet && _.size(activeNet.devices) > 0) || (networks && networks.length > 1)
       },
       {
