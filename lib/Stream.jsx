@@ -17,7 +17,6 @@ export class Stream extends EventEmitter {
     this._sse = new EventSource(url)
 
     this._sse.onerror = (ev) => this.emit("error", ev);
-    this._sse.onmessage = (ev) => this.emit("message", ev)
 
     this._registered = []
 

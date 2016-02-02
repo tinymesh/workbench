@@ -32,6 +32,7 @@
     "json-loader": "^0.5.3",
     "jsonpipe": "^1.0.0",
     "lodash": "^3.10.1",
+    "lodash.unset": "^4.0.1",
     "moment": "^2.10.6",
     "node-sass": "^3.3.2",
     "q": "^1.4.1",

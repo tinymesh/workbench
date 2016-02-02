@@ -535,3 +535,13 @@ body.full-height #react > div {
       .highlight { color: #555; font-weight: bold; }
    }
 }
+
+.device-config {
+   .white-bg { background: white; padding-bottom: 1em; padding-top: 2em;}
+   .page-header { margin-bottom: 0px; }
+   .groups {
+      .config-item {
+         margin-bottom: 1em;
+      }
+   }
+}
