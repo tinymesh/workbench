@@ -1,0 +1,296 @@
+{
+   "gpio":       {"name": "GPIOs",               "desc": null},
+   "net":        {"name": "Network",             "desc": null},
+   "security":   {"name": "Security/Encryption", "desc": null},
+   "device":     {"name": "Device",              "desc": null},
+   "cluster":    {"name": "Cluster Detection",   "desc": null},
+   "rf_jamming": {"name": "RF Tamper",           "desc": null},
+   "rf":         {"name": "RF Settings",         "desc": null},
+   "uart":       {"name": "Serial Port",         "desc": null},
+   "ima":        {"name": "IMA Message",         "desc": null},
+
+	"gpio.input_debounce" : {
+		"name": "",
+		"description": "desc"
+	},
+
+	"gpio_0.config"               : {
+		"name": "GPIO 0 - Config",
+		"description": "Configure GPIO 0; Module pin 15"
+	},
+	"gpio_0.trigger"              : {
+		"name": "GPIO 0 - Trigger",
+		"description": "Trigger an event on input level change (works only if `gpio_0.config := 'input'`)"
+	},
+	"gpio_0.analogue_sample_rate" : {
+		"name": "GPIO 0 - Analogue Sampling Interval",
+		"description": "Time between samplings in 100ms increments"
+	},
+	"gpio_0.analogue_low_trig"    : {
+		"name": "GPIO 0 - Analogue Low trig",
+		"description": ""
+	},
+	"gpio_0.analogue_high_trig"   :  {
+		"name": "GPIO 0 - Analogue High trig",
+		"description": ""
+	},
+
+	"gpio_1.config"               : {
+		"name": null,
+		"desc": null
+	},
+	"gpio_1.trigger"              :  {
+		"name": null,
+		"desc": null
+	},
+	"gpio_1.analogue_sample_rate" :  {
+		"name": null,
+		"desc": null
+	},
+	"gpio_1.analogue_low_trig"    :  {
+		"name": null,
+		"desc": null
+	},
+	"gpio_1.analogue_high_trig"   :  {
+		"name": null,
+		"desc": null
+	},
+
+	"gpio_2.config"  : {
+		"name": null,
+		"desc": null
+	},
+	"gpio_2.trigger" : {
+		"name": null,
+		"desc": null
+	},
+
+	"gpio_3.config"  : {
+		"name": null,
+		"desc": null
+	},
+	"gpio_3.trigger" : {
+		"name": null,
+		"desc": null
+	},
+
+	"gpio_4.config"  : {
+		"name": null,
+		"desc": null
+	},
+	"gpio_4.trigger" : {
+		"name": null,
+		"desc": null
+	},
+
+	"gpio_5.config"  : {
+		"name": null,
+		"desc": null
+	},
+	"gpio_5.trigger" : {
+		"name": null,
+		"desc": null
+	},
+
+	"gpio_6.config"  : {
+		"name": null,
+		"desc": null
+	},
+	"gpio_6.trigger" : {
+		"name": null,
+		"desc": null
+	},
+
+	"gpio_7.config"      : {
+		"name": null,
+		"desc": null
+	},
+	"gpio_7.trigger"     : {
+		"name": null,
+		"desc": null
+	},
+	"gpio_7.pwm_default" : {
+		"name": null,
+		"desc": null
+	},
+
+	"net.hiam_time"             : {
+		"name": null,
+		"desc": null
+	},
+	"net.max_packet_latency"    : {
+		"name": null,
+		"desc": null
+	},
+	"net.max_jump_level"        : {
+		"name": null,
+		"desc": null
+	},
+	"net.rssi_cc_assesment"     : {
+		"name": null,
+		"desc": null
+	},
+	"net.connect_check_time"    : {
+		"name": null,
+		"desc": null
+	},
+	"net.max_jump_count"        : {
+		"name": null,
+		"desc": null
+	},
+	"net.command_retries"       : {
+		"name": null,
+		"desc": null
+	},
+	"net.tx_retry_limit"        : {
+		"name": null,
+		"desc": null
+	},
+	"net.connect_change_margin" : {
+		"name": null,
+		"desc": null
+	},
+	"net.command_accept_time"   : {
+		"name": null,
+		"desc": null
+	},
+	"net.rssi_threshold"        : {
+		"name": null,
+		"desc": null
+	},
+	"net.excellent_rssi"        : {
+		"name": null,
+		"desc": null
+	},
+
+	"security.level" : {
+		"name": null,
+		"desc": null
+	},
+
+	"device.command_ack"         : {
+		"name": null,
+		"desc": null
+	},
+	"device.part"                : {
+		"name": null,
+		"desc": null
+	},
+	"device.fw_revision"         : {
+		"name": null,
+		"desc": null
+	},
+	"device.hw_revision"         : {
+		"name": null,
+		"desc": null
+	},
+	"device.detect_busy_network" : {
+		"name": null,
+		"desc": null
+	},
+	"device.protocol_mode"       : {
+		"name": null,
+		"desc": null
+	},
+	"device.locator"             : {
+		"name": null,
+		"desc": null
+	},
+	"device.type"                : {
+		"name": null,
+		"desc": null
+	},
+	"device.sid"                 : {
+		"name": null,
+		"desc": null
+	},
+	"device.uid"                 : {
+		"name": null,
+		"desc": null
+	},
+
+	"cluster.rssi_threshold" : {
+		"name": null,
+		"desc": null
+	},
+	"cluster.device_limit"   : {
+		"name": null,
+		"desc": null
+	},
+
+	"rf_jamming.port"   : {
+		"name": null,
+		"desc": null
+	},
+	"rf_jamming.detect" : {
+		"name": null,
+		"desc": null
+	},
+
+	"rf.channel"        : {
+		"name": null,
+		"desc": null
+	},
+	"rf.mac_rnd_mask_1" : {
+		"name": null,
+		"desc": null
+	},
+	"rf.mac_rnd_mask_2" : {
+		"name": null,
+		"desc": null
+	},
+	"rf.power"          : {
+		"name": null,
+		"desc": null
+	},
+	"rf.data_rate"      : {
+		"name": null,
+		"desc": null
+	},
+
+	"uart.cts_hold_time" : {
+		"name": null,
+		"desc": null
+	},
+	"uart.timeout"       : {
+		"name": null,
+		"desc": null
+	},
+	"uart.stop_bits"     : {
+		"name": null,
+		"desc": null
+	},
+	"uart.bits"          : {
+		"name": null,
+		"desc": null
+	},
+	"uart.flow_control"  : {
+		"name": null,
+		"desc": null
+	},
+	"uart.parity"        : {
+		"name": null,
+		"desc": null
+	},
+	"uart.buffer_margin" : {
+		"name": null,
+		"desc": null
+	},
+	"uart.baud_rate"     : {
+		"name": null,
+		"desc": null
+	},
+
+	"ima.time"       : {
+		"name": null,
+		"desc": null
+	},
+	"ima.on_connect" : {
+		"name": null,
+		"desc": null
+	},
+	"ima.time_base"  : {
+		"name": null,
+		"desc": null
+	}
+}
