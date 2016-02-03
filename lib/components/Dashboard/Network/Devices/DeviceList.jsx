@@ -119,8 +119,12 @@ export class DeviceList extends React.Component {
                     <th>{stateLink({sortBy: 'address', ascending: !query.ascending}, 'UID')}</th>
                     <th>{stateLink({sortBy: 'name', ascending: !query.ascending}, 'Name')}</th>
                     <th>{stateLink({sortBy: 'type', ascending: !query.ascending}, "Type")}</th>
-                    <th title="When was the last message received">
+                    <th title="When was the device last updated">
                       {stateLink({sortBy: 'meta.updated', ascending: !query.ascending}, 'Last Updated')}
+                    </th>
+
+                    <th title="When did the device receive it's last message">
+                      {stateLink({sortBy: 'meta.event/date', ascending: !query.ascending}, 'Last Message')}
                     </th>
                   </tr>
                 </thead>
@@ -135,6 +139,9 @@ export class DeviceList extends React.Component {
                       <td title={device.meta.updated}>
                         <FormattedRelative value={device.meta.updated} />
                       </td>
+                      <td title={device.meta['event/date']}>
+                        <FormattedRelative value={device.meta['event/date']} />
+                      </td>
                     </tr>
                   )}
                   {fakeDevices.map( (v, idx) =>
@@ -142,6 +149,7 @@ export class DeviceList extends React.Component {
                       <td><span className="dummy-block" style={{display: 'inline-block', width: "100px"}}>&nbsp;</span></td>
                       <td><span className="dummy-block" style={{display: 'inline-block', width: "100px"}}>&nbsp;</span></td>
                       <td><span className="dummy-block" style={{display: 'inline-block', width: "300px"}}>&nbsp;</span></td>
+                      <td><span className="dummy-block" style={{display: 'inline-block', width: "100px"}}>&nbsp;</span></td>
                       <td><span className="dummy-block" style={{display: 'inline-block', width: "100px"}}>&nbsp;</span></td>
                       <td><span className="dummy-block" style={{display: 'inline-block', width: "100px"}}>&nbsp;</span></td>
                     </tr>
