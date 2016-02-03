@@ -11,6 +11,7 @@ import {FormattedRelative, FormattedDate} from 'react-intl'
 
 import {AddressEncoder, Loading, Notify} from '../../../ui'
 import {AuthStore} from '../../../Auth'
+import {DeviceStore, DeviceService} from '../../../stores'
 import {NetworkStore, NetworkService} from '../../../stores/Network'
 
 export class Overview extends React.Component {
@@ -21,20 +22,42 @@ export class Overview extends React.Component {
     this._mounted = false
     this.state = {
       patch: {},
-
+      devices: null,
       newType: ""
     }
 
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.params.nid !== nextProps.params.nid)
+      this.loadForNetwork(nextProps.params.nid)
+  }
+
   componentWillMount() {
-    this._mounted = true
     this._notify = new Notify.Store()
+  }
+
+  componentDidMount() {
+    this._mounted = true
+
+    DeviceStore.addChangeListener( this._changeListener = () => {
+      if (this._mounted)
+        this.setState({devices: DeviceStore.devices(this.props.params.nid)})
+    })
+
+    this.loadForNetwork(this.props.params.nid)
   }
 
   componentWillUnmount() {
     this._mounted = false
     this._notify = null
+  }
+
+  loadForNetwork(nid) {
+    this.setState({loading: true})
+    DeviceService.list(nid)
+      .then(  () => this.setState({loading: false}) )
+      .catch( () => this.setState({loading: false}) )
   }
 
   validateType() {
@@ -140,6 +163,16 @@ export class Overview extends React.Component {
 
     }
 
+    let gws = _.reduce(this.state.devices, function(acc, dev) {
+       if (dev.type !== 'gateway')
+          return acc
+
+       dev.connected = dev.meta['chan/connected'] > dev.meta['chan/disconnected']
+       return acc.concat([dev])
+    }, [])
+
+
+
     return (
       <Loading loading={!this.props.network}>
         {null !== network && <form onSubmit={this.updateNetwork.bind(this)}>
@@ -194,7 +227,25 @@ export class Overview extends React.Component {
           </Row>
 
           <Row className="config section">
-            <Col xs={12} md={6} lg={3} className="types">
+
+            <Col xs={12} md={6} lg={4} className="channels">
+              <h4>Connection Channels</h4>
+
+               <ListGroup>
+                  {_.map(gws, (dev, idx) =>
+                     <ListGroupItem>
+                        {dev.name || ("device/" + network.key + '/' + dev.key)}
+                        <Label
+                           className="pull-right"
+                           key={idx}
+                           bsStyle={dev.connected ? 'success' : 'danger'}>
+                              {dev.connected ? 'Connected' : 'Disconnected'}
+                        </Label>
+                     </ListGroupItem>)}
+               </ListGroup>
+            </Col>
+
+            <Col xs={12} md={6} lg={4} className="types">
               <h4>Network Types</h4>
 
               <ListGroup>
@@ -243,13 +294,7 @@ export class Overview extends React.Component {
               </Row>
            </Col>
 
-            <Col xs={12} md={6} lg={3} className="channels">
-              <h4>Connection Channels</h4>
-
-              <blockquote>Disabled.. this feature will be added soon</blockquote>
-            </Col>
-
-            <Col xs={6} md={6} lg={3} className="provisioning">
+            <Col xs={6} md={6} lg={4} className="provisioning">
               <h4>Provisioning</h4>
 
               <Input
@@ -275,11 +320,6 @@ export class Overview extends React.Component {
               </Input>
             </Col>
 
-            <Col xs={6} md={6} lg={3} className="groups">
-              <h4>Groups</h4>
-
-              <blockquote>Disabled.. this feature will be added soon</blockquote>
-            </Col>
           </Row>
 
           <Row
