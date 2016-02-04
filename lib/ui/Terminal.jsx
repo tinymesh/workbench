@@ -17,6 +17,15 @@ export class Terminal extends React.Component {
      }
    }
 
+   componentWillReceiveProps(nextProps) {
+     if (this.props.newLines !== nextProps.newLines) {
+       this.setState({
+         body: this.state.body.concat(nextProps.newLines),
+       })
+       console.log('new stuff', this.state.body.concat(nextProps.newLines))
+     }
+   }
+
    componentWillMount() {
      this.setState({body: this.props.body || []})
    }
@@ -86,9 +95,19 @@ export class Terminal extends React.Component {
       }.bind(this)
 
       let output = _.flatten(
-        _.map(this.state.body,
-         (line) => formatter(line)
-                     .split(/\n/).map((x) => (x[0] == '>' ? x : "  " + x))))
+        _.reduce(this.state.body, function(acc, line) {
+          let res = formatter(line)
+
+          if (null == res)
+            return acc
+
+          if (_.isString(res)) {
+            return acc.concat([res.split("\n")])
+          } else {
+            console.log('WARN: formatter did not return a string line', res)
+            return acc.concat([res.toString().split("\n")])
+          }
+        }, []))
 
       if (this.props.height) {
         let padding = Array(Math.max(0, this.props.height - output.length))

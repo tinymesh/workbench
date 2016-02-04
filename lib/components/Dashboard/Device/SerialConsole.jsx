@@ -2,7 +2,12 @@ import React from 'react'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
+import axios from 'axios'
+import {BASE_URL} from '../../../Constants.js'
+import {AuthStore} from '../../../Auth'
+
 import {Terminal} from '../../../ui'
+import {QueryStream} from '../QueryStream.jsx'
 
 let usage = `
 usage: "string" | [ 1 10 100 255 ] | < 00 1a ff >, type help for more info
@@ -111,15 +116,24 @@ let parseData = function(input, pos, acc) {
       : parseData(rest, pos + 1, Buffer.concat([acc, res]))
 }
 
-let shipData = function(res) {
-   return res
+let shipData = function(buf, params) {
+   let
+      payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'serial', 'data': btoa(buf.toString())}}),
+		url = BASE_URL + '/message/' + params.nid + '/' + params.key,
+		headers = {
+			'Authorization': AuthStore.signV1('POST', url, payload),
+			'Content-Type':  'application/json'
+		}
+
+	axios.post(url, payload, {headers})
+	return buf
 }
 
 
 let commands = {
    "usage": () => usage,
    "help":  () => help,
-   "send":  (input, trimmed) => shipData(parseData(input, trimmed))
+   "send":  (input, trimmed, p) => shipData(parseData(input, trimmed), p)
 }
 
 let
@@ -150,9 +164,9 @@ let
         return {error: "expected a command OR one of " + p + '. Got `' + head + '`', pos: trimmed}
       } else if (commands[command[0]]) {
         trimmed += command[0].length + 1
-        return commands[command[0]](command.slice(1), trimmed)
+        return commands[command[0]](command.slice(1), trimmed, this.params)
       } else {
-        return commands["send"](input2, trimmed)
+        return commands["send"](input2, trimmed, this.params)
       }
    }
 
@@ -164,6 +178,8 @@ let formatter = function(line) {
       }
 
       return buf
+   } else if(line['proto/tm'] && line['proto/tm'].detail === 'serial') {
+     return line['proto/tm'].data
    }
 
    return Buffer.isBuffer(line) ? line.toString() : line
@@ -171,14 +187,60 @@ let formatter = function(line) {
 
 
 export class SerialConsole extends React.Component {
-  render() {
-    let
-      cmds = { }
+  constructor(props) {
+    super(props)
+    this.state = {
+      stream: null,
+      newLines: null
+    }
+  }
 
+  componentWillMount() {
+    let {nid, key} = this.props.params
+
+    this.runQuery(nid, key)
+  }
+
+  runQuery(nid, key) {
+    let res = new QueryStream({
+       'date.from':  'NOW',
+       'continuous': "true",
+       'query':      "",
+       'uri':        '/' + nid + '/' + key,
+    })
+
+    res.on('error',     (err) => {
+      if (!err && this.state.stream)
+         this.state.stream && this.state.stream.close()
+    })
+
+    res.on('complete',  () => this.setState({stream: null}))
+
+    res.on('data',      (data) => {
+       // skip initial return
+       if ('ping' === data)
+          return
+
+       this.setState({newLines: [data]})
+    })
+
+    this.setState({stream: res})
+  }
+
+  componentDidMount() {
+    this._mounted = true
+  }
+
+  componentWillUnmount() {
+    this._mounted = true
+    this.state.stream
+  }
+
+  render() {
     return <Terminal
       body={[usage]}
-      commands={cmds}
       formatter={formatter}
+      newLines={this.state.newLines}
       handle={handle}
       height={20}
       {...this.props} />
