@@ -19,8 +19,13 @@ export class QueryStore extends EventEmitter {
      this.removeListener("CHANGE", cb)
    }
 
-   add(item) {
+   add(item, cols, order) {
       this._results.push(item)
+
+      if (undefined !== cols && undefined !== order) {
+         this._results = _.sortByOrder(this._results, cols, order)
+      }
+
       this.emitChange()
    }
 

@@ -179,7 +179,7 @@ export class Query extends React.Component {
           // add to col value autocomplete
          autocompleteOptions.add.apply(autocompleteOptions, findPath(data))
 
-         this.state.queryStore.add(data)
+         this.state.queryStore.add(data, this.state.sorting[0], this.state.sorting[1])
       })
 
      this.setState({querystream: res})
