@@ -192,7 +192,7 @@ export class Landing extends React.Component {
 
             <Col xs={12} sm={4} md={6} className="copy text-center">
               <p className="lead">
-                Sense, Monior and Control <strong>any device</strong>
+                Sense, Monitor and Control <strong>any device</strong>
               </p>
 
               <p className="body">
