@@ -22,7 +22,6 @@ export class Terminal extends React.Component {
        this.setState({
          body: this.state.body.concat(nextProps.newLines),
        })
-       console.log('new stuff', this.state.body.concat(nextProps.newLines))
      }
    }
 

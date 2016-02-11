@@ -102,7 +102,6 @@ export class Autocomplete extends React.Component {
    componentWillMount() {
       let {options} = this.state
 
-      console.log(options)
       options.addChangeListener( this._changeHandler = () =>
          this._mounted && this.forceUpdate()
       )

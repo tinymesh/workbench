@@ -22,6 +22,7 @@ export class QueryStore extends EventEmitter {
    add(item, cols, order) {
       this._results.push(item)
 
+ 
       if (undefined !== cols && undefined !== order) {
          this._results = _.sortByOrder(this._results, cols, order)
       }
