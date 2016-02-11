@@ -167,12 +167,13 @@ export class Config extends React.Component {
     this.state = {
       stream: null,
       activeGroup: undefined,
-      config: JSON.parse(localStorage.getItem('t') || 'null'),
+      config: null,
 
       patch: {},
 
       modalHidden: false,
-      configFetchedErr: null
+      configFetchedErr: null,
+      confirmDialog: false
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -217,7 +218,6 @@ export class Config extends React.Component {
       if (!data['proto/tm'].config)
          return
 
-      localStorage.t = JSON.stringify(data['proto/tm'].config)
       this.setState({config: data['proto/tm'].config, configFetched: true})
    }
 
@@ -261,6 +261,20 @@ export class Config extends React.Component {
       'original': val,
     }
   }
+
+  sendConfig() {
+   let
+      payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'set_config', 'config': this.state.patch}}),
+		url = BASE_URL + '/message/' + this.props.params.nid + '/' + this.props.params.key,
+		headers = {
+			'Authorization': AuthStore.signV1('POST', url, payload),
+			'Content-Type':  'application/json'
+		}
+
+	axios.post(url, payload, {headers})
+      .then(() => this.setState({confirmDialog: false}))
+      .catch(() => this.setState({confirmDialog: false}))
+}
 
   render() {
     let
@@ -329,8 +343,15 @@ export class Config extends React.Component {
             </Modal.Footer>
             </Modal>
 
+            <ConfirmConfigModal
+               patch={this.state.patch}
+               cont={() => this.sendConfig()}
+               show={this.state.confirmDialog}
+               onHide={() => this.setState({confirmDialog: false})}
+               />
+
             {config && <div>
-               <Col xs={4} md={3} lg={2} className="aside">
+               <Col xs={4} md={3} className="aside">
                   <h4>Configuration Groups</h4>
 
                   <Nav
@@ -341,7 +362,7 @@ export class Config extends React.Component {
                      {_.map(groups, (v, idx) => <NavItem eventKey={idx} key={idx}>{l10n[idx].name || idx}</NavItem>)}
                   </Nav>
                </Col>
-               <Col xs={8} md={9} lg={10}>
+               <Col xs={8} md={9}>
                   {_.map(groups[activeGroup], (group, idx) =>
                      <Row className="groups" key={idx}>
                        <Col xs={12} className="page-header">
@@ -365,11 +386,58 @@ export class Config extends React.Component {
                      </Row>
                   )}
 
-                  <pre>{JSON.stringify(this.state.patch, null, 4)}</pre>
+                  <div>
+                     <Button
+                       bsStyle="primary"
+                       onClick={() => this.setState({confirmDialog: true})}>
+                         Save Configuration
+                     </Button>
+                  </div>
                </Col>
             </div>}
          </div>
       </Loading>
     )
   }
+}
+
+class ConfirmConfigModal extends React.Component {
+   render() {
+      let {patch, cont, show, onHide} = this.props
+
+      return (
+         <Modal
+            className="modal-wait"
+            show={show}
+            onHide={onHide}>
+
+            <Modal.Header>
+               <Modal.Title>
+                  <Glyphicon glyph="ok">&nbsp;</Glyphicon>
+
+                  You'r about to change the device configuration
+               </Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+               Are you sure you want to change the following parameters?
+
+               <ul>
+                  {_(patch)
+                    .map(
+                     (items, group) => _.map(items,
+                        (v, k) => <li key={k}>{group}.{k} -> {v}</li>) )
+                    .flatten()
+                    .value()}
+               </ul>
+            </Modal.Body>
+
+            <Modal.Footer>
+               <Button bsStyle="primary" onClick={cont}>
+                  Save Configuration
+               </Button>
+            </Modal.Footer>
+         </Modal>
+      )
+   }
 }
