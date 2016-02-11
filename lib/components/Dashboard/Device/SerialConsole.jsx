@@ -40,10 +40,14 @@ let asHex = function(input) {
     })
     .join('')
 
-  if (isNaN(parseInt(processed)))
-    return {error: "invalid hex input"}
+   try {
+      if (isNaN(parseInt(processed, 16)) || processed.match("x"))
+        return {error: "invalid hex input"}
 
-  return new Buffer(processed, "hex")
+      return new Buffer(processed, "hex")
+   } catch (e) {
+      return {error: "invalid hex input"}
+   }
 }
 
 let asBin = function(input) {
@@ -104,8 +108,10 @@ let parseData = function(input, pos, acc) {
    parts = rest.split(pairs[head])
    pos += parts[0].length + 1
 
-   if (undefined === parts[1])
-     return {error: "expected a `" + pairs[head] + "`", pos: pos + 1}
+   if (undefined === parts[1] && pairs[head])
+     return {error: "expected a terminating `" + pairs[head] + "`", pos: pos + 1}
+   if (undefined === parts[1] && !pairs[head])
+     return {error: "expected your data to start with either: your data with one of \" .. \", [ ... ] or < ... >.", pos: pos + 1}
 
    res = parseAs[head](parts[0])
    parts.shift()
@@ -115,6 +121,8 @@ let parseData = function(input, pos, acc) {
       ? res
       : parseData(rest, pos + 1, Buffer.concat([acc, res]))
 }
+
+export {parseData, asAscii, asBin, asHex, pairs, parseAs}
 
 let shipData = function(buf, params) {
    let

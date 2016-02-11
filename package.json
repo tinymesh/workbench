@@ -47,6 +47,7 @@
     "react-router": "^1.0.0-rc1",
     "react-router-bootstrap": "^0.19.3",
     "react-spinkit": "^1.1.4",
+    "react-toggle": "^1.2.3",
     "react-typeahead-component": "^0.9.0",
     "sass-loader": "^2.0.1",
     "sjcl": "^1.0.3",
