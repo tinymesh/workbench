@@ -164,12 +164,14 @@ let authJail = (Component) =>
     },
 
     componentWillMount: function() {
+      this._mounted = true
       // refresh on user:(login,logout)
       this._token = AppDispatcher.register( (action) => {
         switch (action.actionType) {
           case AuthConstants.Actions.logout:
           case AuthConstants.Actions.login:
-            this.forceUpdate()
+            if (this._mounted)
+              this.forceUpdate()
             break
 
           default:
@@ -179,6 +181,7 @@ let authJail = (Component) =>
     },
 
     componentWillUnmount: function() {
+      this._mounted = false
       AppDispatcher.unregister(this._token)
     }
   })
