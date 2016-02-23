@@ -25,20 +25,20 @@ export class QueryStream extends EventEmitter {
     if (opts['date.to'])
       url += '&date.to=' + (opts['date.to'] || "")
 
-    let handleReqErr = function(req) {
-      let data = req.responseText
+    let handleReqErr = function(err) {
+      let data = err || this._req.responseText
 
       try {
          data = JSON.parse(data)
       } catch (e) { }
 
-      this.emit('error', data, req)
+      this.emit('error', err, this._req)
 
     }.bind(this)
 
     this._req = jsonpipe.flow(url, {
       'success': (data) => this.emit('data', data),
-      'error': () => handleReqErr(this._req),
+      'error': handleReqErr,
       'complete': (status) => this.emit('complete', status),
       'method': 'GET',
       'withCredentials': false,
@@ -46,6 +46,9 @@ export class QueryStream extends EventEmitter {
          'Authorization': AuthStore.signV1("GET", url, "")
       }
     })
+
+    this._req.onabort = () => this.emit('abort')
+    this._req.onload = () => this.emit('load')
   }
 
   close() {

@@ -227,7 +227,15 @@ body.full-height #react > div {
 	}
 }
 
-.main {
+.container > .main, .container-fluid > .main {
+  padding-left: 0px;
+  padding-right: 0px;
+
+  .row {
+    margin-left: inherit;
+    margin-right: inherit;
+  }
+
 	/** large screens gets obnoxiously large collapsed sidebars **/
 	&.expand {
 		@media (min-width: 1200px) {
@@ -396,6 +404,14 @@ body.full-height #react > div {
 .modal-error   .modal-header span, .modal-error   .modal-header h4,
 .modal-wait    .modal-header span, .modal-wait    .modal-header h4,
 .modal-confirm .modal-header span, .modal-confirm .modal-header h4 { color: #ffffff; }
+
+.modal-contain {
+  position: relative;
+
+  .modal, .modal-backdrop { position: absolute; overflow: hidden }
+  .modal-backdrop { background: whitesmoke; opacity: 0.7; }
+}
+
 
 
 /*Form Wizard*/

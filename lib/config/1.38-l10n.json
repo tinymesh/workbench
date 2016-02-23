@@ -1,296 +1,300 @@
 {
-   "gpio":       {"name": "GPIOs",               "desc": null},
-   "net":        {"name": "Network",             "desc": null},
-   "security":   {"name": "Security/Encryption", "desc": null},
-   "device":     {"name": "Device",              "desc": null},
-   "cluster":    {"name": "Cluster Detection",   "desc": null},
-   "rf_jamming": {"name": "RF Tamper",           "desc": null},
-   "rf":         {"name": "RF Settings",         "desc": null},
-   "uart":       {"name": "Serial Port",         "desc": null},
-   "ima":        {"name": "IMA Message",         "desc": null},
+   "gpio":       {"name": "GPIOs",               "desc": ""},
+   "net":        {"name": "Network",             "desc": ""},
+   "security":   {"name": "Security/Encryption", "desc": ""},
+   "device":     {"name": "Device",              "desc": ""},
+   "cluster":    {"name": "Cluster Detection",   "desc": ""},
+   "rf_jamming": {"name": "RF Tamper",           "desc": ""},
+   "rf":         {"name": "RF Settings",         "desc": ""},
+   "uart":       {"name": "Serial Port",         "desc": ""},
+   "ima":        {"name": "IMA Message",         "desc": ""},
 
 	"gpio.input_debounce" : {
-		"name": "",
-		"description": "desc"
+		"name": "Input De-bounce",
+		"description": "De-bounce time in ms for all inputs"
 	},
 
 	"gpio_0.config"               : {
-		"name": "GPIO 0 - Config",
+		"name": "GPIO 0 Configuration",
 		"description": "Configure GPIO 0; Module pin 15"
 	},
 	"gpio_0.trigger"              : {
-		"name": "GPIO 0 - Trigger",
+		"name": "GPIO 0 Trigger",
 		"description": "Trigger an event on input level change (works only if `gpio_0.config := 'input'`)"
 	},
 	"gpio_0.analogue_sample_rate" : {
-		"name": "GPIO 0 - Analogue Sampling Interval",
+		"name": "GPIO 0 Analogue Sampling Interval",
 		"description": "Time between samplings in 100ms increments"
 	},
 	"gpio_0.analogue_low_trig"    : {
-		"name": "GPIO 0 - Analogue Low trig",
-		"description": ""
+		"name": "GPIO 0 Analogue Low trig",
+		"description": "Low trig level value"
 	},
 	"gpio_0.analogue_high_trig"   :  {
-		"name": "GPIO 0 - Analogue High trig",
-		"description": ""
+		"name": "GPIO 0 Analogue High trig",
+		"description": "High trig level value"
 	},
 
 	"gpio_1.config"               : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 1 Configuration",
+		"description": "Configure GPIO 1; Module pin 16"
 	},
 	"gpio_1.trigger"              :  {
-		"name": null,
-		"desc": null
+		"name": "GPIO 1 Trigger",
+		"description": "Trigger an event on input level change (works only if `gpio_1.config := 'input'`)"
 	},
 	"gpio_1.analogue_sample_rate" :  {
-		"name": null,
-		"desc": null
+		"name": "GPIO 1 Analogue Sampling Interval",
+		"description": "Time between samplings in 100ms increments"
 	},
 	"gpio_1.analogue_low_trig"    :  {
-		"name": null,
-		"desc": null
+		"name": "GPIO 1 Analogue Low trig",
+		"description": "Low trig level value"
 	},
 	"gpio_1.analogue_high_trig"   :  {
-		"name": null,
-		"desc": null
+		"name": "GPIO 1 Analogue High trig",
+		"description": "High trig level value"
 	},
 
 	"gpio_2.config"  : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 2 Configuration",
+		"description": "Configure GPIO 2; Module pin 20"
 	},
 	"gpio_2.trigger" : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 2 Trigger",
+		"description": "Trigger an event on input level change (works only if `gpio_2.config := 'input'`)"
 	},
 
 	"gpio_3.config"  : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 3 Configuration",
+		"description": "Configure GPIO 3; Module pin 22"
 	},
 	"gpio_3.trigger" : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 3 Trigger",
+		"description": "Trigger an event on input level change (works only if `gpio_3.config := 'input'`)"
 	},
 
 	"gpio_4.config"  : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 4 Configuration",
+		"description": "Configure GPIO 4; Module pin 26"
 	},
 	"gpio_4.trigger" : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 4 Trigger",
+		"description": "Trigger an event on input level change (works only if `gpio_4.config := 'input'`)"
 	},
 
 	"gpio_5.config"  : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 5 Configuration",
+		"description": "Configure GPIO 5; Module pin 25"
 	},
 	"gpio_5.trigger" : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 5 Trigger",
+		"description": "Trigger an event on input level change (works only if `gpio_5.config := 'input'`)"
 	},
 
 	"gpio_6.config"  : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 6 Configuration",
+		"description": "Configure GPIO 6; Module pin 24"
 	},
 	"gpio_6.trigger" : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 6 Trigger",
+		"description": "Trigger an event on input level change (works only if `gpio_6.config := 'input'`)"
 	},
 
 	"gpio_7.config"      : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 7 Configuration",
+		"description": "Configure GPIO 7; Module pin 23"
 	},
 	"gpio_7.trigger"     : {
-		"name": null,
-		"desc": null
+		"name": "GPIO 7 Trigger",
+		"description": "Trigger an event on input level change (works only if `gpio_7.config := 'input'`)"
 	},
 	"gpio_7.pwm_default" : {
-		"name": null,
-		"desc": null
+		"name": "PWM Default",
+		"description": ""
 	},
 
 	"net.hiam_time"             : {
-		"name": null,
-		"desc": null
+		"name": "HIAM Time",
+		"desc": "Time in seconds between network invites"
 	},
 	"net.max_packet_latency"    : {
-		"name": null,
-		"desc": null
+		"name": "Max Packet Latency",
+		"desc": "Maximum transport time in periods of 25s before a packet is eliminated, assumed undeliverable."
 	},
 	"net.max_jump_level"        : {
-		"name": null,
-		"desc": null
+		"name": "Max Jump Level",
+		"desc": "Highest allowable network jump level"
 	},
 	"net.rssi_cc_assesment"     : {
-		"name": null,
-		"desc": null
+		"name": "RSSI Clear Channel Assessment level",
+		"desc": "Max RSSI for Clear Channel during Listen Before Talk"
 	},
 	"net.connect_check_time"    : {
-		"name": null,
-		"desc": null
+		"name": "Connect Check Time",
+		"desc": "Time in seconds between network evaluation",
+		"comment": "Must be equal or larger than HIAM for router modules"
 	},
 	"net.max_jump_count"        : {
-		"name": null,
-		"desc": null
+		"name": "Max Jump Count",
+		"desc": "Maximum number of transportation jumps before a packet is eliminated, assumed undeliverable."
 	},
 	"net.command_retries"       : {
-		"name": null,
-		"desc": null
+		"name": "Command Retry",
+		"desc": "Retiries if no response to command transmit"
 	},
 	"net.tx_retry_limit"        : {
-		"name": null,
-		"desc": null
+		"name": "RF Transmit Retry Limit",
+		"desc": "Number of unsuccessful RF retries before a Router disconnects and attempts reconnecting to the network."
 	},
 	"net.connect_change_margin" : {
-		"name": null,
-		"desc": null
+		"name": "RSSI Change Margin",
+		"desc": "Minimum difference in RSSI to justify automatic change of network connection"
 	},
 	"net.command_accept_time"   : {
-		"name": null,
-		"desc": null
+		"name": "Accept New Command Time Out",
+		"desc": "Minimum time before new command accepted (10 ms)"
 	},
 	"net.rssi_threshold"        : {
-		"name": null,
-		"desc": null
+		"name": "RSSI Acceptance Level",
+		"desc": "Max RSSI for Clear Channel during Listen Before Talk"
 	},
 	"net.excellent_rssi"        : {
-		"name": null,
-		"desc": null
+		"name": "Excellent RSSI Level",
+		"desc": ""
 	},
 
 	"security.level" : {
-		"name": null,
-		"desc": null
+		"name": "Security Level",
+		"desc": "Select Encryption Mode"
 	},
 
 	"device.command_ack"         : {
-		"name": null,
-		"desc": null
+		"name": "HIACK Enable",
+		"desc": "Enable command acknowledge from destination node",
+		"comment": "Applicable in packet mode only. Broadcast commands will not generate HIACK"
 	},
 	"device.part"                : {
-		"name": null,
-		"desc": null
+		"name": "PART Number",
+		"desc": ""
 	},
 	"device.fw_revision"         : {
-		"name": null,
-		"desc": null
+		"name": "FW Revision",
+		"desc": ""
 	},
 	"device.hw_revision"         : {
-		"name": null,
-		"desc": null
+		"name": "HW Revision",
+		"desc": ""
 	},
 	"device.detect_busy_network" : {
-		"name": null,
-		"desc": null
+		"name": "Detect Network Busy",
+		"desc": "Gateway action when network activity detected after Reset."
 	},
 	"device.protocol_mode"       : {
-		"name": null,
-		"desc": null
+		"name": "Protocol Mode",
+		"desc": "Packet format selection"
 	},
 	"device.locator"             : {
-		"name": null,
-		"desc": null
+		"name": "Locator_Enable",
+		"desc": "Enable Locator function"
 	},
 	"device.type"                : {
-		"name": null,
-		"desc": null
+		"name": "Device Type",
+		"desc": "1 = Gateway\n2 = Router"
 	},
 	"device.sid"                 : {
-		"name": null,
-		"desc": null
+		"name": "System ID",
+		"desc": ""
 	},
 	"device.uid"                 : {
-		"name": null,
-		"desc": null
+		"name": "Unique ID",
+		"desc": ""
 	},
 
 	"cluster.rssi_threshold" : {
-		"name": null,
-		"desc": null
+		"name": "Clustered Node RSSI",
+		"desc": "RSSI level to form a node cluster"
 	},
 	"cluster.device_limit"   : {
-		"name": null,
-		"desc": null
+		"name": "Clustered Node Device Limit",
+		"desc": "Minimum number of densely located nodes to form a node cluster"
 	},
 
 	"rf_jamming.port"   : {
-		"name": null,
-		"desc": null
+		"name": "RF Tamper Alarm",
+		"desc": "GPIO port used for RF tamper alarm output"
 	},
 	"rf_jamming.detect" : {
-		"name": null,
-		"desc": null
+		"name": "RF Tamper Detect",
+		"desc": "RF Tamper Detection Time"
 	},
 
 	"rf.channel"        : {
-		"name": null,
-		"desc": null
+		"name": "RF CHANNEL",
+		"desc": "RF channel"
 	},
 	"rf.mac_rnd_mask_1" : {
-		"name": null,
-		"desc": null
+		"name": "MAC RndTime1Mask",
+		"desc": "Radio State 1 max delay mask. First TX"
 	},
 	"rf.mac_rnd_mask_2" : {
-		"name": null,
-		"desc": null
+		"name": "MAC RndTime2Mask",
+		"desc": "Radio State 1 max delay mask. Repeat TX"
 	},
 	"rf.power"          : {
-		"name": null,
-		"desc": null
+		"name": "RF POWER",
+		"desc": "RF output power"
 	},
 	"rf.data_rate"      : {
-		"name": null,
-		"desc": null
+		"name": "RF DATA RATE",
+		"desc": "RF data rate"
 	},
 
 	"uart.cts_hold_time" : {
-		"name": null,
-		"desc": null
+		"name": "CTS Hold Time",
+		"desc": "CTS hold time in 10ms increments",
+		"desc": "Active on gateway only"
 	},
 	"uart.timeout"       : {
-		"name": null,
-		"desc": null
+		"name": "Serial Port Time Out",
+		"desc": "Time out in periods of 1ms between character inputs on serial port, before a packet is transmitted in Transparent mode.",
+		"comment": "An additional 2ms is automatically added. Actual Timing for setting 20 is 22 ms"
 	},
 	"uart.stop_bits"     : {
-		"name": null,
-		"desc": null
+		"name": "UART Stop Bits",
+		"desc": "Number of stop bits"
 	},
 	"uart.bits"          : {
-		"name": null,
-		"desc": null
+		"name": "UART Bits",
+		"desc": "UART word size"
 	},
 	"uart.flow_control"  : {
-		"name": null,
-		"desc": null
+		"name": "UART Flow Control",
+		"desc": "Select UART handshake"
 	},
 	"uart.parity"        : {
-		"name": null,
-		"desc": null
+		"name": "UART Parity",
+		"desc": "Odd/Event parity"
 	},
 	"uart.buffer_margin" : {
-		"name": null,
-		"desc": null
+		"name": "Serial Buffer Full Margin",
+		"desc": "Number of bytes left in Serial Buffer when CTS goes false and/or Xoff transmitted"
 	},
 	"uart.baud_rate"     : {
-		"name": null,
-		"desc": null
+		"name": "UART Baud Rate",
+		"desc": "Baud Rate"
 	},
 
 	"ima.time"       : {
-		"name": null,
-		"desc": null
+		"name": "IMA Time",
+		"desc": "Time in minutes between automatic status messages"
 	},
 	"ima.on_connect" : {
-		"name": null,
-		"desc": null
+		"name": "IMA On Connect",
+		"desc": ""
 	},
-	"ima.time_base"  : {
-		"name": null,
-		"desc": null
+	"ima.time_base" : {
+		"name": "IMA Time base",
+		"desc": ""
 	}
 }

@@ -100,6 +100,6 @@
    "ima" : {
       "time"       : { "range" : [ 1, 255 ], "default": 255 },
       "on_connect" : { "enum" : [ 0, 1 ],    "default": 0},
-      "time_base"  : { "range" : [ 1, 255 ] }
+      "time_base"  : { "range" : [ 1, 255 ], "default": 6 }
    }
 }

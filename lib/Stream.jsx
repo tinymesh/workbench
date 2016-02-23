@@ -1,11 +1,13 @@
+import React from 'react'
 import {BASE_URL} from './Constants'
 import {AuthStore} from './Auth'
 
 import {EventEmitter} from 'events'
 
-export class Stream extends EventEmitter {
+export class StreamEmitter extends EventEmitter {
   constructor(spec, opts) {
     super()
+    console.log('stream/open', spec)
 
     let url = BASE_URL + "/stream?query=" + window.encodeURI(spec) + "&accept=*/*"
     let sig = AuthStore.signV1("GET", url, "")
@@ -15,8 +17,6 @@ export class Stream extends EventEmitter {
     this.setMaxListeners(0)
 
     this._sse = new EventSource(url)
-
-    this._sse.onerror = (ev) => this.emit("error", ev);
 
     this._registered = []
 
@@ -31,15 +31,12 @@ export class Stream extends EventEmitter {
       return
 
     this._sse.addEventListener(type, (ev) => {
-      try {
-        this.emit(type, JSON.parse(ev.data))
-      } catch(e) {
-        this.emit("error", e);
-      }
+      this.emit(type, JSON.parse(ev.data))
     })
   }
 
   close() {
+    console.log('closing')
     this._sse.close()
   }
 

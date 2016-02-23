@@ -12,7 +12,6 @@ import {Loading} from '../../../ui'
 import axios from 'axios'
 
 import {AuthStore} from '../../../Auth'
-import {Stream} from '../../../Stream.jsx'
 import {BASE_URL} from '../../../Constants.js'
 
 import _unset from 'lodash.unset'
@@ -47,7 +46,7 @@ class ConfigInputRange extends React.Component {
             min={spec.range[0]}
             max={spec.range[1]}
             className={className.join(' ')}
-            wrapperClassName="col-xs-9"
+            wrapperClassName="col-xs-8"
             labelClassName="col-xs-12"
             label={l10n[group + "." + k].name || (group + "." + k)}
             value={value.value}
@@ -58,21 +57,24 @@ class ConfigInputRange extends React.Component {
             disabled={spec.ro}
             {...props} />
 
-            {spec.ro || <Col xs={3}>
+            {spec.ro || <div>
+              <Col xs={2}>
                <Button
                   bsStyle="default"
                   disabled={!value.patched}
                   title={`Reset to stored value '${ value.original }'`}
                   onClick={(ev) => onChange([group, k], value.original)}
                   ><Glyphicon glyph="remove-sign" /></Button>
-               &nbsp;
+              </Col>
+              <Col xs={2}>
                <Button
                   bsStyle="default"
                   disabled={value.value == spec.default}
                   onClick={(ev) => onChange([group, k], spec.default )}
                   title={`Reset to default value '${ spec.default }'`}
                   ><Glyphicon glyph="exclamation-sign" /></Button>
-            </Col>}
+              </Col>
+            </div>}
       </div>)
    }
 }
@@ -95,10 +97,10 @@ class ConfigInputEnum extends React.Component {
             <Input
                type="select"
                className={spec.default === spec.value ? 'default' : 'non-default'}
-               wrapperClassName="col-xs-9"
+               wrapperClassName="col-xs-8"
                labelClassName="col-xs-12"
                label={l10n[group + "." + k].name || (group + "." + k)}
-               value={value}
+               value={value.value}
                placeholder={spec.default}
                onChange={changeHandler}
                help={helpText}
@@ -109,21 +111,24 @@ class ConfigInputEnum extends React.Component {
                {_.map(spec.enum, (val, idx) => <option key={idx} value={val}>{val}</option>)}
             </Input>
 
-            {spec.ro || <Col xs={3}>
+            {spec.ro || <div>
+              <Col xs={2}>
                <Button
                   bsStyle="default"
                   disabled={!value.patched}
                   title={`Reset to stored value '${ value.original }'`}
                   onClick={(ev) => onChange([group, k], value.original)}
                   ><Glyphicon glyph="remove-sign" /></Button>
-               &nbsp;
+              </Col>
+              <Col xs={2}>
                <Button
                   bsStyle="default"
                   disabled={value.value == spec.default}
                   onClick={(ev) => onChange([group, k], spec.default )}
                   title={`Reset to default value '${ spec.default }'`}
                   ><Glyphicon glyph="exclamation-sign" /></Button>
-            </Col>}
+              </Col>
+            </div>}
          </div>
       )
    }
@@ -137,7 +142,7 @@ class ConfigInputStatic extends React.Component {
       return (
          <div>
             <FormControls.Static
-               wrapperClassName="col-xs-9"
+               wrapperClassName="col-xs-8"
                labelClassName="col-xs-12"
                label={l10n[group + "." + k].name || (group + "." + k)}
                value={value.value}
@@ -169,32 +174,106 @@ export class Config extends React.Component {
       activeGroup: undefined,
       config: null,
 
-      patch: {},
+      getConfig: null,
+      getConfigError: null,
 
-      modalHidden: false,
-      configFetchedErr: null,
-      confirmDialog: false
+      patch: {},
     }
 
     this.handleChange = this.handleChange.bind(this)
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (this.props.params.nid !== nextProps.params.nid || this.props.params.key !== nextProps.params.key) {
+  componentWillReceiveProps(nextProps) {
+    let
+      {nid, key} = this.props.params,
+      nextNid = this.props.params.nid,
+      nextKey = this.props.params.key
+
+    if (nid !== nextNid || key !== nextKey) {
       if (this.state.stream)
         this.state.stream.close()
 
-      let {nid, key} = nextProps.params
-
-      this.setState({stream: this.stream(nid, key)})
+      this.setState({stream: this.findOrRequestConfig(nextNid, nextKey)})
     }
   }
 
   componentWillMount() {
     let {nid, key} = this.props.params
 
-    this.setState({stream: this.stream(nid, key)})
-   }
+    if (this.state.stream)
+      this.state.stream.close()
+
+    this.setState({stream: this.findOrRequestConfig(nid, key)})
+  }
+
+  findOrRequestConfig(nid, key) {
+    if (!nid)
+      throw("first agument `nid` cannot be undefined or null")
+
+    if (!key)
+      throw("second agument `key` cannot be undefined or null")
+
+    let q = 'proto/tm.detail == "config" or proto/tm.detail == "reset"'
+
+    let
+      QueryStream = require('../QueryStream.jsx').QueryStream,
+      res = new QueryStream({
+        'date.from': 'NOW//-24HOUR',
+        'continuous': true,
+        'query': q,
+        'uri': '/' + nid + '/' + key
+      })
+
+      res.on('error', function(err, req) { null })
+
+      res.on('complete', () => console.log('completed config req'))
+      res.on('data', (ev) => {
+         let proto
+         if (proto = ev['proto/tm'])
+            res.emit(proto.type + "/" + (proto.detail || proto.command), ev)
+      })
+
+      res.on('event/reset', (ev) => {
+        let setCfgDate = (this.state.setConfig || {}).datetime
+        if (setCfgDate && setCfgDate < ev.datetime) {
+          // let's assume that our patch was applied
+          this.setState( state => {
+            state.config['proto/tm'].config = _.merge(state.config['proto/tm'].config, state.patch)
+            state.patch = {}
+            return state
+          })
+
+          this.getConfig()
+        }
+
+        if (!this.state.config || ev.datetime < this.state.config.datetime)
+          return
+
+        if (this.state.config.conflict && ev.datetime < this.state.config.conflict.datetime)
+          return
+
+        this.setState((state) => {
+          state.config.conflict = ev
+          return state
+        })
+      })
+
+      res.on('event/config', (cfg) => {
+         if (this.state.timer) {
+            clearTimeout(this.state.timer)
+            this.setState({timer: null})
+         }
+
+         if (!this.state.config || cfg.datetime > this.state.config.datetime) {
+            if (this.state.config && (this.state.config.conflict && cfg.datetime < this.state.config.conflict.datetime))
+              cfg.conflict = this.state.config.conflict.datetime
+
+            this.setState({config: cfg})
+         }
+      })
+
+      return res
+  }
 
   componentWillUnmount() {
     this._mounted = false
@@ -203,46 +282,10 @@ export class Config extends React.Component {
       this.state.stream.close()
   }
 
-  stream(nid, dev, opts) {
-    let query = "message/" + nid + "/" + dev +" : :nil != proto/tm.config"
-
-    if (this.state.stream)
-      this.state.stream.close()
-
-    let stream = new Stream(query)
-
-    stream.on("message", (data) => this.handleMessage(data))
-  }
-
-   handleMessage(data) {
-      if (!data['proto/tm'].config)
-         return
-
-      this.setState({config: data['proto/tm'].config, configFetched: true})
-   }
-
-  fetchConfig(nid, key) {
-    let promise, url, payload, headers
-
-
-    url = BASE_URL + '/message/' + nid + '/' + key
-    payload = {
-       'proto/tm': {"type": "command", "command": "get_config"}
-    }
-
-    headers  = {
-       'Authorization': AuthStore.signV1('POST', url, JSON.stringify(payload)),
-       'Content-Type':  'text/json'
-    }
-
-    this.setState({config: undefined, configFetchedErr: null})
-    return axios.post(url, payload, {headers})
-                .catch((err) => this.setState({config: null, configFetchedErr: err}))
-  }
 
   handleChange(path, v) {
     this.setState(function(state) {
-      if (_.get(state, ['config'].concat(path)) === v) {
+      if (_.get(state, ['config', 'proto/tm', 'config'].concat(path)) === v) {
          return _unset(state, ['patch'].concat(path))
       }
 
@@ -253,7 +296,8 @@ export class Config extends React.Component {
   findValues(path) {
     let
       patchVal = _.get(this.state.patch, path),
-      val = _.get(this.state.config, path)
+      val = _.get(this.state.config, ['proto/tm', 'config'].concat(path))
+
 
     return {
       'value': patchVal === val || undefined === patchVal ? val : patchVal,
@@ -272,16 +316,37 @@ export class Config extends React.Component {
 		}
 
 	axios.post(url, payload, {headers})
-      .then(() => this.setState({confirmDialog: false}))
-      .catch(() => this.setState({confirmDialog: false}))
-}
+      .then( (resp)  => this.setState({confirmDialog: false, setConfig: resp.data}) )
+      .catch( (resp) => this.setState({confirmDialog: false, setConfig: resp.data}) )
+  }
+
+  getConfig() {
+    let
+      {nid, key} = this.props.params,
+      payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'get_config'}}),
+      url = BASE_URL + '/message/' + nid + '/' + key,
+      headers = {
+         'Authorization': AuthStore.signV1('POST', url, payload),
+         'Content-Type':  'application/json'
+      },
+      timer = null
+
+    axios.post(url, payload, {headers})
+      .then(  (resp) => {
+        timer = setTimeout(() => {
+          this.setState({getConfigError: "timeout"})
+        }, 5000)
+        this.setState({getConfig: resp.data, getConfigError: null, timer: timer})
+      })
+      .catch( (resp) => this.setState({getConfig: null,      getConfigError: resp.data, timer: timer}) )
+  }
 
   render() {
     let
-      config = require("../../../config/1.38.json"),
+      cfgdef = require("../../../config/1.38.json"),
       l10n = require("../../../config/1.38-l10n.json"),
-      keys = _.keys(config),
-      groups = _.reduce(config,
+      keys = _.keys(cfgdef),
+      groups = _.reduce(cfgdef,
                function (acc, v, k) {
                   if (k.match(/^gpio_/)) {
                      if (!acc["gpio"])
@@ -299,49 +364,24 @@ export class Config extends React.Component {
                },
                {})
 
-    let activeGroup = this.state.activeGroup ||_.keys(groups)[0]
+    let activeGroup = this.state.activeGroup || _.keys(groups)[0]
 
+    let {config, getConfigError, getConfig, stream} = this.state
 
     return (
-      <Loading loading={null == this.props.device}>
-         <div className="device-config">
-            <Modal
-               className="modal-wait"
-               show={!this.state.config || this.state.modalHidden}
-               onHide={() => this.props.history.push('/dashboard/device/' + this.props.params.nid + '/' + this.props.params.key)}>
-
-               <Modal.Header>
-                  <Modal.Title>
-                     <Glyphicon glyph="time">&nbsp;</Glyphicon>
-
-                     Fetch configuration
-                  </Modal.Title>
-               </Modal.Header>
-
-            <Modal.Body>
-               To configure your device we need to fetch the current
-               configuration.
-
-               {this.state.configFetchedErr && <div>
-                  <h4>An error occured:</h4>
-
-                  <hr />
-
-                  <pre>{JSON.stringify(this.state.configFetchedErr.data, null, 4)}</pre>
-               </div>}
-            </Modal.Body>
-
-            <Modal.Footer>
-                 <Button
-                     bsStyle="primary"
-                     disabled={(null !== this.state.config && !this.state.configFetchedErr)}
-                     onClick={() => this.fetchConfig(this.props.device.network, this.props.device.key)}>
-                {(undefined === this.state.config && !this.state.configFetchedErr) && <Spinner spinnerName="circle" />}
-
-                Fetch Configuration
-              </Button>
-            </Modal.Footer>
-            </Modal>
+      <Loading loading={null == this.props.device} style={{height: '100%'}}>
+         <div className="device-config modal-contain" style={{height: '100%'}}>
+            <FetchConfigModal
+               config={config}
+               getConfigError={getConfigError}
+               getConfig={getConfig}
+               container={this}
+               stream={stream}
+               fetchConfig={() => this.getConfig()}
+               autoFocus={false}
+               enforceFocus={false}
+               animation={false}
+               />
 
             <ConfirmConfigModal
                patch={this.state.patch}
@@ -371,7 +411,7 @@ export class Config extends React.Component {
 
                        <Col xs={12} className="white-bg">
                        {_.map(group[1], (spec, k) =>
-                        <Col className="config-item" xs={12} md={5} mdPull={1} mdOffset={1} lg={4}>
+                        <Col key={k} className="config-item" xs={12} md={4} lg={4}>
                            <ConfigInput
                               l10n={l10n}
                               key={idx + k}
@@ -392,6 +432,12 @@ export class Config extends React.Component {
                        onClick={() => this.setState({confirmDialog: true})}>
                          Save Configuration
                      </Button>
+
+                     <Button
+                       bsStyle="warning"
+                       onClick={() => this.getConfig()}>
+                         Reload Device Configuration 
+                     </Button>
                   </div>
                </Col>
             </div>}
@@ -399,6 +445,66 @@ export class Config extends React.Component {
       </Loading>
     )
   }
+}
+
+class FetchConfigModal extends React.Component {
+   render() {
+
+      let {config, getConfig, getConfigError, onHide, fetchConfig, show, ...rest} = this.props
+
+      onHide = onHide || () => null
+
+      return (
+         <Modal
+            className={getConfigError  ? "modal-error" : "modal-wait"}
+            onHide={onHide}
+            show={undefined !== show ? show : (!config || !!config.conflict)}
+            {...rest}>
+
+            <Modal.Header>
+               <Modal.Title>
+                  <Glyphicon glyph="time">&nbsp;</Glyphicon>
+
+                  No Configuration Available
+               </Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+               {!config && <p>
+                  We don't seem to have the configuration details for this
+                  device. To configure the device this configuration must
+                  be available.
+               </p>}
+
+               {(config && config.conflict) && <p>
+                  Some changes have been made to your configuration and
+                  you will have to refetch the latest configuration from your device.
+               </p>}
+
+
+               {!getConfigError && <p>
+                  Do you want to fetch it now?
+               </p>}
+
+               {getConfigError && <p>
+                  <b>An error occured:</b> <code>{JSON.stringify(getConfigError)}</code>
+               </p>}
+            </Modal.Body>
+
+            <Modal.Footer>
+                 <Button
+                     bsStyle="primary"
+                     disabled={!!getConfig && (!getConfigError && !config)}
+                     onClick={fetchConfig}>
+
+                {(getConfig && !config && !getConfigError) && <Spinner spinnerName="circle" />}
+
+                Fetch Configuration
+              </Button>
+            </Modal.Footer>
+         </Modal>
+      )
+   }
 }
 
 class ConfirmConfigModal extends React.Component {
