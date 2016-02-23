@@ -384,9 +384,12 @@ export class Config extends React.Component {
 
             <ConfirmConfigModal
                patch={this.state.patch}
+               config={config}
+               setConfig={this.state.setConfig}
                cont={() => this.sendConfig()}
                show={this.state.confirmDialog}
                onHide={() => this.setState({confirmDialog: false})}
+               l10n={l10n}
                />
 
             {config && <div>
@@ -508,7 +511,9 @@ class FetchConfigModal extends React.Component {
 
 class ConfirmConfigModal extends React.Component {
    render() {
-      let {patch, cont, show, onHide} = this.props
+      let {patch, cont, show, onHide, setConfig, config, l10n} = this.props
+
+      let resp = (config || {}).response
 
       return (
          <Modal
@@ -531,7 +536,7 @@ class ConfirmConfigModal extends React.Component {
                   {_(patch)
                     .map(
                      (items, group) => _.map(items,
-                        (v, k) => <li key={k}>{group}.{k} -> {v}</li>) )
+                        (v, k) => <li key={k}>Update <em>{l10n[group + '.' + k].name}</em> from <code>{config['proto/tm'].config[group][k]}</code> to <code>{v}</code></li>) )
                     .flatten()
                     .value()}
                </ul>
