@@ -45,8 +45,8 @@ export class Landing extends React.Component {
         let msg = "an unknown error occured"
 
         if (_.isError(resp)) {
-          console.log("caught error", err.message)
-          console.log(err.stack)
+          console.log("caught error", resp.message)
+          console.log(resp.stack)
           msg = err.message
         } else {
           msg = resp.data.error || JSON.stringify(resp.data)

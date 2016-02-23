@@ -3,25 +3,42 @@ import Router from 'react-router'
 import {Route, RouteHandler, IndexRoute} from 'react-router'
 
 import {About, User, Dashboard, Landing, NotFound} from './components'
-import {RequireAuth} from './ui'
+import {RequireAuth, Loading} from './ui'
 
 import {AuthStore, AuthService, AuthConstants} from './Auth'
 import AppDispatcher from './AppDispatcher'
+
+import {ErrorModal} from './ErrorModal.jsx'
 
 import './style/app.scss'
 
 import _ from 'lodash'
 
 let auth = localStorage.getItem('auth')
-if (auth)
-  AuthService.validate(JSON.parse(auth))
 
 
 let haveAuthentication = false // this is outside of flux dispatcher
 export default class App extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      error: null,
+      loading: !!auth
+    }
+
+    window.onerror = this.handleThrownErrors.bind(this)
+    this.clearError = this.clearError.bind(this)
+  }
+
   componentDidMount() {
     var body = document.getElementsByTagName('body')[0]
     body.className = _.without(body.className.split(' '), 'blockloader-init').join(' ')
+
+    if (auth)
+      AuthService.validate(JSON.parse(auth))
+                 .then(() => this.setState({loading: false}))
+                 .catch(() => this.setState({loading: false}))
 
     // refresh on user:(login,logout)
     AppDispatcher.register( (action) => {
@@ -40,11 +57,37 @@ export default class App extends React.Component {
     })
   }
 
+  handleThrownErrors(msg, file, line, col, err) {
+    col = col || (window.event && window.event.errorCharacter);
+    let
+      stack = err ? err.stack : null,
+      data = {
+         message:    msg,
+         file:       file,
+         line:       line,
+         column:     col,
+         stack:      stack
+     }
+
+    this.setState({error: data})
+
+    return false
+  }
+
+  clearError() {
+    this.setState({error: null})
+  }
+
   render() {
+    let {error, loading} = this.state
+
     return (
-      <div>
-        {this.props.children}
-      </div>
+      <Loading loading={loading} text="Waiting for authentication reply from server">
+        <div>
+          <ErrorModal onHide={this.clearError} error={error} />
+          {this.props.children}
+        </div>
+      </Loading>
     )
   }
 }
