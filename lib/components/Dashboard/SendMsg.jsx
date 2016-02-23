@@ -472,8 +472,6 @@ class SerialMsg extends React.Component {
          this.setState({input: ev.target.value, parsed: ret})
       else
          this.setState({input: ev.target.value, parsed: ret.toString()})
-
-         console.log({input: ev.target.value, parsed: ret})
    }
 
    render() {

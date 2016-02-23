@@ -48,7 +48,6 @@ export class Account extends React.Component {
       this.nameValidationState().length !== 0 ||
       this.phoneValidationState().length !== 0) {
 
-      console.log("failed to validate")
       return
     }
 

@@ -226,7 +226,6 @@ export class Config extends React.Component {
 
       res.on('error', function(err, req) { null })
 
-      res.on('complete', () => console.log('completed config req'))
       res.on('data', (ev) => {
          let proto
          if (proto = ev['proto/tm'])
