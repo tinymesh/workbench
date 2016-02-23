@@ -237,12 +237,17 @@ export class Config extends React.Component {
         if (setCfgDate && setCfgDate < ev.datetime) {
           // let's assume that our patch was applied
           this.setState( state => {
-            state.config['proto/tm'].config = _.merge(state.config['proto/tm'].config, state.patch)
             state.patch = {}
+            state.confirmDialog = false
+            state.config.conflict = null
+            state.config['proto/tm'].config = _.merge(state.config['proto/tm'].config, state.patch)
+            state.config.response = ev
+
             return state
           })
 
           this.getConfig()
+          return
         }
 
         if (!this.state.config || ev.datetime < this.state.config.datetime)
@@ -253,6 +258,7 @@ export class Config extends React.Component {
 
         this.setState((state) => {
           state.config.conflict = ev
+          state.config.response = null
           return state
         })
       })
@@ -266,6 +272,9 @@ export class Config extends React.Component {
          if (!this.state.config || cfg.datetime > this.state.config.datetime) {
             if (this.state.config && (this.state.config.conflict && cfg.datetime < this.state.config.conflict.datetime))
               cfg.conflict = this.state.config.conflict.datetime
+
+            if (this.state.config && this.state.config.response)
+              cfg.response = this.state.config.response.datetime
 
             this.setState({config: cfg})
          }
@@ -314,9 +323,15 @@ export class Config extends React.Component {
 			'Content-Type':  'application/json'
 		}
 
+   this.setState(state => {
+      state.config.response = null
+      state.config.conflict = null
+      return state
+   })
+
 	axios.post(url, payload, {headers})
-      .then( (resp)  => this.setState({confirmDialog: false, setConfig: resp.data}) )
-      .catch( (resp) => this.setState({confirmDialog: false, setConfig: resp.data}) )
+      .then( (resp)  => this.setState({setConfig: resp.data}) )
+      .catch( (resp) => this.setState({setConfig: resp.data}) )
   }
 
   getConfig() {
@@ -335,9 +350,14 @@ export class Config extends React.Component {
         timer = setTimeout(() => {
           this.setState({getConfigError: "timeout"})
         }, 5000)
-        this.setState({getConfig: resp.data, getConfigError: null, timer: timer})
+
+        this.setState({
+            getConfig: resp.data,
+            getConfigError: null,
+            timer: timer
+         })
       })
-      .catch( (resp) => this.setState({getConfig: null,      getConfigError: resp.data, timer: timer}) )
+      .catch( (resp) => this.setState({getConfig: null, getConfigError: resp.data, timer: timer}) )
   }
 
   render() {
@@ -428,19 +448,22 @@ export class Config extends React.Component {
                      </Row>
                   )}
 
-                  <div>
-                     <Button
-                       bsStyle="primary"
-                       onClick={() => this.setState({confirmDialog: true})}>
-                         Save Configuration
-                     </Button>
+                  <Row>
+                     <Col xs={12} style={{marginTop: '1em', borderTop: '1px solid #e7e7e7', paddingTop: '1em', paddingBottom: '1em'}}>
+                        <Button
+                          style={{marginRight: '15px'}}
+                          bsStyle="primary"
+                          onClick={() => this.setState({confirmDialog: true})}>
+                            Save Configuration
+                        </Button>
 
-                     <Button
-                       bsStyle="warning"
-                       onClick={() => this.getConfig()}>
-                         Reload Device Configuration 
-                     </Button>
-                  </div>
+                        <Button
+                          bsStyle="warning"
+                          onClick={() => this.setState({config: null}, this.getConfig)}>
+                            Reload Device Configuration
+                        </Button>
+                     </Col>
+                  </Row>
                </Col>
             </div>}
          </div>
@@ -543,8 +566,15 @@ class ConfirmConfigModal extends React.Component {
             </Modal.Body>
 
             <Modal.Footer>
-               <Button bsStyle="primary" onClick={cont}>
-                  Save Configuration
+               <Button
+                  bsStyle="primary"
+                  disabled={setConfig && (!resp && (!!config && !config.conflict))}
+                  onClick={cont}>
+                {(setConfig && !resp) &&
+                  <span><Spinner spinnerName="circle" /> Saving configuration ...</span>}
+
+                {(!setConfig || (setConfig && resp)) &&
+                  <span>Save configuration</span>}
                </Button>
             </Modal.Footer>
          </Modal>
