@@ -127,14 +127,15 @@ export {parseData, asAscii, asBin, asHex, pairs, parseAs}
 let shipData = function(buf, params) {
    let
       payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'serial', 'data': btoa(buf.toString())}}),
-		url = BASE_URL + '/message/' + params.nid + '/' + params.key,
-		headers = {
-			'Authorization': AuthStore.signV1('POST', url, payload),
-			'Content-Type':  'application/json'
-		}
+      url = BASE_URL + '/message/' + params.nid + '/' + params.key,
+      headers = {
+         'Authorization': AuthStore.signV1('POST', url, payload),
+         'Content-Type':  'application/json'
+      }
 
-	axios.post(url, payload, {headers})
-	return buf
+   axios.post(url, payload, {headers})
+
+   return buf
 }
 
 
@@ -179,15 +180,30 @@ let
    }
 
 let formatter = function(line) {
-   if (line.error) {
+   let encode = buf => (Buffer.isBuffer(buf) ? buf.toString() : buf)
+                        .replace(/\n/, '\\n')
+                        .replace(/\r/, '\\r')
+
+   if (line && line.error) {
       let buf = "! Error: " + line.error
       if (line.pos) {
         buf += " (char: " + line.pos + ")"
       }
 
-      return buf
-   } else if(line['proto/tm'] && line['proto/tm'].detail === 'serial') {
-     return line['proto/tm'].data
+      return <span className="error"><br />{buf}</span>
+   } else if(line && line['proto/tm']) {
+     if (line['proto/tm'].detail === 'serial') {
+        let block = line['proto/tm'].block
+        if (block === 0) {
+           return <span className="upstream block-{block}"><br />&lt;&nbsp; {encode(line['proto/tm'].data)}</span>
+        } else {
+           return <span className="upstream block-{block}">{encode(line['proto/tm'].data)}</span>
+        }
+     } else if (line['proto/tm'].command === 'serial') {
+        return <span className="downstream"><br />&gt;&nbsp;{encode(line['proto/tm'].data)}</span>
+     } else {
+       return;
+     }
    }
 
    return Buffer.isBuffer(line) ? line.toString() : line
@@ -210,10 +226,14 @@ export class SerialConsole extends React.Component {
   }
 
   runQuery(nid, key) {
+    if (this.state.stream)
+      throw("A query is already running. Make sure it's closed")
+
     let res = new QueryStream({
-       'date.from':  'NOW',
+       'data.encoding': 'base64',
+       'date.from':  'NOW//-24HOUR',
        'continuous': "true",
-       'query':      "",
+       'query':      '',
        'uri':        '/' + nid + '/' + key,
     })
 
@@ -226,10 +246,13 @@ export class SerialConsole extends React.Component {
 
     res.on('data',      (data) => {
        // skip initial return
-       if ('ping' === data)
+       if ('ping' === data || !data['proto/tm'])
           return
 
-       this.setState({newLines: [data]})
+       if (data['proto/tm'].detail == 'serial' || data['proto/tm'].command == 'serial') {
+         data['proto/tm'].data = new Buffer(data['proto/tm'].data, 'base64')
+         this.setState({newLines: [data]})
+       }
     })
 
     this.setState({stream: res})
@@ -241,7 +264,9 @@ export class SerialConsole extends React.Component {
 
   componentWillUnmount() {
     this._mounted = true
-    this.state.stream
+
+    if (this.state.stream)
+      this.state.stream.close()
   }
 
   render() {

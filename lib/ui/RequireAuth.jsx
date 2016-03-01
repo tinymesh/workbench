@@ -44,14 +44,16 @@ const shared = {
 
     let info = (<Box.Info>
                   <p>
-								    You are using a beta product, it may not work as
-								    expected at all times but by giving us feedback we
-								    improve it over time!
+                    You are using a beta product, it may not work as
+                    expected at all times but by giving us feedback we
+                    improve it over time!
                   </p>
 
-								  <p>
-                    <em>By logging in to the <strong>Tinymesh Cloud™</strong> you agree to
-								    our terms of service.</em>
+                  <p>
+                    <em>
+                        By logging in to the <strong>Tinymesh Cloud™</strong> you agree to
+                        our terms of service.
+                    </em>
                   </p>
                 </Box.Info>)
     return (

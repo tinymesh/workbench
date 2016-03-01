@@ -20,7 +20,7 @@ export class QueryStream extends EventEmitter {
     url += '&continuous=' + (opts['continuous'] || "false")
 
     if (opts['date.from'])
-    	url += '&date.from=' + (opts['date.from'] || "")
+      url += '&date.from=' + (opts['date.from'] || "")
 
     if (opts['date.to'])
       url += '&date.to=' + (opts['date.to'] || "")
@@ -36,15 +36,21 @@ export class QueryStream extends EventEmitter {
 
     }.bind(this)
 
+    let headers = {
+      'Authorization': AuthStore.signV1("GET", url, "")
+    }
+
+    let enc
+    if (enc = opts['data-encoding'] || opts['data.encoding'] || opts['x-data-encoding'])
+      headers['X-Data-Encoding'] = enc
+
     this._req = jsonpipe.flow(url, {
       'success': (data) => this.emit('data', data),
       'error': handleReqErr,
       'complete': (status) => this.emit('complete', status),
       'method': 'GET',
       'withCredentials': false,
-      'headers': {
-         'Authorization': AuthStore.signV1("GET", url, "")
-      }
+      'headers': headers
     })
 
     this._req.onabort = () => this.emit('abort')

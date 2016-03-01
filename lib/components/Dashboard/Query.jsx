@@ -246,11 +246,11 @@ export class Query extends React.Component {
                <div className="pick-cols">
                   <div className="form-group">
                      <label>Pick columns</label>
-               	   <Autocomplete
-						   	placeholder="Add column"
-						   	store={autocompleteOptions}
-						   	filter={(option) => -1 === cols.lastIndexOf(option)}
-						   	onSelect={(ev, option) => this.addCol(option)} />
+                     <Autocomplete
+                        placeholder="Add column"
+                        store={autocompleteOptions}
+                        filter={(option) => -1 === cols.lastIndexOf(option)}
+                        onSelect={(ev, option) => this.addCol(option)} />
                   </div>
                </div>
 

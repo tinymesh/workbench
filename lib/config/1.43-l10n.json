@@ -9,15 +9,7 @@
    "gpio_6":     {"name": "GPIO 6",              "desc": ""},
    "gpio_7":     {"name": "GPIO 7",              "desc": ""},
    "net":        {"name": "Network",             "desc": ""},
-   "security":   {
-      "name": "Security/Encryption",
-      "desc": "",
-      "enum": {
-         "0": "Off",
-         "1": "On",
-         "2": "Compatible"
-      }
-   },
+   "security":   {"name": "Security/Encryption", "desc": "" },
    "device":     {"name": "Device",              "desc": ""},
    "cluster":    {"name": "Cluster Detection",   "desc": ""},
    "rf_jamming": {"name": "RF Tamper",           "desc": ""},
@@ -193,7 +185,12 @@
 
    "security.level" : {
       "name": "Security Level",
-      "desc": "Select Encryption Mode"
+      "desc": "Select Encryption Mode",
+    "enum": {
+      "0": "Off",
+      "1": "On",
+      "2": "Compatible"
+   }
    },
 
    "device.command_ack"         : {
@@ -215,11 +212,20 @@
    },
    "device.detect_busy_network" : {
       "name": "Detect Network Busy",
-      "desc": "Gateway action when network activity detected after Reset."
+      "desc": "Gateway action when network activity detected after Reset.",
+    "enum": {
+      "0": "Ignore",
+      "1": "Halt+Warn",
+      "2": "Warn"
+    }
    },
    "device.protocol_mode"       : {
       "name": "Protocol Mode",
-      "desc": "Packet format selection"
+      "desc": "Packet format selection",
+    "enum": {
+      "0": "Packet Mode",
+      "1": "Transparent Mode"
+    }
    },
    "device.locator"             : {
       "name": "Locator_Enable",
@@ -227,7 +233,12 @@
    },
    "device.type"                : {
       "name": "Device Type",
-      "desc": "1 = Gateway\n2 = Router"
+      "desc": "1 = Gateway\n2 = Router",
+    "enum": {
+      "1": "Gateway",
+      "2": "Router",
+      "3": "End-Device"
+    }
    },
    "device.sid"                 : {
       "name": "System ID",
@@ -319,7 +330,20 @@
    },
    "uart.baud_rate"     : {
       "name": "UART Baud Rate",
-      "desc": "Baud Rate"
+      "desc": "Baud Rate",
+    "enum": {
+       "1":   "2 400 b/s",
+       "2":   "4 800 b/s",
+       "3":   "9 600 b/s",
+       "4":  "14 400 b/s",
+       "5":  "19 200 b/s",
+       "6":  "28 800 b/s",
+       "7":  "38 400 b/s",
+       "8":  "56 700 b/s",
+       "9":  "76 800 b/s",
+      "10": "115 200 b/s",
+      "11": "230 400 b/s"
+    }
    },
 
    "ima.time"       : {
@@ -335,3 +359,4 @@
       "desc": ""
    }
 }
+

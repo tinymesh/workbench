@@ -84,13 +84,22 @@ class ConfigInputEnum extends React.Component {
       let {group, k, value, spec, l10n, onChange, ...props} = this.props
       let changeHandler = (ev) => onChange([group, k], parseInt(ev.target.value))
 
-      let helpText, bsStyle
-      if (-1 === spec.enum.lastIndexOf(value.value)) {
+      let
+        helpText,
+        bsStyle,
+        values = _.isArray(spec.enum) ? spec.enum : _.keys(spec.enum)
+
+      if (_.every(values, (v) => v != value.value)) {
+        if (values.length > 4)
+          values = values.slice(0,3).concat(['...'])
+
         bsStyle = 'error'
-        helpText = `value should be one of: ${spec.enum.join(", ")}`
+        helpText = `value should be one of: ${values.join(', ')}`
       } else if (value.patched) {
         bsStyle = 'success'
       }
+
+      let l10nmap = l10n[group + '.' + k]
 
       return (
          <div>
@@ -99,7 +108,7 @@ class ConfigInputEnum extends React.Component {
                className={spec.default === spec.value ? 'default' : 'non-default'}
                wrapperClassName="col-xs-8"
                labelClassName="col-xs-12"
-               label={l10n[group + "." + k].name || (group + "." + k)}
+               label={l10nmap.name || (group + "." + k)}
                value={value.value}
                placeholder={spec.default}
                onChange={changeHandler}
@@ -108,7 +117,15 @@ class ConfigInputEnum extends React.Component {
                disabled={spec.ro}
                {...props}>
 
-               {_.map(spec.enum, (val, idx) => <option key={idx} value={val}>{val}</option>)}
+               {_.map(spec.enum, (val, idx) => {
+                if (spec['l10n-pre'])
+                  return <option key={idx} value={_.isNumber(val) ? val : idx}>{l10n[spec['l10n-pre'] + val] || val}</option>
+
+                if (l10nmap.enum)
+                  return <option key={idx} value={_.isNumber(val) ? val : idx}>{l10nmap.enum[val] || val}</option>
+
+                return <option key={idx} value={_.isNumber(val) ? val : idx}>{val}</option>
+                })}
             </Input>
 
             {spec.ro || <div>
@@ -317,11 +334,11 @@ export class Config extends React.Component {
   sendConfig() {
    let
       payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'set_config', 'config': this.state.patch}}),
-		url = BASE_URL + '/message/' + this.props.params.nid + '/' + this.props.params.key,
-		headers = {
-			'Authorization': AuthStore.signV1('POST', url, payload),
-			'Content-Type':  'application/json'
-		}
+      url = BASE_URL + '/message/' + this.props.params.nid + '/' + this.props.params.key,
+      headers = {
+         'Authorization': AuthStore.signV1('POST', url, payload),
+         'Content-Type':  'application/json'
+      }
 
    this.setState(state => {
       state.config.response = null
@@ -329,7 +346,7 @@ export class Config extends React.Component {
       return state
    })
 
-	axios.post(url, payload, {headers})
+   axios.post(url, payload, {headers})
       .then( (resp)  => this.setState({setConfig: resp.data}) )
       .catch( (resp) => this.setState({setConfig: resp.data}) )
   }
@@ -360,10 +377,59 @@ export class Config extends React.Component {
       .catch( (resp) => this.setState({getConfig: null, getConfigError: resp.data, timer: timer}) )
   }
 
+  config(fwrev, partnum) {
+   if (!fwrev || !partnum)
+      return  [{}, {}]
+
+   let map = {
+      'RC1140-TM':   'RC114x-TM',
+      'RC1141-TM':   'RC114x-TM',
+      'RC1170-TM':   'RC117x-TM',
+      'RC1171-TM':   'RC117x-TM',
+      'RC1180-TM':   'RC118x-TM',
+      'RC1181-TM':   'RC118x-TM',
+      'RC1190-TM':   'RC119x-TM',
+      'RC1191-TM':   'RC119x-TM',
+      'RC1171HP-TM': 'RC117xHP-TM',
+      'RC1181HP-TM': 'RC118xHP-TM',
+      'RC1191HP-TM': 'RC119xHP-TM',
+      'RC2500-TM':   'RC2500-TM',
+      'RC2500HP-TM': 'RC2500HP-TM',
+      'RC1701HP-TM': 'RC1701HP-TM',
+      'RC1740-TM':   'RC174x-TM',
+      'RC1740HP-TM': 'RC174xHP-TM',
+      'RC1760HP-TM': 'RC176xHP-TM',
+      'RC1780HP-TM': 'RC178xHP-TM'
+   }
+
+  try {
+     let
+       partdef = require('../../../config/parts/' + (map[partnum] || partnum) + '.json'),
+       cfgdef  = require('../../../config/' + fwrev + '.json'),
+       l10n    = require('../../../config/' + fwrev + '-l10n.json')
+
+       if (!partdef)
+         throw("Could not find part number : " + partnum + ", please contact support")
+
+       if (!cfgdef)
+         throw("Could not find configuration definition for : " + fwrev + ", please contact support")
+
+       if (!l10n)
+         throw("Missing localization for : " + fwrev + ", please contact support")
+
+       let cfg = _.merge(cfgdef, partdef)
+
+       return [cfg, l10n, null]
+    } catch(e) {
+      return [null, null, e.message]
+    }
+  }
+
   render() {
     let
-      cfgdef = require("../../../config/1.38.json"),
-      l10n = require("../../../config/1.38-l10n.json"),
+      fwrev = ((this.props.device || {})['proto/tm'] || {}).firmware,
+      partnum = ((this.props.device || {})['proto/tm'] || {}).part,
+      [cfgdef, l10n, err] = this.config(fwrev, partnum),
       keys = _.keys(cfgdef),
       groups = _.reduce(cfgdef,
                function (acc, v, k) {
@@ -402,6 +468,18 @@ export class Config extends React.Component {
                animation={false}
                />
 
+            <MissingCfgDefModal
+              fwrev={fwrev}
+              partnum={partnum}
+              error={err}
+              show={null !== err}
+              container={this}
+              animation={false}
+              autoFocus={false}
+              enforceFocus={false}
+              resource={`/device/${this.props.params.nid}/${this.props.params.key}`}
+              />
+
             <ConfirmConfigModal
                patch={this.state.patch}
                config={config}
@@ -428,7 +506,7 @@ export class Config extends React.Component {
                   {_.map(groups[activeGroup], (group, idx) =>
                      <Row className="groups" key={idx}>
                        <Col xs={12} className="page-header">
-                          <h4>Group: {group[0]}</h4>
+                          <h4>{l10n[group[0]].name || "Group: {group[0]}"}</h4>
                        </Col>
 
                        <Col xs={12} className="white-bg">
@@ -581,3 +659,38 @@ class ConfirmConfigModal extends React.Component {
       )
    }
 }
+
+class MissingCfgDefModal extends React.Component {
+   render() {
+      let {onHide, error, fwrev, partnum, resource, ...rest} = this.props
+
+      onHide = onHide || () => null
+
+      return (
+         <Modal
+            className="modal-error"
+            onHide={onHide}
+            {...rest}>
+
+            <Modal.Header>
+               <Modal.Title>
+                  <Glyphicon glyph="warning-sign">&nbsp;</Glyphicon>
+
+                  <b>Error:</b> failed to fetch configuration definition
+               </Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <p>
+                There was an error fetching the configuration for <code>`{partnum}@{fwrev}`</code>.
+                Please contact support <em>(<code>support@tiny-mesh.com</code>)</em> specifying this resource <em><code>({resource})</code></em>
+                to resolve this issue.
+              </p>
+
+              <code>{JSON.stringify(error)}</code>
+            </Modal.Body>
+         </Modal>
+      )
+   }
+}
+

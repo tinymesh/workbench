@@ -123,13 +123,13 @@ let sendData = function(command, payload, resource) {
 
    let
       buf = JSON.stringify({'proto/tm': payload}),
-		url = BASE_URL + resource,
-		headers = {
-			'Authorization': AuthStore.signV1('POST', url, buf),
-			'Content-Type':  'application/json'
-		}
+      url = BASE_URL + resource,
+      headers = {
+         'Authorization': AuthStore.signV1('POST', url, buf),
+         'Content-Type':  'application/json'
+      }
 
-	return axios.post(url, buf, {headers})
+   return axios.post(url, buf, {headers})
 }
 
 

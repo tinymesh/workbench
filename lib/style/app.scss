@@ -493,6 +493,10 @@ body.full-height #react > div {
     border: none;
     color: inherit;
   }
+
+   .upstream { color: blue; }
+   .downstream { color: green; }
+   .error { color: red; }
 }
 
 .btn .spinner {

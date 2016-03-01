@@ -36,7 +36,7 @@ export class StreamEmitter extends EventEmitter {
   }
 
   close() {
-    console.log('closing')
+    console.log('stream/closing')
     this._sse.close()
   }
 

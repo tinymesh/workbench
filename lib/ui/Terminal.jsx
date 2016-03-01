@@ -35,13 +35,22 @@ export class Terminal extends React.Component {
        return
      }
 
-     let res = this.props.handle ? this.props.handle(input) : input
+     let encode = buf => (Buffer.isBuffer(buf) ? buf.toString() : buf)
+
+     let
+       res = this.props.handle ? this.props.handle(input) : input,
+       elem = [
+         <span className="input"><br />&gt;&nbsp;{input}</span>,
+         res && res.error ? res : null
+       ]
+
+     //"> " + input, res]),
 
      this.setState({
        input: res.error ? input : "",
        shadowInput: undefined !== res.pos ?  (Array(res.pos).join(' ') + "^") : "",
        history: this.state.history.concat([input]),
-       body:    this.state.body.concat(["> " + input, res]),
+       body:    this.state.body.concat(elem),
        pointer: -1
      })
    }
@@ -93,20 +102,14 @@ export class Terminal extends React.Component {
         return oldStateLink(value)
       }.bind(this)
 
-      let output = _.flatten(
-        _.reduce(this.state.body, function(acc, line) {
+      let output = _.map(this.state.body, function(line) {
           let res = formatter(line)
 
           if (null == res)
-            return acc
+            return null
 
-          if (_.isString(res)) {
-            return acc.concat([res.split("\n")])
-          } else {
-            console.log('WARN: formatter did not return a string line', res)
-            return acc.concat([res.toString().split("\n")])
-          }
-        }, []))
+          return res
+        })
 
       if (this.props.height) {
         let padding = Array(Math.max(0, this.props.height - output.length))
@@ -116,7 +119,7 @@ export class Terminal extends React.Component {
       return (
          <div className="terminal">
             <pre>
-               {output.join("\r\n")}
+               {output}
             </pre>
             <div className="input-line line" ref="inputLine">
             <div className="prompt">&gt;<br />&nbsp;</div>
