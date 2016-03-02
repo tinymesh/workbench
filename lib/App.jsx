@@ -18,6 +18,7 @@ let auth = localStorage.getItem('auth')
 
 
 let haveAuthentication = false // this is outside of flux dispatcher
+
 export default class App extends React.Component {
   constructor(props) {
     super(props)
@@ -91,7 +92,13 @@ export default class App extends React.Component {
     )
   }
 }
-
+//
+//      <Route path="organizations"   component={ NotFound }  glyph="user"      linkText="Organizations" />
+//      <Route path="applications"    component={ NotFound }  glyph="book"      linkText="Applications" />
+//      <Route path="operations"      component={ NotFound }  glyph="scale"     linkText="Operations" />
+//      <Route path="getting-started" component={ NotFound }  glyph="flash"     linkText="Getting Started" />
+//      <Route path="help"            component={ NotFound }  glyph="education" linkText="Help & Support" />
+//
 React.render((
   <Router>
     <Route path="/" component={ App }>
@@ -105,12 +112,6 @@ React.render((
         glyph="home"
         linkText="Dashboard" />
 
-      <Route path="organizations"   component={ NotFound }  glyph="user"      linkText="Organizations" />
-      <Route path="applications"    component={ NotFound }  glyph="book"      linkText="Applications" />
-      <Route path="operations"      component={ NotFound }  glyph="scale"     linkText="Operations" />
-      <Route path="getting-started" component={ NotFound }  glyph="flash"     linkText="Getting Started" />
-      <Route path="help"            component={ NotFound }  glyph="education" linkText="Help & Support" />
-
       <Route
         path="user"
         component={ RequireAuth(User) }
@@ -122,7 +123,7 @@ React.render((
 
       <Route path="about" component={ About } />
 
-      <Route path="/*" component={ NotFound } />
+      <Route path="*" component={ NotFound } />
     </Route>
   </Router>
   ), document.getElementById("react") )

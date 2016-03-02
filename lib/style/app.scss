@@ -13,6 +13,8 @@ $navigation-highlight-color:  #a5b5c3;
 
 $highlight-color: #33a3cd;
 
+$nav-height: 60px;
+
 //#31475A; // dark blue
 //#516d76; // lighter-greyish blue/green
 //#a5b5c3; // light grey / white
@@ -170,19 +172,14 @@ body.full-height #react > div {
 
 .sidebar {
 	position: relative;
-	background: $sidebar-bg;
+   background: $sidebar-bg;
+
 	color: $sidebar-color;
 	height: 100%;
-	border-right: 1px solid #111;
-	box-shadow: inset -10px 0px 20px -10px #1a1a1a;
+	//border-right: 1px solid #eee;
+	//box-shadow: inset -10px 0px 20px -10px #1a1a1a;
 	padding: 0px;
-
-	/** large screens gets obnoxiously large collapsed sidebars **/
-	&.collapsed {
-		@media (min-width: 1200px) {
-			width: 4%
-		}
-	}
+   margin-top: $nav-height;
 
 	h4 {
 		margin: 5rem 10px 1rem;
@@ -207,50 +204,91 @@ body.full-height #react > div {
 			font-weight: bold;
 		}
 	}
-
-	.expand-btn {
-		display: inline-block;
-		height: 100%;
-		width: 100%;
-		text-align: center;
-		font-size: 2.5rem;
-		color: #91959B;
-
-		& > .padding {
-			height: 49.5%;
-			display: block;
-		}
-
-		&:hover {
-			background: #2b3540;
-		}
-	}
 }
 
-.container > .main, .container-fluid > .main {
-  padding-left: 0px;
-  padding-right: 0px;
-
-  .row {
+.container > .row, .container-fluid > .row {
     margin-left: inherit;
     margin-right: inherit;
-  }
+}
 
-	/** large screens gets obnoxiously large collapsed sidebars **/
-	&.expand {
-		@media (min-width: 1200px) {
-			width: 96%;
-		}
-	}
+.collapsed .container-fluid {
+   /** large screens gets obnoxiously large collapsed sidebars **/
+   .sidebar {
+      @media (min-width: 1200px) { width: 4%; }
+   }
+   .main{
+      @media (min-width: 1200px) { width: 96%; }
+   }
+}
+
+.expanded, .collapsed {
+   .container-fluid {
+      .sidebar {
+         margin-top: 0;
+         position: relative;
+
+         a.expand {
+            color: #dddddd;
+            font-size: 2em;
+            display: block;
+            height: 100%;
+            text-align: center;
+            cursor: pointer
+         }
+
+         a.expand:hover {
+            color: #777;
+         }
+
+         a.expand .glyphicon {
+            top: 50%;
+            margin-top: -14px;
+            width: 100%;
+            left: 0;
+         }
+      }
+   }
+}
+
+.collapsed .container-fluid {
+   .sidebar {
+      padding: 0;
+
+      a.expand { padding: 15px; }
+   }
+}
+
+.expanded .container-fluid {
+   .sidebar {
+      .nav a { color: #999; }
+
+      a.expand {
+         position: absolute;
+         top: 0;
+         right: 0;
+         width: 38px;
+         padding-right:38px;
+         padding-left:19px;
+      }
+
+      a.expand:hover {
+         //border-left: 1px solid #eee;
+      }
+   }
+}
+
+
+
+.nav-container, .nav-branding {
+	background: $navigation-bg;
+	border-bottom: 1px solid $navigation-border;
+	height: $nav-height;
 }
 
 .navigation {
 	list-style: none;
 	padding: 0;
 	margin: 0;
-	background: $navigation-bg;
-	border-bottom: 1px solid $navigation-border;
-	height: 60px;
 
 	&.bare {
 		background: inherit;
@@ -297,6 +335,60 @@ body.full-height #react > div {
 			}
 		}
 	}
+}
+
+.dashboard {
+   .overview a.network {
+      margin-top: 1em;
+      border-bottom: 1px solid transparent;
+
+      &:hover {
+         background: #fafafa;
+         border-bottom: 1px solid #eee;
+      }
+
+
+      > .title { float: left; padding-left: 15px; }
+      > .address { display: none; }
+      > .connected { float: right; }
+
+      > .connstate { float: right; }
+   }
+
+   .overview a.network, .sidebar .nav li a {
+      > * { padding: 12px 0px 11px; }
+      > .title { padding-left: 15px; }
+      > .address { display: none; }
+      > .connected {
+         color: #bbb;
+         font-style: italic;
+         padding-right: 15px;
+      }
+      > .connstate {
+         float: right;
+         padding: 0 15px 0 0;
+
+         .good { color: green; }
+         .degraded { color: orange; }
+         .failed { color: red; }
+      }
+   }
+
+   .overview .showof {
+      .box {
+         margin: 20px 0 30px;
+         padding: 15px;
+         background: #333;
+      }
+
+      h3 {
+         font-weight: bold;
+         border-bottom: 3px solid #444;
+         display: inline-block;
+         color: #aaa;
+         margin-bottom: 2em;
+      }
+   }
 }
 
 .dashboard .action-header {
@@ -705,4 +797,14 @@ body.full-height #react > div {
   -webkit-box-shadow: 0px 0px 5px 5px #0099E0;
   -moz-box-shadow: 0px 0px 5px 5px #0099E0;
   box-shadow: 0px 0px 5px 5px #0099E0;
+}
+
+
+
+.row.white {
+   border-top: 1px solid #ddd;
+   border-bottom: 1px solid #ddd;
+   padding-top: 20px;
+   padding-bottom: 10px;
+   background: white;
 }

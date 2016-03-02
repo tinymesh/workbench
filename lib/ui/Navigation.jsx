@@ -60,7 +60,7 @@ export class Navigation extends React.Component {
                       if (!item.component)
                          console.log("WARN: Navigation item " + item.path + " does not have valid component")
 
-                      if (!item.path || item.path === '/')
+                      if (!item.path || item.path === '/' || item.path === '*')
                         return acc
 
                       acc.crumbs.push(<li key={index}>
