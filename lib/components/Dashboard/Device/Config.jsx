@@ -473,7 +473,7 @@ export class Config extends React.Component {
 
             <MissingCfgDefModal
               fwrev={fwrev}
-              partnum={partnum}
+              partnum={((config || {}).device || {}).part || partnum}
               error={err}
               show={null !== err && config}
               container={this}
