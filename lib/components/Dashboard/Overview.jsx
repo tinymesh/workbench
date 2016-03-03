@@ -41,7 +41,7 @@ class NetworkNavLink extends React.Component {
 
       return (
          <Link
-            className="col-xs-12 col-md-3 network"
+            className="col-xs-12 col-md-6 network"
             to={`/dashboard/network/${network.key}`}>
 
             <span className="title">{network.name || network.key}</span>
@@ -87,12 +87,12 @@ class NetworkList extends React.Component {
       return (
          <div>
             <Row className="showof">
-               <Col xs={12}>
+               <Col xs={12} md={4}>
                   <div className="box">
                      <h3 style={{fontWeight: 'bold'}}>Getting started</h3>
 
                      <Row>
-                        <Col xs={12} md={6} lg={4}>
+                        <Col xs={12}>
                            <p>
                               Welcome to the Tinymesh Workbench, the tool for
                               working with your connected Tinymesh devices.
@@ -119,10 +119,8 @@ class NetworkList extends React.Component {
                      </Row>
                   </div>
                </Col>
-            </Row>
 
-            <Row className="networks white">
-               <Col xs={12}>
+               <Col xs={12} md={6} style={{marginTop: "20px"}}>
                   <Row className="input">
                      <Col md={9}>
                         <h4>Your networks</h4>
@@ -139,17 +137,17 @@ class NetworkList extends React.Component {
                            <Glyphicon glyph="search" className="form-control-feedback" />
                         </Input>
                      </Col>
-                  </Row>
 
-                  <Row>
-                     {_.map(filtered, net =>
-                        <API.DeviceList
-                           key={net.key}
-                           nid={net.key}>
+                     <Col xs={12}>
+                        {_.map(filtered, net =>
+                           <API.DeviceList
+                              key={net.key}
+                              nid={net.key}>
 
-                           <NetworkNavLink network={net} />
-                        </API.DeviceList>
-                     )}
+                              <NetworkNavLink network={net} />
+                           </API.DeviceList>
+                        )}
+                     </Col>
                   </Row>
                </Col>
             </Row>
