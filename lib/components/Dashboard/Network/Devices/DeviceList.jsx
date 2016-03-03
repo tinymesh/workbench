@@ -135,10 +135,10 @@ export class DeviceList extends React.Component {
                       <td>{device.name || "Unnamed device"}</td>
                       <td>{stateLink({'filter.type': device.type}, device.type, true)}</td>
                       <td title={device.meta.updated}>
-                        {device.meta.updated && <FormattedRelative value={device.meta.updated} />}
+                        {device.meta.updated && <FormattedRelative value={device.meta.updated} /> || "Never"}
                       </td>
                       <td title={device.meta['event/date']}>
-                        {device.meta['event/data'] && <FormattedRelative value={device.meta['event/date']} />}
+                        {device.meta['event/date'] && <FormattedRelative value={device.meta['event/date']} /> || "Never"}
                       </td>
                     </tr>
                   )}
