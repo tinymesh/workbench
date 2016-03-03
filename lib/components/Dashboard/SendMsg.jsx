@@ -70,7 +70,6 @@ export class SendMsg extends React.Component {
 
       return (
          <Row className="send-msg">
-            <b>SUFFIX: {pathSuffix}</b>
             <Col xs={4} md={3} className="aside">
 
                <Nav

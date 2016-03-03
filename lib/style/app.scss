@@ -175,14 +175,13 @@ body.full-height #react > div {
    background: $sidebar-bg;
 
 	color: $sidebar-color;
-	height: 100%;
 	//border-right: 1px solid #eee;
 	//box-shadow: inset -10px 0px 20px -10px #1a1a1a;
 	padding: 0px;
-   margin-top: $nav-height;
+   z-index: 1;
 
 	h4 {
-		margin: 5rem 10px 1rem;
+		margin: 3rem 10px 1rem;
 		padding: 0 5px 5px;
 		border-bottom: 1px solid #444;
 	}
@@ -204,6 +203,12 @@ body.full-height #react > div {
 			font-weight: bold;
 		}
 	}
+
+   nav.meta-links {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+   }
 }
 
 .container > .row, .container-fluid > .row {
@@ -213,10 +218,10 @@ body.full-height #react > div {
 
 .collapsed .container-fluid {
    /** large screens gets obnoxiously large collapsed sidebars **/
-   .sidebar {
+   .col-lg-1.sidebar {
       @media (min-width: 1200px) { width: 4%; }
    }
-   .main{
+   .col-lg-11.main {
       @media (min-width: 1200px) { width: 96%; }
    }
 }
@@ -254,7 +259,12 @@ body.full-height #react > div {
    .sidebar {
       padding: 0;
 
-      a.expand { padding: 15px; }
+      > * { display: none }
+
+      a.expand {
+         padding: 15px;
+         display: inherit;
+      }
    }
 }
 
@@ -385,15 +395,18 @@ body.full-height #react > div {
       .box {
          margin: 20px 0 30px;
          padding: 15px;
-         background: #333;
-      }
 
-      h3 {
-         font-weight: bold;
-         border-bottom: 3px solid #444;
-         display: inline-block;
-         color: #aaa;
-         margin-bottom: 2em;
+         &.dark {
+            background: #333;
+            border-bottom: 3px solid #444;
+            color: #aaa;
+         }
+
+         h3 {
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 2em;
+         }
       }
    }
 }

@@ -88,7 +88,7 @@ class NetworkList extends React.Component {
          <div>
             <Row className="showof">
                <Col xs={12} md={4}>
-                  <div className="box">
+                  <div className="dark box">
                      <h3 style={{fontWeight: 'bold'}}>Getting started</h3>
 
                      <Row>
@@ -120,7 +120,7 @@ class NetworkList extends React.Component {
                   </div>
                </Col>
 
-               <Col xs={12} md={6} style={{marginTop: "20px"}}>
+               <Col xs={12} md={8} style={{marginTop: "20px"}} className="white box">
                   <Row className="input">
                      <Col md={9}>
                         <h4>Your networks</h4>
