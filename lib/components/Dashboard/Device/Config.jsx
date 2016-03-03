@@ -427,8 +427,10 @@ export class Config extends React.Component {
 
   render() {
     let
-      fwrev = ((this.props.device || {})['proto/tm'] || {}).firmware,
-      partnum = ((this.props.device || {})['proto/tm'] || {}).part,
+      deffwrev = ((this.props.device || {})['proto/tm'] || {}).firmware,
+      defpartnum = ((this.props.device || {})['proto/tm'] || {}).part,
+      fwrev = ((((this.state.config || {})['proto/tm'] || {}).config || {}).device || {}).fw_revision || deffwrev,
+      partnum = ((((this.state.config || {})['proto/tm'] || {}).config || {}).device || {}).part || defpartnum,
       [cfgdef, l10n, err] = this.config(fwrev, partnum),
       keys = _.keys(cfgdef),
       groups = _.reduce(cfgdef,
@@ -448,6 +450,7 @@ export class Config extends React.Component {
                   return acc
                },
                {})
+
 
     let activeGroup = this.state.activeGroup || _.keys(groups)[0]
 
