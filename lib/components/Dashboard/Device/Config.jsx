@@ -472,7 +472,7 @@ export class Config extends React.Component {
               fwrev={fwrev}
               partnum={partnum}
               error={err}
-              show={null !== err}
+              show={null !== err && config}
               container={this}
               animation={false}
               autoFocus={false}
