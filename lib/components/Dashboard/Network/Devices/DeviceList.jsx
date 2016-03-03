@@ -48,10 +48,8 @@ export class DeviceList extends React.Component {
   }
 
   loadForNetwork(nid) {
-    this.setState({loading: true})
+    this.setState({loading: false})
     DeviceService.list(nid)
-      .then(  () => this.setState({loading: false}) )
-      .catch( () => this.setState({loading: false}) )
   }
 
 
@@ -137,10 +135,10 @@ export class DeviceList extends React.Component {
                       <td>{device.name || "Unnamed device"}</td>
                       <td>{stateLink({'filter.type': device.type}, device.type, true)}</td>
                       <td title={device.meta.updated}>
-                        <FormattedRelative value={device.meta.updated} />
+                        {device.meta.updated && <FormattedRelative value={device.meta.updated} />}
                       </td>
                       <td title={device.meta['event/date']}>
-                        <FormattedRelative value={device.meta['event/date']} />
+                        {device.meta['event/data'] && <FormattedRelative value={device.meta['event/date']} />}
                       </td>
                     </tr>
                   )}
