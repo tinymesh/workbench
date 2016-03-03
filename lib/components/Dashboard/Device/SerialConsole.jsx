@@ -9,6 +9,11 @@ import {AuthStore} from '../../../Auth'
 import {Terminal} from '../../../ui'
 import {QueryStream} from '../QueryStream.jsx'
 
+import {formatters, parse} from './SerialConsole.Utils.jsx'
+
+import {Label} from 'react-bootstrap'
+
+
 let usage = `
 usage: "string" | [ 1 10 100 255 ] | < 00 1a ff >, type help for more info
 `
@@ -29,252 +34,227 @@ Commands:
   - help          - shows this text
   - usage         - shows usage
   - send \`data\`   - send data to device
+  - output \`mode\` - switch between output modes (hex, bytes, ascii)
 
 `
 
-let asHex = function(input) {
-   var processed = input
-    .split(/\s+/)
-    .map(function(v) {
-      return v ? ("0" + v).slice(-1 * v.length - (v.length % 2)) : '';
-    })
-    .join('')
+//let shipData = function(buf, params) {
+//   console.log(buf, params)
+//   let
+//      payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'serial', 'data': buf.toString()}}),
+//      url = BASE_URL + '/message/' + params.nid + '/' + params.key,
+//      headers = {
+//         'Authorization': AuthStore.signV0('POST', url, payload),
+//         'Content-Type':  'application/json',
+//      }
+//
+//   axios.post(url, payload, {headers})
+//
+//   return buf
+//}
+//
+//let
+//   handle = function(input) {
+//      let head, p, command, trimmed
+//
+//      let input2 = _.trimLeft(input)
+//      trimmed = input.length - input2.length // preserve spaces for pos
+//
+//      head = input2[0]
+//
+//      command = (input2.split(/ /) || [])
+//
+//      if (!pairs[head] && !commands[command[0]]) {
+//        p = _.map(pairs, (t) => "`" + t + "`").join(', ')
+//        return {error: "expected a command OR one of " + p + '. Got `' + head + '`', pos: trimmed}
+//      } else if (commands[command[0]]) {
+//        trimmed += command[0].length + 1
+//        return commands[command[0]](command.slice(1), trimmed, this.params)
+//      } else {
+//        return commands["send"](input2, trimmed, this.params)
+//      }
+//   }
 
-   try {
-      if (isNaN(parseInt(processed, 16)) || processed.match("x"))
-        return {error: "invalid hex input"}
+class Cycle extends React.Component {
+   constructor(props) {
+      super(props)
 
-      return new Buffer(processed, "hex")
-   } catch (e) {
-      return {error: "invalid hex input"}
-   }
-}
-
-let asBin = function(input) {
-  var err = undefined
-
-  var processed = input
-    .split(/\s+/)
-    .reduce(function(acc, n) {
-      if ('' === n)
-        return acc
-
-      var num = parseInt(n)
-
-      if (isNaN(num && !err)) {
-        err = {error: 'invalid number `' + n + '` in byte array', pos: -1}
-      } else if (num > 255 || num < 0 && !err) {
-        err = {error: 'invalid byte `' + n + ', out of range 0..255', pos: -1}
-      } else {
-        acc.push(num)
+      this.state = {
+         pos: 0
       }
 
-      return acc
-    }, [])
-
-  return err || new Buffer(processed)
-}
-
-let asAscii = function(input) {
-  input = input
-    .replace(/\\0/g, "\0")
-    .replace(/\\\\/g, "\\")
-    .replace(/\\a/g, "\a")
-    .replace(/\\t/g, "\t")
-    .replace(/\\n/g, "\n")
-    .replace(/\\v/g, "\v")
-    .replace(/\\f/g, "\f")
-    .replace(/\\r/g, "\r")
-
-  return new Buffer(input)
-}
-
-let parseData = function(input, pos, acc) {
-   let head, rest, p, parts, res
-
-   pos = pos || 0
-
-   acc = acc || new Buffer("")
-
-   if (!input)
-     return acc
-
-   let input2 = _.trimLeft(input)
-   pos += input.length - input2.length // preserve spaces for pos
-
-   head = input2[0]
-   rest = input2.slice(1)
-
-   parts = rest.split(pairs[head])
-   pos += parts[0].length + 1
-
-   if (undefined === parts[1] && pairs[head])
-     return {error: "expected a terminating `" + pairs[head] + "`", pos: pos + 1}
-   if (undefined === parts[1] && !pairs[head])
-     return {error: "expected your data to start with either: your data with one of \" .. \", [ ... ] or < ... >.", pos: pos + 1}
-
-   res = parseAs[head](parts[0])
-   parts.shift()
-
-   rest = parts.join(pairs[head])
-   return res.error
-      ? res
-      : parseData(rest, pos + 1, Buffer.concat([acc, res]))
-}
-
-export {parseData, asAscii, asBin, asHex, pairs, parseAs}
-
-let shipData = function(buf, params) {
-   let
-      payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'serial', 'data': buf.toString()}}),
-      url = BASE_URL + '/message/' + params.nid + '/' + params.key,
-      headers = {
-         'Authorization': AuthStore.signV1('POST', url, payload),
-         'Content-Type':  'application/json',
-      }
-
-   axios.post(url, payload, {headers})
-
-   return buf
-}
-
-
-let commands = {
-   "usage": () => usage,
-   "help":  () => help,
-   "send":  (input, trimmed, p) => shipData(parseData(input, trimmed), p)
-}
-
-let
-   parseAs = {
-    '<': asHex,
-    '[': asBin,
-     '"': asAscii,
-    '\'': asAscii
-   },
-   pairs = {
-    '<': '>',
-    '[': ']',
-    '"': '"',
-    '\'': '\''
-   },
-   handle = function(input) {
-      let head, p, command, trimmed
-
-      let input2 = _.trimLeft(input)
-      trimmed = input.length - input2.length // preserve spaces for pos
-
-      head = input2[0]
-
-      command = (input2.split(/ /) || [])
-
-      if (!pairs[head] && !commands[command[0]]) {
-        p = _.map(pairs, (t) => "`" + t + "`").join(', ')
-        return {error: "expected a command OR one of " + p + '. Got `' + head + '`', pos: trimmed}
-      } else if (commands[command[0]]) {
-        trimmed += command[0].length + 1
-        return commands[command[0]](command.slice(1), trimmed, this.params)
-      } else {
-        return commands["send"](input2, trimmed, this.params)
-      }
+      this.handleClick = this.handleClick.bind(this)
    }
 
-let formatter = function(line) {
-   let encode = buf => (Buffer.isBuffer(buf) ? buf.toString() : buf)
-                        .replace(/\n/, '\\n')
-                        .replace(/\r/, '\\r')
+   handleClick() {
+      let {items, onSelect} = this.props
 
-   if (line && line.error) {
-      let buf = "! Error: " + line.error
-      if (line.pos) {
-        buf += " (char: " + line.pos + ")"
-      }
+      this.setState( state => state.pos++,
+                     () => {
+                        if (onSelect) {
+                           let {pos} = this.state
+                           onSelect(items[pos % items.length])
+                        }
+                     } )
 
-      return <span className="error"><br />{buf}</span>
-   } else if(line && line['proto/tm']) {
-     if (line['proto/tm'].detail === 'serial') {
-        let block = line['proto/tm'].block
-        if (block === 0) {
-           return <span className="upstream block-{block}"><br />&lt;&nbsp; {encode(line['proto/tm'].data)}</span>
-        } else {
-           return <span className="upstream block-{block}">{encode(line['proto/tm'].data)}</span>
-        }
-     } else if (line['proto/tm'].command === 'serial') {
-        return <span className="downstream"><br />&gt;&nbsp;{encode(line['proto/tm'].data)}</span>
-     } else {
-       return;
-     }
    }
 
-   return Buffer.isBuffer(line) ? line.toString() : line
-}
+   render() {
+      let
+         {items} = this.props,
+         {pos} = this.state
 
+      return (
+         <Label
+            onClick={this.handleClick}
+            bsStyle="success">
+
+            {items[pos % items.length]}
+         </Label>
+      )
+   }
+}
 
 export class SerialConsole extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      stream: null,
-      newLines: null
-    }
-  }
+   constructor(props) {
+      super(props)
 
-  componentWillMount() {
-    let {nid, key} = this.props.params
+      this.state = {
+         stream: null,
+         newLines: null,
+         output: "hex",
+      }
 
-    this.runQuery(nid, key)
-  }
+      this.formatter = this.formatter.bind(this)
+      this.sendData = this.sendData.bind(this)
+      this.handleInput = this.handleInput.bind(this)
+   }
 
-  runQuery(nid, key) {
-    if (this.state.stream)
-      throw("A query is already running. Make sure it's closed")
+   componentWillMount() {
+      let {nid, key} = this.props.params
 
-    let res = new QueryStream({
-       'date.from':  'NOW//-24HOUR',
-       'continuous': "true",
-       'query':      '',
-       'uri':        '/' + nid + '/' + key,
-    })
+      this.runQuery(nid, key)
+   }
 
-    res.on('error',     (err) => {
-      if (!err && this.state.stream)
-         this.state.stream && this.state.stream.close()
-    })
+   runQuery(nid, key) {
+      if (this.state.stream)
+         throw("A query is already running. Make sure it's closed")
 
-    res.on('complete',  () => this.setState({stream: null}))
+      let res = new QueryStream({
+         'date.from':  'NOW//-1MINUTE',
+         'continuous': "true",
+         'query':      '',
+         'uri':        '/' + nid + '/' + key,
+      })
 
-    res.on('data',      (data) => {
-       // skip initial return
-       if ('ping' === data || !data['proto/tm'])
-          return
+      res.on('error',     (err) => {
+         if (!err && this.state.stream)
+            this.state.stream && this.state.stream.close()
+      })
 
-       if (data['proto/tm'].detail == 'serial' || data['proto/tm'].command == 'serial') {
-         data['proto/tm'].data = new Buffer(data['proto/tm'].data)
-         this.setState({newLines: [data]})
-       }
-    })
+      res.on('complete',  () => this.setState({stream: null}))
 
-    this.setState({stream: res})
-  }
+      res.on('data',      (data) => {
+         // skip initial return
+         if ('ping' === data || !data['proto/tm'])
+            return
 
-  componentDidMount() {
-    this._mounted = true
-  }
+         if (data['proto/tm'].detail == 'serial' || data['proto/tm'].command == 'serial') {
+            data['proto/tm'].data = new Buffer(data['proto/tm'].data)
+            this.setState({newLines: [data]})
+         }
+      })
 
-  componentWillUnmount() {
-    this._mounted = true
+      this.setState({stream: res})
+   }
 
-    if (this.state.stream)
-      this.state.stream.close()
-  }
+   componentDidMount() {
+      this._mounted = true
+   }
 
-  render() {
-    return <Terminal
-      body={[usage]}
-      formatter={formatter}
-      newLines={this.state.newLines}
-      handle={handle}
-      height={20}
-      {...this.props} />
-  }
+   componentWillUnmount() {
+      this._mounted = false
+
+      if (this.state.stream)
+         this.state.stream.close()
+   }
+
+   formatter(line) {
+      return formatters.serial(line, this.state.output)
+   }
+
+   commands() {
+      return {
+         "usage": () => usage,
+         "help":  () => help,
+
+         "send":  (input, trimmed, p) => {
+            let res = parse(input, trimmed)
+
+            return Buffer.isBuffer(res) ? this.sendData(res, p) : res
+         },
+
+         "output": function(mode) {
+            mode = mode[0]
+            if ('hex' === mode || 'ascii' === mode || 'bytes' === mode)
+               return "Switched from `oldmode` to `" + mode + "`"
+
+            return {error: "Invalid output mode: `" + mode + "`\nusage: output <hex | ascii | bytes>"}
+         }
+      }
+   }
+
+   sendData(buf, params) {
+      let
+         payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'serial', 'data': buf.toString()}}),
+         url = BASE_URL + '/message/' + params.nid + '/' + params.key,
+         headers = {
+            'Authorization': AuthStore.signV1('POST', url, payload),
+            'Content-Type':  'application/json',
+         }
+
+      axios.post(url, payload, {headers})
+
+      return ""
+   }
+
+   handleInput(input) {
+      let
+         {params} = this.props,
+         head, p, command, trimmed
+
+      let input2 = _.trimLeft(input)
+      trimmed = input.length - input2.length // preserve padding for pos
+
+      head = input2[0]
+      command = input2.split(/ /) || []
+
+      if (undefined === command[0])
+         return
+      else if (command[0].match(/^[\[<"'>\]]/))
+         return this.commands()['send'](input2, trimmed, params)
+      else if (this.commands()[command[0]]) {
+         trimmed += command[0].length + 1
+         return this.commands()[command[0]]( command.slice(1), trimmed, params )
+      } else
+         return {error: "No such command `" + command[0] + "`. try calling `help`"}
+   }
+
+   render() {
+      let {output} = this.state
+
+      let label = <Cycle
+         items={["hex", "ascii", "bytes"]}
+         onSelect={v => this.setState({output: v})}
+         />
+
+      return <Terminal
+         className="row"
+         body={[usage]}
+         formatter={this.formatter}
+         newLines={this.state.newLines}
+         labels={["Serial Mode", label]}
+         onInput={this.handleInput}
+         {...this.props} />
+   }
 }

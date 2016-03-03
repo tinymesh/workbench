@@ -561,6 +561,14 @@ body.full-height #react > div {
 
 .terminal {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  background: white;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+
+  > pre {
+   background: transparent;
+   border: none;
+  }
 
   .input-line {
     display: -webkit-box;
@@ -573,6 +581,8 @@ body.full-height #react > div {
     box-orient: horizontal;
     box-align: stretch;
     clear: both;
+
+    .labels > * { margin-left: 0.5rem; }
   }
   .input-line > div:nth-child(2) {
     -webkit-box-flex: 1;
@@ -596,6 +606,11 @@ body.full-height #react > div {
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
+    padding-left: 9.5px;
+    padding-left: 9.5px;
+    color: #0000cc;
+    font-weight: bold;
+
   }
   .cmdline {
     outline: none;

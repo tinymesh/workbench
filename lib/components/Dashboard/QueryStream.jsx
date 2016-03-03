@@ -54,15 +54,17 @@ export class QueryStream extends EventEmitter {
          switch (this._req.getResponseHeader('x-data-encoding')) {
             case 'base64':
                if (proto.detail == 'serial' || proto.command == 'serial')
-                  proto.data = (new Buffer(proto.data, 'base64')).toString()
+                  proto.data = new Buffer(proto.data, 'base64')
                break
 
             case 'hex':
                if (proto.detail == 'serial' || proto.command == 'serial')
-                  proto.data = (new Buffer(proto.data, 'hex')).toString()
+                  proto.data = new Buffer(proto.data, 'hex')
                break
 
             case 'binary':
+               if (proto.detail == 'serial' || proto.command == 'serial')
+                  proto.data = new Buffer(proto.data)
                break
 
             default:
