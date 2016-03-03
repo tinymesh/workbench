@@ -130,7 +130,7 @@ let shipData = function(buf, params) {
       url = BASE_URL + '/message/' + params.nid + '/' + params.key,
       headers = {
          'Authorization': AuthStore.signV1('POST', url, payload),
-         'Content-Type':  'application/json'
+         'Content-Type':  'application/json',
       }
 
    axios.post(url, payload, {headers})

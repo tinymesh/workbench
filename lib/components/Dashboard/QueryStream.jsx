@@ -45,7 +45,34 @@ export class QueryStream extends EventEmitter {
       headers['X-Data-Encoding'] = enc
 
     this._req = jsonpipe.flow(url, {
-      'success': (data) => this.emit('data', data),
+      'success': (data, req) => {
+         let proto = data['proto/tm']
+
+         if (!proto)
+            return
+
+         switch (this._req.getResponseHeader('x-data-encoding')) {
+            case 'base64':
+               if (proto.detail == 'serial' || proto.command == 'serial')
+                  proto.data = (new Buffer(proto.data, 'base64')).toString()
+               break
+
+            case 'hex':
+               if (proto.detail == 'serial' || proto.command == 'serial')
+                  proto.data = (new Buffer(proto.data, 'hex')).toString()
+               break
+
+            case 'binary':
+               break
+
+            default:
+               console.log('ERROR! unsuported data-encoding ' + this._req.getResponseHeader('x-data-encoding'))
+               return
+               break
+         }
+
+         this.emit('data', data)
+      },
       'error': handleReqErr,
       'complete': (status) => this.emit('complete', status),
       'method': 'GET',
