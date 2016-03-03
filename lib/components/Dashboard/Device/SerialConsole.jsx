@@ -141,7 +141,7 @@ export class SerialConsole extends React.Component {
          throw("A query is already running. Make sure it's closed")
 
       let res = new QueryStream({
-         'date.from':  'NOW//-1MINUTE',
+         'date.from':  'NOW//-24HOUR',
          'continuous': "true",
          'query':      '',
          'uri':        '/' + nid + '/' + key,
