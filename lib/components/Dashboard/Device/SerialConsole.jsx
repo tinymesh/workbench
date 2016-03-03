@@ -126,7 +126,7 @@ export {parseData, asAscii, asBin, asHex, pairs, parseAs}
 
 let shipData = function(buf, params) {
    let
-      payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'serial', 'data': btoa(buf.toString())}}),
+      payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'serial', 'data': buf.toString()}}),
       url = BASE_URL + '/message/' + params.nid + '/' + params.key,
       headers = {
          'Authorization': AuthStore.signV1('POST', url, payload),
@@ -230,7 +230,6 @@ export class SerialConsole extends React.Component {
       throw("A query is already running. Make sure it's closed")
 
     let res = new QueryStream({
-       'data.encoding': 'base64',
        'date.from':  'NOW//-24HOUR',
        'continuous': "true",
        'query':      '',
@@ -250,7 +249,7 @@ export class SerialConsole extends React.Component {
           return
 
        if (data['proto/tm'].detail == 'serial' || data['proto/tm'].command == 'serial') {
-         data['proto/tm'].data = new Buffer(data['proto/tm'].data, 'base64')
+         data['proto/tm'].data = new Buffer(data['proto/tm'].data)
          this.setState({newLines: [data]})
        }
     })
