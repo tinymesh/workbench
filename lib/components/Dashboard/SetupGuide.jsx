@@ -283,8 +283,8 @@ export class SetupGuideConnect extends React.Component {
                You can download version 0.3.0 for Windows:
 
                <ul>
-                  <li><a href="https://github.com/tinymesh/tinyconnect-connect-backend/releases/download/0.3.0-rc1/tinyconnect-win32.exe">Tinyconnect - 32bit</a></li>
-                  <li><a href="https://github.com/tinymesh/tinyconnect-connect-backend/releases/download/0.3.0-rc1/tinyconnect-win64.exe">Tinyconnect - 64bit</a></li>
+                  <li><a href="https://github.com/tinymesh/tinyconnect-backend/releases/download/0.3.0/tinyconnect-win32.exe">Tinymesh Connect - 32bit</a></li>
+                  <li><a href="https://github.com/tinymesh/tinyconnect-backend/releases/download/0.3.0/tinyconnect-win64.exe">Tinymesh Connect - 64bit</a></li>
                </ul>
             </p>
           </div>
