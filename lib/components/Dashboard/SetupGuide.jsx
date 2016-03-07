@@ -382,7 +382,7 @@ export class SetupGuide extends React.Component {
 
               <div className="text-center bs-wizard-stepnum">{step.text}</div>
               <div className="progress"><div className="progress-bar"></div></div>
-              <a href="#" className="bs-wizard-dot"></a>
+              <a style={{cursor: 'default'}} className="bs-wizard-dot"></a>
             </Col>
           })}
 
