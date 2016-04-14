@@ -335,6 +335,13 @@ export class Overview extends React.Component {
                 valueLink={this.linkState('patch.provision.type', network.provision.type)}
                 help="The default device type to use when creating devices"
                 placeholder="select">
+
+                {undefined === _.find(patch.types || network.types, (t) => t === network.provision.type) &&
+                   <option key={-1} value={network.provision.type} disabled>
+                      {network.provision.type} (removed)
+                   </option>
+                }
+
                 {_.uniq(network.types.concat(patch.types || [])).map( (val, k) =>
                   <option
                      key={k}
