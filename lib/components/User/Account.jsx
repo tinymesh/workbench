@@ -147,7 +147,7 @@ export class Account extends React.Component {
               <Col xs={12} sm={6}>
                 <Input
                   type="tel"
-                  valueLink={this.linkState('patch.name', this.state.user.phone)}
+                  valueLink={this.linkState('patch.phone', this.state.user.phone)}
                   bsStyle={this.phoneValidationState()[0]}
                   help={this.phoneValidationState()[1] || ' '}
                   label="Phone Number"
