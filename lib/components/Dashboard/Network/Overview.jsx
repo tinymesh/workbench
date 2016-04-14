@@ -167,7 +167,7 @@ export class Overview extends React.Component {
        if (dev.type !== 'gateway')
           return acc
 
-       dev.connected = dev.meta['chan/connected'] > dev.meta['chan/disconnected']
+       dev.connected = dev.meta['chan/connected'] > (dev.meta['chan/disconnected'] || "")
        return acc.concat([dev])
     }, [])
 
