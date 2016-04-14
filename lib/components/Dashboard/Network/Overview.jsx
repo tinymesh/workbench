@@ -67,19 +67,34 @@ export class Overview extends React.Component {
       return 'danger'
   }
 
-  removeType(ev, type) {
+  toggleType(ev, type) {
     ev.preventDefault()
 
     if ('gateway' === type) {
-      alert("you can't delete the `Gateway` type")
+      alert("You can't delete the `Gateway` type")
+      return
+    }
+
+    let n
+    if ((n = this.typeCount(type)) > 0) {
+      alert("You can't delete the `" + type + "` containing " + n + " devices")
+      return
+    }
+
+    let defaulttype = _.get(this.state.patch, ['provision', 'type'], this.props.network.provision.type)
+
+    if (type === defaulttype) {
+      alert("You can't delete the `" + type + "`, it's set as the Default Device Type")
       return
     }
 
     this.setState((prevState) => {
-      let newTypes = _.without((prevState.patch.types || this.props.network.types), type)
-      return {
-        patch: _.set(prevState.patch || {}, 'types', newTypes)
-      }
+      let types = prevState.patch.types || this.props.network.types
+
+      if (_.find(types, (t) => t === type))
+         return _.set(prevState || {}, ['patch', 'types'], _.without(types, type))
+      else
+         return _.set(prevState || {}, ['patch', 'types'], types.concat([type]))
     })
   }
 
@@ -132,6 +147,10 @@ export class Overview extends React.Component {
         })
   }
 
+  typeCount(type) {
+      return _.countBy(DeviceStore.devices(this.props.params.nid), 'type')[type] || 0
+  }
+
   render() {
     let
       network = this.props.network,
@@ -146,20 +165,20 @@ export class Overview extends React.Component {
           return <span>{parent.replace(/^[^/]*\//, '')}</span>
       }
 
-    let typeState = (type) => {
+    const typeState = (type) => {
       let
         inNet   = -1 != _.indexOf(network.types, type),
         inPatch = -1 != _.indexOf(patch.types, type)
 
 
       if (!inNet && inPatch)
-        return "success"
+        return 1
 
       if (patch.types && (inNet && !inPatch))
-        return "danger"
+        return -1
 
       if (!patch.types || (inNet && inPatch))
-        return undefined
+        return 0
 
     }
 
@@ -172,6 +191,7 @@ export class Overview extends React.Component {
     }, [])
 
 
+    let types = _.uniq(network.types.concat((patch ||{}).types || []))
 
     return (
       <Loading loading={!this.props.network}>
@@ -249,21 +269,22 @@ export class Overview extends React.Component {
               <h4>Network Types</h4>
 
               <ListGroup>
-                {_.uniq(((patch || {}).types || []).concat(network.types)).map( (type, idx) =>
+                {types.map( (type, idx) =>
                   <ListGroupItem
-                    bsStyle={typeState(type)}
+                    bsStyle={-1 === typeState(type) ? 'danger' : (1 === typeState(type) ? 'success' : '')}
                     key={idx}>
 
-                    {type}
+                    {type} <span className="count">&ndash;<em>{this.typeCount(type)} device(s)</em></span>
+
                     <Button
                       className="pull-right"
-                      bsStyle="danger"
+                      bsStyle={-1 === typeState(type) ? 'success' : 'danger'}
                       bsSize="small"
                       style={{marginTop: '-6px'}}
-                      onClick={(ev) => this.removeType(ev, type)}
-                      title="Remove Type">
+                      onClick={(ev) => this.toggleType(ev, type)}
+                      title={-1 === typeState(type) ? 'Restore Type' : 'Remove Type'}>
 
-                      <Glyphicon glyph="remove" />
+                      <Glyphicon glyph={-1 === typeState(type) ? 'repeat' : 'remove'} />
                     </Button>
                   </ListGroupItem>
                 )}
