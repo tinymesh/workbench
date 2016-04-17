@@ -8,7 +8,7 @@ import Toggle from 'react-toggle'
 
 import {Notify, Loading} from '../../ui'
 import {TinymeshProto} from '../../TinymeshProto.jsx'
-import {parseData, asAscii, asBin, asHex} from './Device/SerialConsole.jsx'
+import {parse} from './Device/SerialConsole.Utils.jsx'
 
 import axios from 'axios'
 import {BASE_URL} from '../../Constants.js'
@@ -451,7 +451,7 @@ class SerialMsg extends React.Component {
       this.handleChange = this.handleChange.bind(this)
 
       this.sendData = function() {
-         let data = {data: btoa(this.state.parsed)}
+         let data = {data: this.state.parsed}
 
          if (this.state.cmd_number)
             data.cmd_number = this.state.cmd_number
@@ -465,7 +465,7 @@ class SerialMsg extends React.Component {
    }
 
    handleChange(ev) {
-      let ret = parseData(ev.target.value)
+      let ret = parse(ev.target.value)
 
       if (ret.error)
          this.setState({input: ev.target.value, parsed: ret})
