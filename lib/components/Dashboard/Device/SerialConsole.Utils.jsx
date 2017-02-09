@@ -133,7 +133,7 @@ export var formatters = {
       if (line.error) {
          let buf = "! Error: " + line.error
          if (line.pos)
-            buf += " (char: " + line,pos + ")"
+            buf += " (char: " + line.pos + ")"
 
          return <span className="error"><br />{buf}</span>
       } else if (line['proto/tm']) {

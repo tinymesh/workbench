@@ -206,11 +206,12 @@ export class SerialConsole extends React.Component {
 
    sendData(buf, params) {
       let
-         payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'serial', 'data': buf.toString()}}),
+         payload = JSON.stringify({'proto/tm': {'type': 'command', 'command': 'serial', 'data': buf.toString('base64')}}),
          url = BASE_URL + '/message/' + params.nid + '/' + params.key,
          headers = {
             'Authorization': AuthStore.signV1('POST', url, payload),
             'Content-Type':  'application/json',
+            'X-Data-Encoding':  'base64'
          }
 
       axios.post(url, payload, {headers})
