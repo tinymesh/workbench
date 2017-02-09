@@ -3,12 +3,19 @@
 	<head>
 		<title>Workbench &ndash; Tiny Mesh</title>
 		<meta charset="utf-8">
-		<link type="text/css" rel="stylesheet" media="all" href="node_modules/bootstrap/dist/css/bootstrap.css">
-		<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/gggiioljfnkabofaoknolicdlnjadcpn"></link>
+		<link type="text/css" rel="stylesheet" media="all" href="./dist/bundle.css">
 
 		<style type="text/css">
 			body.blockloader-init {
 				background: #111;
+			}
+
+			#initial-loader {
+				display: none;
+			}
+
+			body.blockloader-init #initial-loader {
+				display: block;
 			}
 
 			#initial-loader p {
@@ -21,100 +28,177 @@
 				text-align: center:
 			}
 
-			body.blockloader-init .loader { min-height: 0px; }
-
-			body.blockloader-init {
-				background: #111;
+			body.blockloader-init .loader {
+				position: absolute;
+				width: 60px;
+				height: 60px;
+				top: 50%;
+				left: 50%;
+				margin: -30px 0 0 -30px;
 			}
 
-			body.blockloader-init footer {
-				color: #eee;
-				position: fixed;
-				bottom: 0px;
-				width: 100%;
-				text-align: center;
-				padding-bottom: 40px;
+			.loader .enter {
+				top: 0px;
+				opacity: 1;
 			}
-				body.blockloader-init footer .container-fluid {
-					border: none;
-					padding-right: 15px;
-					padding-left: 15px;
-					margin-right: auto;
-					margin-left: auto;
-				}
-				body.blockloader-init footer .links {
-					color: #444;
-				}
-				body.blockloader-init footer .links a {
-					color: #777;
-				}
 
-			body.blockloader-init #data,
-			body.blockloader-init #auth,
-			body.blockloader-init #modal {
-				display: none;
+			.loader .square {
+				background: #ddd;
+				width: 15px;
+				height: 15px;
+				float: left;
+				top: -10px;
+				margin-right: 5px;
+				margin-top: 5px;
+				position: relative;
+				opacity: 0;
+				-webkit-animation: enter 6s infinite;
+				animation: enter 6s infinite;
+			}
+
+			body.blockloader-init .loader .square {
+				background: #333;
+			}
+
+			.loader .square:nth-child(1) {
+				-webkit-animation-delay: 1.8s;
+				-moz-animation-delay: 1.8s;
+				animation-delay: 1.8s;
+			}
+
+			.loader .square:nth-child(2) {
+				-webkit-animation-delay: 2.1s;
+				-moz-animation-delay: 2.1s;
+				animation-delay: 2.1s;
+			}
+
+			.loader .square:nth-child(3) {
+				-webkit-animation-delay: 2.4s;
+				-moz-animation-delay: 2.4s;
+				animation-delay: 2.4s;
+			}
+
+			.loader .square:nth-child(4) {
+				-webkit-animation-delay: 0.9s;
+				-moz-animation-delay: 0.9s;
+				animation-delay: 0.9s;
+			}
+
+			.loader .square:nth-child(5) {
+				-webkit-animation-delay: 1.2s;
+				-moz-animation-delay: 1.2s;
+				animation-delay: 1.2s;
+			}
+
+			.loader .square:nth-child(6) {
+				-webkit-animation-delay: 1.5s;
+				-moz-animation-delay: 1.5s;
+				animation-delay: 1.5s;
+			}
+
+			.loader .square:nth-child(8) {
+				-webkit-animation-delay: 0.3s;
+				-moz-animation-delay: 0.3s;
+				animation-delay: 0.3s;
+			}
+
+			.loader .square:nth-child(9) {
+				-webkit-animation-delay: 0.6s;
+				-moz-animation-delay: 0.6s;
+				animation-delay: 0.6s;
+			}
+
+			.loader .clear {
+			clear: both;
+			}
+
+			.loader .last {
+				margin-right: 0;
+			}
+
+			@-webkit-keyframes enter {
+				0% {
+						opacity: 0;
+						top: -10px;
+				}
+				5% {
+						opacity: 1;
+						top: 0px;
+				}
+				50.9% {
+						opacity: 1;
+						top: 0px;
+				}
+				55.9% {
+						opacity: 0;
+						top: 10px;
+				}
+			}
+			@keyframes enter {
+				0% {
+						opacity: 0;
+						top: -10px;
+				}
+				5% {
+						opacity: 1;
+						top: 0px;
+				}
+				50.9% {
+						opacity: 1;
+						top: 0px;
+				}
+				55.9% {
+						opacity: 0;
+						top: 10px;
+				}
+			}
+			@-moz-keyframes enter {
+				0% {
+						opacity: 0;
+						top: -10px;
+				}
+				5% {
+						opacity: 1;
+						top: 0px;
+				}
+				50.9% {
+						opacity: 1;
+						top: 0px;
+				}
+				55.9% {
+						opacity: 0;
+						top: 10px;
+				}
 			}
 		</style>
 	</head>
 	<body class="blockloader-init">
 		<div class="container-fluid" id="initial-loader" class="fade">
-			<div class="loader">
-				<div class="square" ></div>
-				<div class="square"></div>
-				<div class="square last"></div>
-				<div class="square clear"></div>
-				<div class="square"></div>
-				<div class="square last"></div>
-				<div class="square clear"></div>
-				<div class="square "></div>
-				<div class="square last"></div>
+			<div>
+				<div class="loader">
+					<div class="square" ></div>
+					<div class="square"></div>
+					<div class="square last"></div>
+					<div class="square clear"></div>
+					<div class="square"></div>
+					<div class="square last"></div>
+					<div class="square clear"></div>
+					<div class="square "></div>
+					<div class="square last"></div>
+				</div>
 			</div>
+
 			<p class="loader-text">
-				Application is loading. This shouldn't take more than a few
+				The Workbench is loading.This shouldn't take more than a few
 				seconds. If it takes a very long time, make sure you are
-				using a modern web browser (preferably chrome) - if you are
+				using a modern web browser (preferably Google Chrome) - if you are
 				try refreshing the page or contact support.
 			</p>
 		</div>
 
-		<div id="app">
 
-			<div id="data" v-component="wb-data" v-ref="data"></div>
-			<div id="auth" v-component="wb-auth" v-ref="auth"></div>
-
-			<div id="navigation" v-component="wb-navigation" v-ref="navigation"></div>
-			<div v-component="wb-notify" v-ref="notify" id="notify"></div>
-
-			<div id="user" v-component="user" v-ref="user"></div>
-
-			<div v-component="wb-blockloader" v-ref="loader"></div>
-
-
-			<div
-				v-wb-modal="false !== modal.show && modal.comp"
-				id="modal">
-				<div class="popup">
-					 <!--<div class="content" v-component="{{modalComp}}"></div>-->
-					<div class="content">
-						<button type="button" class="close" v-on="click: modal.show = false"><span>&times;</span></button>
-						<div v-component="{{modal.comp}}"></div>
-					</div>
-				</div>
-			</div>
-
-			<router-view id="main" class="main" v-transition="defaulttransition" transition-mode="out-in"></router-view>
-
-			<footer>
-				<div class="container-fluid">
-					<div class="row">
-						<ul class="links muted">
-							<li>&copy; 2012-2015 <a href="https://tiny-mesh.com">Tiny Mesh AS</a></li>
-						</ul>
-					</div>
-				</div>
-			</footer>
-		</div>
+		<div id="react"></div>
 
 	</body>
-	<script type="text/javascript" src="./build/dist.js"></script>
+	<script type="text/javascript" src="./dist/bundle.js"></script>
 </html>

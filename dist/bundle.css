@@ -1,0 +1,1699 @@
+@-webkit-keyframes fade-in {
+  0% {
+      opacity: 0;
+  }
+  50% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+@-moz-keyframes fade-in {
+  0% {
+      opacity: 0;
+  }
+  50% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+@-ms-keyframes fade-in {
+  0% {
+      opacity: 0;
+  }
+  50% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+      opacity: 0;
+  }
+  50% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+.fade-in {
+  -webkit-animation: fade-in 2s;
+  -moz-animation: fade-in 2s;
+  -o-animation: fade-in 2s;
+  -ms-animation: fade-in 2s;
+}
+.three-bounce > div {
+  width: 18px;
+  height: 18px;
+  background-color: #333;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+  animation: bouncedelay 1.4s infinite ease-in-out;
+  /* Prevent first frame from flickering when animation starts */
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.three-bounce .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.three-bounce .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0.0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes bouncedelay {
+  0%, 80%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 40% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+.double-bounce {
+  width: 27px;
+  height: 27px;
+
+  position: relative;
+}
+
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  -webkit-animation: bounce 2.0s infinite ease-in-out;
+  animation: bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+.rotating-plane {
+  width: 27px;
+  height: 27px;
+  background-color: #333;
+
+  -webkit-animation: rotateplane 1.2s infinite ease-in-out;
+  animation: rotateplane 1.2s infinite ease-in-out;
+}
+
+@-webkit-keyframes rotateplane {
+  0% { -webkit-transform: perspective(120px) }
+  50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+  100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+}
+
+@keyframes rotateplane {
+  0% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+  } 50% {
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+  } 100% {
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+
+.wave {
+  width: 50px;
+  height: 27px;
+}
+
+.wave > div {
+  background-color: #333;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+
+  -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+  animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.wave .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.wave .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.wave .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.wave .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  } 20% {
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+
+.wandering-cubes {
+  width: 27px;
+  height: 27px;
+  position: relative;
+}
+
+.cube1, .cube2 {
+  background-color: #333;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  -webkit-animation: cubemove 1.8s infinite ease-in-out;
+  animation: cubemove 1.8s infinite ease-in-out;
+}
+
+.cube2 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+@-webkit-keyframes cubemove {
+  25% { -webkit-transform: translateX(22px) rotate(-90deg) scale(0.5) }
+  50% { -webkit-transform: translateX(22px) translateY(22px) rotate(-180deg) }
+  75% { -webkit-transform: translateX(0px) translateY(22px) rotate(-270deg) scale(0.5) }
+  100% { -webkit-transform: rotate(-360deg) }
+}
+
+@keyframes cubemove {
+  25% { 
+    transform: translateX(42px) rotate(-90deg) scale(0.5);
+    -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+  } 50% {
+    /* Hack to make FF rotate in the right direction */
+    transform: translateX(42px) translateY(42px) rotate(-179deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+  } 50.1% {
+    transform: translateX(42px) translateY(42px) rotate(-180deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+  } 75% {
+    transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+    -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+  } 100% {
+    transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+  }
+}
+
+.pulse {
+  width: 27px;
+  height: 27px;
+  background-color: #333;
+
+  border-radius: 100%;
+  -webkit-animation: scaleout 1.0s infinite ease-in-out;
+  animation: scaleout 1.0s infinite ease-in-out;
+}
+
+@-webkit-keyframes scaleout {
+  0% { -webkit-transform: scale(0.0) }
+  100% {
+    -webkit-transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+@keyframes scaleout {
+  0% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 100% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+.chasing-dots {
+  width: 27px;
+  height: 27px;
+  position: relative;
+
+  -webkit-animation: rotate 2.0s infinite linear;
+  animation: rotate 2.0s infinite linear;
+}
+
+.dot1, .dot2 {
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  background-color: #333;
+  border-radius: 100%;
+
+  -webkit-animation: bounce 2.0s infinite ease-in-out;
+  animation: bounce 2.0s infinite ease-in-out;
+}
+
+.dot2 {
+  top: auto;
+  bottom: 0px;
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg) }}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+.circle-wrapper {
+  width: 22px;
+  height: 22px;
+  position: relative;
+}
+
+.circle {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.circle:before {
+  content: '';
+  display: block;
+  margin: 0 auto;
+  width: 20%;
+  height: 20%;
+  background-color: #333;
+
+  border-radius: 100%;
+  -webkit-animation: bouncedelay 1.2s infinite ease-in-out;
+  animation: bouncedelay 1.2s infinite ease-in-out;
+  /* Prevent first frame from flickering when animation starts */
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.circle2  { -webkit-transform: rotate(30deg);  transform: rotate(30deg)  }
+.circle3  { -webkit-transform: rotate(60deg);  transform: rotate(60deg)  }
+.circle4  { -webkit-transform: rotate(90deg);  transform: rotate(90deg)  }
+.circle5  { -webkit-transform: rotate(120deg); transform: rotate(120deg) }
+.circle6  { -webkit-transform: rotate(150deg); transform: rotate(150deg) }
+.circle7  { -webkit-transform: rotate(180deg); transform: rotate(180deg) }
+.circle8  { -webkit-transform: rotate(210deg); transform: rotate(210deg) }
+.circle9  { -webkit-transform: rotate(240deg); transform: rotate(240deg) }
+.circle10 { -webkit-transform: rotate(270deg); transform: rotate(270deg) }
+.circle11 { -webkit-transform: rotate(300deg); transform: rotate(300deg) }
+.circle12 { -webkit-transform: rotate(330deg); transform: rotate(330deg) }
+
+.circle2:before  { -webkit-animation-delay: -1.1s; animation-delay: -1.1s }
+.circle3:before  { -webkit-animation-delay: -1.0s; animation-delay: -1.0s }
+.circle4:before  { -webkit-animation-delay: -0.9s; animation-delay: -0.9s }
+.circle5:before  { -webkit-animation-delay: -0.8s; animation-delay: -0.8s }
+.circle6:before  { -webkit-animation-delay: -0.7s; animation-delay: -0.7s }
+.circle7:before  { -webkit-animation-delay: -0.6s; animation-delay: -0.6s }
+.circle8:before  { -webkit-animation-delay: -0.5s; animation-delay: -0.5s }
+.circle9:before  { -webkit-animation-delay: -0.4s; animation-delay: -0.4s }
+.circle10:before { -webkit-animation-delay: -0.3s; animation-delay: -0.3s }
+.circle11:before { -webkit-animation-delay: -0.2s; animation-delay: -0.2s }
+.circle12:before { -webkit-animation-delay: -0.1s; animation-delay: -0.1s }
+
+@-webkit-keyframes bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0.0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0.0);
+    transform: scale(0.0);
+  } 40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+
+.cube-grid {
+  width:27px;
+  height:27px;
+}
+
+.cube {
+  width:33%;
+  height:33%;
+  background:#333;
+  float:left;
+  -webkit-animation: scaleDelay 1.3s infinite ease-in-out;
+  animation: scaleDelay 1.3s infinite ease-in-out;
+}
+
+/*
+ * Spinner positions
+ * 1 2 3
+ * 4 5 6
+ * 7 8 9
+ */
+
+.spinner .cube:nth-child(1) { -webkit-animation-delay: 0.2s; animation-delay: 0.2s  }
+.spinner .cube:nth-child(2) { -webkit-animation-delay: 0.3s; animation-delay: 0.3s  }
+.spinner .cube:nth-child(3) { -webkit-animation-delay: 0.4s; animation-delay: 0.4s  }
+.spinner .cube:nth-child(4) { -webkit-animation-delay: 0.1s; animation-delay: 0.1s  }
+.spinner .cube:nth-child(5) { -webkit-animation-delay: 0.2s; animation-delay: 0.2s  }
+.spinner .cube:nth-child(6) { -webkit-animation-delay: 0.3s; animation-delay: 0.3s  }
+.spinner .cube:nth-child(7) { -webkit-animation-delay: 0.0s; animation-delay: 0.0s  }
+.spinner .cube:nth-child(8) { -webkit-animation-delay: 0.1s; animation-delay: 0.1s  }
+.spinner .cube:nth-child(9) { -webkit-animation-delay: 0.2s; animation-delay: 0.2s  }
+
+@-webkit-keyframes scaleDelay {
+  0%, 70%, 100% { -webkit-transform:scale3D(1.0, 1.0, 1.0) }
+  35%           { -webkit-transform:scale3D(0.0, 0.0, 1.0) }
+}
+
+@keyframes scaleDelay {
+  0%, 70%, 100% { -webkit-transform:scale3D(1.0, 1.0, 1.0); transform:scale3D(1.0, 1.0, 1.0) }
+  35%           { -webkit-transform:scale3D(1.0, 1.0, 1.0); transform:scale3D(0.0, 0.0, 1.0) }
+}
+
+.wordpress {
+  background: #333;
+  width: 27px;
+  height: 27px;
+  display: inline-block;
+  border-radius: 27px;
+  position: relative;
+  -webkit-animation: inner-circle 1s linear infinite;
+  animation: inner-circle 1s linear infinite;
+}
+
+.inner-circle {
+  display: block;
+  background: #fff;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  border-radius: 8px;
+  top: 5px;
+  left: 5px;
+}
+
+@-webkit-keyframes inner-circle {
+  0% { -webkit-transform: rotate(0); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes inner-circle {
+  0% { transform: rotate(0); -webkit-transform:rotate(0); }
+  100% { transform: rotate(360deg); -webkit-transform:rotate(360deg); }
+}
+
+/**
+ * FixedDataTable v0.6.0 
+ *
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule Scrollbar
+ *
+ */
+
+/**
+ * Scrollbars.
+ */
+
+/* Touching the scroll-track directly makes the scroll-track bolder */
+.public_Scrollbar_main.public_Scrollbar_mainActive,
+.public_Scrollbar_main:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.public_Scrollbar_mainOpaque,
+.public_Scrollbar_mainOpaque.public_Scrollbar_mainActive,
+.public_Scrollbar_mainOpaque:hover {
+  background-color: #fff;
+}
+
+.public_Scrollbar_face:after {
+  background-color: #c2c2c2;
+}
+
+.public_Scrollbar_main:hover .public_Scrollbar_face:after,
+.public_Scrollbar_mainActive .public_Scrollbar_face:after,
+.public_Scrollbar_faceActive:after {
+  background-color: #7d7d7d;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule fixedDataTable
+ *
+ */
+
+/**
+ * Table.
+ */
+.public_fixedDataTable_main {
+  border-color: #d3d3d3;
+}
+
+.public_fixedDataTable_header,
+.public_fixedDataTable_hasBottomBorder {
+  border-color: #d3d3d3;
+}
+
+.public_fixedDataTable_header .public_fixedDataTableCell_main {
+  font-weight: bold;
+}
+
+.public_fixedDataTable_header,
+.public_fixedDataTable_header .public_fixedDataTableCell_main {
+  background-color: #f6f7f8;
+  background-image: -webkit-linear-gradient(#fff, #efefef);
+  background-image: linear-gradient(#fff, #efefef);
+}
+
+.public_fixedDataTable_footer .public_fixedDataTableCell_main {
+  background-color: #f6f7f8;
+  border-color: #d3d3d3;
+}
+
+.public_fixedDataTable_topShadow {
+  background: 0 0 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAECAYAAABP2FU6AAAAF0lEQVR4AWPUkNeSBhHCjJoK2twgFisAFagCCp3pJlAAAAAASUVORK5CYII=) repeat-x;
+}
+
+.public_fixedDataTable_bottomShadow {
+  background: 0 0 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAECAYAAABP2FU6AAAAHElEQVQI12MwNjZmZdAT1+Nm0JDWEGZQk1GTBgAWkwIeAEp52AAAAABJRU5ErkJggg==) repeat-x;
+}
+
+.public_fixedDataTable_horizontalScrollbar .public_Scrollbar_mainHorizontal {
+  background-color: #fff;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule fixedDataTableCell
+ */
+
+/**
+ * Table cell.
+ */
+.public_fixedDataTableCell_main {
+  background-color: #fff;
+  border-color: #d3d3d3;
+}
+
+.public_fixedDataTableCell_highlighted {
+  background-color: #f4f4f4;
+}
+
+.public_fixedDataTableCell_cellContent {
+  padding: 8px;
+}
+
+.public_fixedDataTableCell_columnResizerKnob {
+  background-color: #0284ff;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule fixedDataTableColumnResizerLine
+ *
+ */
+
+/**
+ * Column resizer line.
+ */
+.public_fixedDataTableColumnResizerLine_main {
+  border-color: #0284ff;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule fixedDataTableRow
+ */
+
+/**
+ * Table row.
+ */
+.public_fixedDataTableRow_main {
+  background-color: #fff;
+}
+
+.public_fixedDataTableRow_highlighted,
+.public_fixedDataTableRow_highlighted .public_fixedDataTableCell_main {
+  background-color: #f6f7f8;
+}
+
+.public_fixedDataTableRow_fixedColumnsDivider {
+  border-color: #d3d3d3;
+}
+
+.public_fixedDataTableRow_columnsShadow {
+  background: 0 0 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABCAYAAAD5PA/NAAAAFklEQVQIHWPSkNeSBmJhTQVtbiDNCgASagIIuJX8OgAAAABJRU5ErkJggg==) repeat-y;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule ScrollbarLayout
+ */
+
+.ScrollbarLayout_main {
+  box-sizing: border-box;
+  outline: none;
+  overflow: hidden;
+  position: absolute;
+  -webkit-transition-duration: 250ms;
+          transition-duration: 250ms;
+  -webkit-transition-timing-function: ease;
+          transition-timing-function: ease;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.ScrollbarLayout_mainVertical {
+  bottom: 0;
+  right: 0;
+  top: 0;
+  -webkit-transition-property: background-color width;
+          transition-property: background-color width;
+  width: 15px;
+}
+
+.ScrollbarLayout_mainVertical.public_Scrollbar_mainActive,
+.ScrollbarLayout_mainVertical:hover {
+  width: 17px;
+}
+
+.ScrollbarLayout_mainHorizontal {
+  bottom: 0;
+  height: 15px;
+  left: 0;
+  -webkit-transition-property: background-color height;
+          transition-property: background-color height;
+}
+
+/* Touching the scroll-track directly makes the scroll-track bolder */
+.ScrollbarLayout_mainHorizontal.public_Scrollbar_mainActive,
+.ScrollbarLayout_mainHorizontal:hover {
+  height: 17px;
+}
+
+.ScrollbarLayout_face {
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: 1;
+}
+
+/**
+ * This selector renders the "nub" of the scrollface. The nub must
+ * be rendered as pseudo-element so that it won't receive any UI events then
+ * we can get the correct `event.offsetX` and `event.offsetY` from the
+ * scrollface element while dragging it.
+ */
+.ScrollbarLayout_face:after {
+  border-radius: 6px;
+  content: '';
+  display: block;
+  position: absolute;
+  -webkit-transition: background-color 250ms ease;
+          transition: background-color 250ms ease;
+}
+
+.ScrollbarLayout_faceHorizontal {
+  bottom: 0;
+  left: 0;
+  top: 0;
+}
+
+.ScrollbarLayout_faceHorizontal:after {
+  bottom: 4px;
+  left: 0;
+  top: 4px;
+  width: 100%;
+}
+
+.ScrollbarLayout_faceVertical {
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.ScrollbarLayout_faceVertical:after {
+  height: 100%;
+  left: 4px;
+  right: 4px;
+  top: 0;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule fixedDataTableCellGroupLayout
+ */
+
+.fixedDataTableCellGroupLayout_cellGroup {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+}
+
+.fixedDataTableCellGroupLayout_cellGroup > .public_fixedDataTableCell_main {
+  display: inline-block;
+  vertical-align: top;
+  white-space: normal;
+}
+
+.fixedDataTableCellGroupLayout_cellGroupWrapper {
+  position: absolute;
+  top: 0;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule fixedDataTableCellLayout
+ */
+
+.fixedDataTableCellLayout_main {
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-width: 0 1px 0 0;
+  box-sizing: border-box;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  white-space: normal;
+}
+
+.fixedDataTableCellLayout_lastChild {
+  border-width: 0 1px 1px 0;
+}
+
+.fixedDataTableCellLayout_alignRight {
+  text-align: right;
+}
+
+.fixedDataTableCellLayout_alignCenter {
+  text-align: center;
+}
+
+.fixedDataTableCellLayout_wrap1 {
+  display: table;
+}
+
+.fixedDataTableCellLayout_wrap2 {
+  display: table-row;
+}
+
+.fixedDataTableCellLayout_wrap3 {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.fixedDataTableCellLayout_columnResizerContainer {
+  position: absolute;
+  right: 0px;
+  width: 6px;
+  z-index: 1;
+}
+
+.fixedDataTableCellLayout_columnResizerContainer:hover {
+  cursor: ew-resize;
+}
+
+.fixedDataTableCellLayout_columnResizerContainer:hover .fixedDataTableCellLayout_columnResizerKnob {
+  visibility: visible;
+}
+
+.fixedDataTableCellLayout_columnResizerKnob {
+  position: absolute;
+  right: 0px;
+  visibility: hidden;
+  width: 4px;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule fixedDataTableColumnResizerLineLayout
+ */
+
+.fixedDataTableColumnResizerLineLayout_mouseArea {
+  cursor: ew-resize;
+  position: absolute;
+  right: -5px;
+  width: 12px;
+}
+
+.fixedDataTableColumnResizerLineLayout_main {
+  border-right-style: solid;
+  border-right-width: 1px;
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 10;
+}
+
+body[dir="rtl"] .fixedDataTableColumnResizerLineLayout_main {
+  /* the resizer line is in the wrong position in RTL with no easy fix.
+   * Disabling is more useful than displaying it.
+   * #167 (github) should look into this and come up with a permanent fix.
+   */
+  display: none !important;
+}
+
+.fixedDataTableColumnResizerLineLayout_hiddenElem {
+  display: none !important;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule fixedDataTableLayout
+ */
+
+.fixedDataTableLayout_main {
+  border-style: solid;
+  border-width: 1px;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+
+.fixedDataTableLayout_header,
+.fixedDataTableLayout_hasBottomBorder {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+.fixedDataTableLayout_footer .public_fixedDataTableCell_main {
+  border-top-style: solid;
+  border-top-width: 1px;
+}
+
+.fixedDataTableLayout_topShadow,
+.fixedDataTableLayout_bottomShadow {
+  height: 4px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+}
+
+.fixedDataTableLayout_bottomShadow {
+  margin-top: -4px;
+}
+
+.fixedDataTableLayout_rowsContainer {
+  overflow: hidden;
+  position: relative;
+}
+
+.fixedDataTableLayout_horizontalScrollbar {
+  bottom: 0;
+  position: absolute;
+}
+/**
+ * Copyright (c) 2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @providesModule fixedDataTableRowLayout
+ */
+
+.fixedDataTableRowLayout_main {
+  box-sizing: border-box;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+}
+
+.fixedDataTableRowLayout_body {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.fixedDataTableRowLayout_fixedColumnsDivider {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  border-left-style: solid;
+  border-left-width: 1px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 0;
+}
+
+.fixedDataTableRowLayout_columnsShadow {
+  width: 4px;
+}
+
+.fixedDataTableRowLayout_rowWrapper {
+  position: absolute;
+  top: 0;
+}
+@charset "UTF-8";
+html, body {
+  height: 100%;
+  position: relative; }
+
+body {
+  background: whitesmoke;
+  color: #343c48;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+
+body .container-fluid {
+  padding: 0; }
+
+body .container.no-margin {
+  margin-left: initial;
+  margin-right: initial; }
+
+a {
+  cursor: pointer; }
+
+.row.section {
+  margin-bottom: 55px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ddd; }
+  .row.section:last-child {
+    border-bottom: none; }
+  .row.section.main {
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+    background: white; }
+    .row.section.main .meta {
+      color: #999; }
+      .row.section.main .meta .item {
+        font-style: italic; }
+
+.row.static {
+  position: fixed;
+  z-index: 99; }
+  .row.static.bottom {
+    bottom: 0;
+    width: 100%;
+    padding: 15px; }
+
+.row.footer {
+  margin-top: 5rem;
+  text-align: center; }
+
+body.theme-blue {
+  background: #2980b9;
+  color: white; }
+  body.theme-blue .muted a {
+    font-weight: normal; }
+  body.theme-blue a {
+    color: white;
+    font-weight: normal; }
+  body.theme-blue .btn.btn-default {
+    color: #555; }
+
+body.full-height #react,
+body.full-height #react > div {
+  height: 100%; }
+
+.branding.top.left {
+  position: absolute;
+  top: 1rem;
+  left: 1.5rem; }
+
+.box {
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
+  color: #aaa; }
+  .box a {
+    color: #337ab7 !important; }
+  .box .box-title {
+    padding: 7px 15px 3px;
+    padding: 0.7rem 1.5rem 0.3rem;
+    background: #eee;
+    border-bottom: 1px solid #ddd;
+    color: #777; }
+  .box .box-notify .alert {
+    border-radius: none;
+    border-top: none;
+    border-left: none;
+    border-right: none; }
+  .box .box-content {
+    padding: 3rem 1.5rem 2rem; }
+  .box .box-info {
+    padding: 1rem 1.5rem;
+    background: #c9d5e0;
+    border-top: 1px solid #b8c4cf;
+    color: #666; }
+
+.landing {
+  padding-top: 20rem; }
+  .landing .copy .lead {
+    font-size: 3rem; }
+
+.sidebar {
+  position: relative;
+  background: #343c48;
+  color: #a5b5c3;
+  padding: 0px;
+  z-index: 1; }
+  .sidebar h4 {
+    margin: 3rem 10px 1rem;
+    padding: 0 5px 5px;
+    border-bottom: 1px solid #444; }
+  .sidebar .nav li a {
+    color: #ccc; }
+    .sidebar .nav li a:hover {
+      background: #2b3540; }
+  .sidebar .nav li.active a {
+    background: #454d59;
+    border-left: 3px solid #3990c9;
+    margin-left: 2px;
+    color: #ccc;
+    font-weight: bold; }
+  .sidebar nav.meta-links {
+    position: absolute;
+    width: 100%;
+    bottom: 0; }
+
+.container > .row, .container-fluid > .row {
+  margin-left: inherit;
+  margin-right: inherit; }
+
+.collapsed .container-fluid {
+  /** large screens gets obnoxiously large collapsed sidebars **/ }
+  @media (min-width: 1200px) {
+    .collapsed .container-fluid .col-lg-1.sidebar {
+      width: 4%; } }
+  @media (min-width: 1200px) {
+    .collapsed .container-fluid .col-lg-11.main {
+      width: 96%; } }
+
+.expanded .container-fluid .sidebar, .collapsed .container-fluid .sidebar {
+  margin-top: 0;
+  position: relative; }
+  .expanded .container-fluid .sidebar a.expand, .collapsed .container-fluid .sidebar a.expand {
+    color: #dddddd;
+    font-size: 2em;
+    display: block;
+    height: 100%;
+    text-align: center;
+    cursor: pointer; }
+  .expanded .container-fluid .sidebar a.expand:hover, .collapsed .container-fluid .sidebar a.expand:hover {
+    color: #777; }
+  .expanded .container-fluid .sidebar a.expand .glyphicon, .collapsed .container-fluid .sidebar a.expand .glyphicon {
+    top: 50%;
+    margin-top: -14px;
+    width: 100%;
+    left: 0; }
+
+.collapsed .container-fluid .sidebar {
+  padding: 0; }
+  .collapsed .container-fluid .sidebar > * {
+    display: none; }
+  .collapsed .container-fluid .sidebar a.expand {
+    padding: 15px;
+    display: inherit; }
+
+.expanded .container-fluid .sidebar .nav a {
+  color: #999; }
+
+.expanded .container-fluid .sidebar a.expand {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28px;
+  padding-right: 26px;
+  padding-left: 2px; }
+
+.nav-container, .nav-branding {
+  background: #ecf2f6;
+  border-bottom: 1px solid #dbe1e5;
+  height: 60px; }
+
+.navigation {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+  .navigation.bare {
+    background: inherit;
+    border-bottom: none; }
+  .navigation .breadcrumb {
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    display: inline; }
+    .navigation .breadcrumb > li a {
+      font-weight: normal; }
+    .navigation .breadcrumb > li:first-child a {
+      font-weight: bold; }
+    .navigation .breadcrumb > li + li:before {
+      content: '\A0/\A0'; }
+  .navigation.unexpanded > li {
+    display: none; }
+    .navigation.unexpanded > li.active, .navigation.unexpanded > li.prefix, .navigation.unexpanded > li.suffix {
+      display: inline-block; }
+  .navigation > li {
+    float: left;
+    display: inline-block;
+    padding: 20px 15px; }
+    .navigation > li.prefix {
+      padding-right: 0; }
+    .navigation > li.active, .navigation > li a.active {
+      font-weight: bold; }
+    .navigation > li a {
+      color: #607a99;
+      cursor: pointer; }
+      .navigation > li a:hover {
+        color: #a5b5c3;
+        text-decoration: none; }
+
+.dashboard .overview a.network {
+  margin-top: 1em;
+  border-bottom: 1px solid transparent; }
+  .dashboard .overview a.network:hover {
+    background: #fafafa;
+    border-bottom: 1px solid #eee; }
+  .dashboard .overview a.network > .title {
+    float: left;
+    padding-left: 15px;
+    padding-bottom: 0px; }
+  .dashboard .overview a.network > .address {
+    display: none; }
+  .dashboard .overview a.network > .connected {
+    clear: both;
+    float: right;
+    padding: 0px 15px 11px 0 !important; }
+  .dashboard .overview a.network > .connstate {
+    float: right;
+    padding: 12px 15px 0 0 !important; }
+
+.dashboard .overview a.network > *, .dashboard .sidebar .nav li a > * {
+  padding: 12px 0px 11px; }
+
+.dashboard .overview a.network > .title, .dashboard .sidebar .nav li a > .title {
+  padding-left: 15px; }
+
+.dashboard .overview a.network > .address, .dashboard .sidebar .nav li a > .address {
+  display: none; }
+
+.dashboard .overview a.network > .connected, .dashboard .sidebar .nav li a > .connected {
+  color: #bbb;
+  font-style: italic;
+  padding: 12px 15px 0 0; }
+
+.dashboard .overview a.network > .connstate, .dashboard .sidebar .nav li a > .connstate {
+  float: right;
+  padding: 0px 15px 0 0; }
+  .dashboard .overview a.network > .connstate .good, .dashboard .sidebar .nav li a > .connstate .good {
+    color: green; }
+  .dashboard .overview a.network > .connstate .degraded, .dashboard .sidebar .nav li a > .connstate .degraded {
+    color: orange; }
+  .dashboard .overview a.network > .connstate .failed, .dashboard .sidebar .nav li a > .connstate .failed {
+    color: red; }
+
+.dashboard .overview .showof .box {
+  margin: 20px 0 30px;
+  padding: 15px; }
+  .dashboard .overview .showof .box.dark {
+    background: #333;
+    border-bottom: 3px solid #444;
+    color: #aaa; }
+  .dashboard .overview .showof .box h3 {
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 2em; }
+
+.dashboard .action-header {
+  padding-top: 4rem; }
+  .dashboard .action-header .nav.nav-tabs {
+    padding-left: 5rem; }
+    .dashboard .action-header .nav.nav-tabs a {
+      background: transparent;
+      border: none;
+      color: #343c48; }
+    .dashboard .action-header .nav.nav-tabs .active a {
+      font-weight: bold;
+      border-bottom: 3px solid #33a3cd;
+      color: #33a3cd; }
+  .dashboard .action-header .tab-content {
+    background: white;
+    padding: 4rem 0 0;
+    border-bottom: 1px solid #eee;
+    height: 35rem; }
+    .dashboard .action-header .tab-content > .tab-pane {
+      padding-left: 5rem; }
+
+.tagged-item {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 1rem;
+  padding: 0 0 1rem; }
+  .tagged-item .date {
+    font-size: 1rem;
+    color: grey; }
+  .tagged-item > .item {
+    border-left: 5px solid grey;
+    padding: 1rem 2rem 1rem 2rem; }
+  .tagged-item > .item-warning {
+    border-left-color: yellow; }
+  .tagged-item > .item-danger {
+    border-left-color: red; }
+  .tagged-item > .item-info {
+    border-left-color: blue; }
+  .tagged-item > .item-success {
+    border-left-color: blue; }
+  .tagged-item:last-child {
+    margin-bottom: 0; }
+
+.items.more-items > a {
+  padding: 3rem 0 2rem;
+  display: inline-block;
+  width: 100%; }
+  .items.more-items > a:hover {
+    background-color: #eee; }
+
+.alert.expand {
+  margin: 0 -15px;
+  border-radius: 0; }
+
+.tokens .list-group-item .btn-sm {
+  margin-top: -5px; }
+
+.tokens .token > .item {
+  display: inline-block;
+  margin-right: 2rem; }
+
+.dummy-block {
+  background: #eee;
+  font-family: monospace; }
+
+/**
+ *  modal styles
+ */
+.modal-error .modal-header {
+  background-color: #d2322d; }
+
+.modal-wait .modal-header {
+  background-color: #428bca; }
+
+.modal-notify .modal-header {
+  background-color: #eeeeee; }
+
+.modal-confirm .modal-header {
+  background-color: #333333; }
+
+.modal-error .modal-header span, .modal-error .modal-header h4,
+.modal-wait .modal-header span, .modal-wait .modal-header h4,
+.modal-confirm .modal-header span, .modal-confirm .modal-header h4 {
+  color: #ffffff; }
+
+.modal-contain {
+  position: relative;
+  min-height: 400px; }
+  .modal-contain .modal, .modal-contain .modal-backdrop {
+    position: absolute;
+    overflow: hidden; }
+  .modal-contain .modal-backdrop {
+    background: whitesmoke;
+    opacity: 0.7; }
+
+/*Form Wizard*/
+.progress {
+  background-color: #eee; }
+
+.bs-wizard {
+  margin-top: 40px; }
+
+.bs-wizard {
+  border-bottom: solid 1px #e0e0e0;
+  padding: 0 0 10px 0; }
+
+.bs-wizard > .bs-wizard-step {
+  padding: 0;
+  position: relative; }
+
+.bs-wizard > .bs-wizard-step .bs-wizard-stepnum {
+  color: #595959;
+  font-size: 16px;
+  margin-bottom: 5px; }
+
+.bs-wizard > .bs-wizard-step .bs-wizard-info {
+  color: #999;
+  font-size: 14px; }
+
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  display: block;
+  background: #fbe8aa;
+  top: 45px;
+  left: 50%;
+  margin-top: -15px;
+  margin-left: -15px;
+  border-radius: 50%; }
+
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot:after {
+  content: ' ';
+  width: 14px;
+  height: 14px;
+  background: #fbbd19;
+  border-radius: 50px;
+  position: absolute;
+  top: 8px;
+  left: 8px; }
+
+.bs-wizard > .bs-wizard-step > .progress {
+  position: relative;
+  border-radius: 0px;
+  height: 8px;
+  box-shadow: none;
+  margin: 20px 0; }
+
+.bs-wizard > .bs-wizard-step > .progress > .progress-bar {
+  width: 0px;
+  box-shadow: none;
+  background: #fbe8aa; }
+
+.bs-wizard > .bs-wizard-step.complete > .progress > .progress-bar {
+  width: 100%; }
+
+.bs-wizard > .bs-wizard-step.active > .progress > .progress-bar {
+  width: 50%; }
+
+.bs-wizard > .bs-wizard-step:first-child.active > .progress > .progress-bar {
+  width: 0%; }
+
+.bs-wizard > .bs-wizard-step:last-child.active > .progress > .progress-bar {
+  width: 100%; }
+
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot {
+  background-color: #ddd; }
+
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot:after {
+  background-color: #ccc; }
+
+.bs-wizard > .bs-wizard-step:first-child > .progress {
+  left: 50%;
+  width: 50%; }
+
+.bs-wizard > .bs-wizard-step:last-child > .progress {
+  width: 50%; }
+
+.bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot {
+  pointer-events: none; }
+
+.terminal {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  background: white;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd; }
+  .terminal > pre {
+    background: transparent;
+    border: none; }
+  .terminal .input-line {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: horizontal;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: horizontal;
+    box-align: stretch;
+    clear: both; }
+    .terminal .input-line .labels > * {
+      margin-left: 0.5rem; }
+  .terminal .input-line > div:nth-child(2) {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1; }
+  .terminal .prompt {
+    white-space: nowrap;
+    color: black;
+    font-weight: bold;
+    margin-right: 7px;
+    display: -webkit-box;
+    -webkit-box-pack: center;
+    -webkit-box-orient: vertical;
+    display: -moz-box;
+    -moz-box-pack: center;
+    -moz-box-orient: vertical;
+    display: box;
+    box-pack: center;
+    box-orient: vertical;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    padding-left: 9.5px;
+    padding-left: 9.5px;
+    color: #0000cc;
+    font-weight: bold; }
+  .terminal .cmdline {
+    outline: none;
+    background-color: transparent;
+    margin: 0;
+    width: 100%;
+    font: inherit;
+    border: none;
+    color: inherit; }
+  .terminal .upstream {
+    color: blue; }
+  .terminal .downstream {
+    color: green; }
+  .terminal .error {
+    color: red; }
+
+.btn .spinner {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  margin-top: 3px;
+  margin-right: 1em; }
+  .btn .spinner .circle:before {
+    background-color: white;
+    width: 15%;
+    height: 15%; }
+
+.react-typeahead-input {
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857;
+  color: #555555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s; }
+
+.react-typeahead-options {
+  padding: 0; }
+  .react-typeahead-options li {
+    list-style: none;
+    padding: 7px 20px 7px;
+    border-bottom: 1px solid #eee; }
+    .react-typeahead-options li:hover {
+      background: #33a3cd;
+      cursor: pointer; }
+      .react-typeahead-options li:hover .head, .react-typeahead-options li:hover .tail, .react-typeahead-options li:hover .highlight {
+        color: #fff;
+        font-weight: bold; }
+    .react-typeahead-options li .head {
+      color: #555; }
+    .react-typeahead-options li .tail {
+      color: #999; }
+    .react-typeahead-options li .highlight {
+      color: #555;
+      font-weight: bold; }
+
+.device-config .white-bg {
+  background: white;
+  padding-bottom: 1em;
+  padding-top: 2em; }
+
+.device-config .page-header {
+  margin-bottom: 0px; }
+
+.device-config .groups .config-item {
+  margin-bottom: 1em; }
+
+.react-toggle {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  margin-right: 1em;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent; }
+
+.react-toggle-screenreader-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; }
+
+.react-toggle--disabled {
+  opacity: 0.5;
+  -webkit-transition: opacity 0.25s;
+  transition: opacity 0.25s; }
+
+.react-toggle-track {
+  width: 50px;
+  height: 24px;
+  padding: 0;
+  border-radius: 2px;
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  transition: all 0.2s ease; }
+
+.react-toggle-track {
+  background-color: #c7254e; }
+
+.react-toggle:hover .react-toggle-track {
+  background-color: #b6143d; }
+
+.toggle-untouched .react-toggle-track {
+  background-color: #7d7d7d; }
+
+.toggle-untouched .react-toggle:hover .react-toggle-track {
+  background-color: #000000; }
+
+.react-toggle--checked .react-toggle-track {
+  background-color: #19AB27; }
+
+.react-toggle.react-toggle--checked:hover .react-toggle-track {
+  background-color: #128D15; }
+
+.react-toggle-track-check {
+  position: absolute;
+  width: 14px;
+  height: 10px;
+  top: 0px;
+  bottom: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  line-height: 0;
+  left: 8px;
+  opacity: 0;
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease; }
+
+.react-toggle--checked .react-toggle-track-check {
+  opacity: 1;
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease; }
+
+.react-toggle-track-x {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 0px;
+  bottom: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  line-height: 0;
+  right: 10px;
+  opacity: 1;
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease; }
+
+.react-toggle--checked .react-toggle-track-x {
+  opacity: 0; }
+
+.react-toggle-thumb {
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #6d6d6d;
+  border-radius: 2px;
+  background-color: #FAFAFA;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  transition: all 0.25s ease; }
+
+.react-toggle--checked .react-toggle-thumb {
+  left: 27px;
+  border-color: #19AB27; }
+
+.react-toggle--focus .react-toggle-thumb {
+  -webkit-box-shadow: 0px 0px 3px 2px #0099E0;
+  -moz-box-shadow: 0px 0px 3px 2px #0099E0;
+  box-shadow: 0px 0px 2px 3px #0099E0; }
+
+.react-toggle:active .react-toggle-thumb {
+  -webkit-box-shadow: 0px 0px 5px 5px #0099E0;
+  -moz-box-shadow: 0px 0px 5px 5px #0099E0;
+  box-shadow: 0px 0px 5px 5px #0099E0; }
+
+.row.white {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  background: white; }
