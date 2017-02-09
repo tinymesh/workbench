@@ -125,7 +125,8 @@ let sendData = function(command, payload, resource) {
       url = BASE_URL + resource,
       headers = {
          'Authorization': AuthStore.signV1('POST', url, buf),
-         'Content-Type':  'application/json'
+         'Content-Type':  'application/json',
+         'X-Data-Encoding':  'base64',
       }
 
    return axios.post(url, buf, {headers})
@@ -470,7 +471,7 @@ class SerialMsg extends React.Component {
       if (ret.error)
          this.setState({input: ev.target.value, parsed: ret})
       else
-         this.setState({input: ev.target.value, parsed: ret.toString()})
+         this.setState({input: ev.target.value, parsed: ret.toString('base64')})
    }
 
    render() {
